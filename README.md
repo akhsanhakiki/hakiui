@@ -14,6 +14,53 @@ Also install peer dependencies if your app does not already have them:
 npm install react react-dom lucide-react
 ```
 
+## Tailwind setup (required)
+
+HakiUI components use Tailwind utility classes. To ensure those classes are generated in consuming apps, import the package stylesheet in your global CSS:
+
+```css
+@import "tailwindcss";
+@import "@hakistudio/hakiui/styles.css";
+```
+
+### Framework quick setup
+
+#### React + Vite
+
+1. Install Tailwind v4 in your Vite app.
+2. Add this to your global stylesheet:
+
+```css
+@import "tailwindcss";
+@import "@hakistudio/hakiui/styles.css";
+```
+
+3. Wrap your app with `HakiProvider`.
+
+#### Next.js (App Router)
+
+1. Ensure your `app/globals.css` contains:
+
+```css
+@import "tailwindcss";
+@import "@hakistudio/hakiui/styles.css";
+```
+
+2. Wrap your root layout body content (or a shared client boundary) with `HakiProvider`.
+
+#### Astro
+
+1. Install and configure `@astrojs/react`.
+2. Enable Tailwind in Astro.
+3. In your shared stylesheet:
+
+```css
+@import "tailwindcss";
+@import "@hakistudio/hakiui/styles.css";
+```
+
+4. Render HakiUI React components inside `.tsx` React components and use `HakiProvider`.
+
 ## Usage (barrel import)
 
 ```tsx
@@ -60,13 +107,14 @@ Adjust import paths to match your project aliases.
 
 ## Styling note
 
-This package uses Tailwind-style utility classes in component markup. Ensure your app includes compatible utility CSS (for example, Tailwind CSS) so those classes render correctly.
+This package uses Tailwind utility classes and CSS variables. `HakiProvider` provides the `--ui-*` variables consumed by components, so it should wrap every area where you render HakiUI components.
 
 ## Package exports
 
 | Subpath | Exports |
 |---------|---------|
 | `@hakistudio/hakiui` | Full public API (re-exports) |
+| `@hakistudio/hakiui/styles.css` | Tailwind v4 source hints for HakiUI components |
 | `@hakistudio/hakiui/theme-provider` | `HakiProvider`, `useTheme`, `defaultTheme`, types |
 | `@hakistudio/hakiui/hex-to-rgb` | `hexToRgb` |
 | `@hakistudio/hakiui/radius` | `getRadiusStyle`, `Radius` |

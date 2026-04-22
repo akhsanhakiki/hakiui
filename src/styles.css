@@ -1,0 +1,5 @@
+/*
+ * Import this in your app's global stylesheet after Tailwind.
+ * It tells Tailwind v4 to scan HakiUI component files in this package.
+ */
+@source "./dist/**/*.{js,mjs,cjs}";
