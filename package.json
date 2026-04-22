@@ -1,0 +1,123 @@
+{
+  "name": "@hakistudio/hakiui",
+  "version": "1.0.0",
+  "description": "Dark-themed React UI components with CSS variable theming.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./theme-provider": {
+      "types": "./dist/theme-provider.d.ts",
+      "import": "./dist/theme-provider.js",
+      "require": "./dist/theme-provider.cjs"
+    },
+    "./hex-to-rgb": {
+      "types": "./dist/hex-to-rgb.d.ts",
+      "import": "./dist/hex-to-rgb.js",
+      "require": "./dist/hex-to-rgb.cjs"
+    },
+    "./radius": {
+      "types": "./dist/radius.d.ts",
+      "import": "./dist/radius.js",
+      "require": "./dist/radius.cjs"
+    },
+    "./button": {
+      "types": "./dist/button.d.ts",
+      "import": "./dist/button.js",
+      "require": "./dist/button.cjs"
+    },
+    "./input": {
+      "types": "./dist/input.d.ts",
+      "import": "./dist/input.js",
+      "require": "./dist/input.cjs"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "import": "./dist/pagination.js",
+      "require": "./dist/pagination.cjs"
+    },
+    "./switch": {
+      "types": "./dist/switch.d.ts",
+      "import": "./dist/switch.js",
+      "require": "./dist/switch.cjs"
+    },
+    "./tooltip": {
+      "types": "./dist/tooltip.d.ts",
+      "import": "./dist/tooltip.js",
+      "require": "./dist/tooltip.cjs"
+    },
+    "./table": {
+      "types": "./dist/table.d.ts",
+      "import": "./dist/table.js",
+      "require": "./dist/table.cjs"
+    },
+    "./tabs": {
+      "types": "./dist/tabs.d.ts",
+      "import": "./dist/tabs.js",
+      "require": "./dist/tabs.cjs"
+    },
+    "./accordion": {
+      "types": "./dist/accordion.d.ts",
+      "import": "./dist/accordion.js",
+      "require": "./dist/accordion.cjs"
+    },
+    "./checkbox": {
+      "types": "./dist/checkbox.d.ts",
+      "import": "./dist/checkbox.js",
+      "require": "./dist/checkbox.cjs"
+    },
+    "./radio": {
+      "types": "./dist/radio.d.ts",
+      "import": "./dist/radio.js",
+      "require": "./dist/radio.cjs"
+    },
+    "./calendar": {
+      "types": "./dist/calendar.d.ts",
+      "import": "./dist/calendar.js",
+      "require": "./dist/calendar.cjs"
+    },
+    "./modal": {
+      "types": "./dist/modal.d.ts",
+      "import": "./dist/modal.js",
+      "require": "./dist/modal.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19",
+    "lucide-react": ">=0.460.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "react",
+    "ui",
+    "components",
+    "design-system",
+    "hakiui"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
