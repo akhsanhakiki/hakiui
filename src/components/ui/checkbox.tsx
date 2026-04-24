@@ -6,7 +6,7 @@ export const Checkbox = ({
   checked,
   onChange,
   children,
-  radius = "sm"
+  radius = "sm",
 }: {
   checked: boolean;
   onChange: (val: boolean) => void;
@@ -14,10 +14,23 @@ export const Checkbox = ({
   radius?: Radius;
 }) => (
   <label className="flex items-center gap-2 cursor-pointer group w-fit">
-    <div className={`w-5 h-5 flex items-center justify-center transition-colors ${!checked ? "border-2 border-[#27272a] group-hover:border-gray-400" : ""}`} style={{ ...getRadiusStyle(radius), ...(checked ? { background: "var(--ui-primary-bg)" } : {}) }}>
+    <div
+      className={`flex h-5 w-5 items-center justify-center transition-colors ${!checked ? "border-2 border-(--border) group-hover:border-(--ui-primary)" : ""}`}
+      style={{
+        ...getRadiusStyle(radius),
+        ...(checked ? { background: "var(--ui-primary-bg)" } : {}),
+      }}
+    >
       {checked && <Check size={14} className="text-white" />}
     </div>
-    <input type="checkbox" className="hidden" checked={checked} onChange={(e) => onChange(e.target.checked)} />
-    {children && <span className="text-sm text-gray-300 select-none">{children}</span>}
+    <input
+      type="checkbox"
+      className="hidden"
+      checked={checked}
+      onChange={(e) => onChange(e.target.checked)}
+    />
+    {children && (
+      <span className="select-none text-sm text-(--text)">{children}</span>
+    )}
   </label>
 );

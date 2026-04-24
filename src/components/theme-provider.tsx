@@ -1,4 +1,9 @@
-import React, { createContext, useContext, useState, type ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+} from "react";
 import { hexToRgb } from "../lib/hex-to-rgb";
 
 export type Theme = {
@@ -14,7 +19,7 @@ export const defaultTheme: Theme = {
   gradientColor: "#5EA2EF",
   useGradient: false,
   fontFamily: "'Inter', sans-serif",
-  borderRadius: 12
+  borderRadius: 12,
 };
 
 type ThemeContextType = {
@@ -36,7 +41,11 @@ export type HakiProviderProps = {
   className?: string;
 };
 
-export const HakiProvider = ({ children, initialTheme = defaultTheme, className = "" }: HakiProviderProps) => {
+export const HakiProvider = ({
+  children,
+  initialTheme = defaultTheme,
+  className = "",
+}: HakiProviderProps) => {
   const [theme, setTheme] = useState<Theme>(initialTheme);
 
   return (
@@ -48,9 +57,11 @@ export const HakiProvider = ({ children, initialTheme = defaultTheme, className 
             "--ui-primary": theme.primaryColor,
             "--ui-primary-rgb": hexToRgb(theme.primaryColor),
             "--ui-gradient": `linear-gradient(to right, ${theme.primaryColor}, ${theme.gradientColor})`,
-            "--ui-primary-bg": theme.useGradient ? "var(--ui-gradient)" : "var(--ui-primary)",
+            "--ui-primary-bg": theme.useGradient
+              ? "var(--ui-gradient)"
+              : "var(--ui-primary)",
             "--ui-font": theme.fontFamily,
-            "--ui-radius": `${theme.borderRadius}px`
+            "--ui-radius": `${theme.borderRadius}px`,
           } as React.CSSProperties
         }
       >
