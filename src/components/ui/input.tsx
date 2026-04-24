@@ -59,10 +59,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputContainer = (
       <div className="flex flex-col gap-1.5 w-full">
         <div
-          className={`flex w-full items-center overflow-hidden border-2 border-transparent transition-colors focus-within:border-(--ui-primary) ${currentSize.container}`}
+          className={`flex w-full items-center overflow-hidden transition-colors focus-within:border-(--ui-primary) ${currentSize.container}`}
           style={{
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
+            border: "0.5px solid var(--border)",
+            outline: "0.5px solid var(--border)",
+            outlineOffset: 0,
           }}
         >
           <div className="flex items-center w-full gap-2">
