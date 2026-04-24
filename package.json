@@ -88,6 +88,16 @@
       "types": "./dist/modal.d.ts",
       "import": "./dist/modal.js",
       "require": "./dist/modal.cjs"
+    },
+    "./dropdown": {
+      "types": "./dist/dropdown.d.ts",
+      "import": "./dist/dropdown.js",
+      "require": "./dist/dropdown.cjs"
+    },
+    "./autocomplete": {
+      "types": "./dist/autocomplete.d.ts",
+      "import": "./dist/autocomplete.js",
+      "require": "./dist/autocomplete.cjs"
     }
   },
   "files": [

@@ -12,7 +12,9 @@ const ui = [
   "checkbox",
   "radio",
   "calendar",
-  "modal"
+  "modal",
+  "dropdown",
+  "autocomplete"
 ] as const;
 
 const entry: Record<string, string> = {

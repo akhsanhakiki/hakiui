@@ -13,5 +13,7 @@ export { Checkbox } from './checkbox.cjs';
 export { Radio } from './radio.cjs';
 export { Calendar } from './calendar.cjs';
 export { Modal, ModalProps } from './modal.cjs';
+export { Dropdown, DropdownOption, DropdownProps } from './dropdown.cjs';
+export { Autocomplete, AutocompleteOption, AutocompleteProps } from './autocomplete.cjs';
 import 'react';
 import 'react/jsx-runtime';

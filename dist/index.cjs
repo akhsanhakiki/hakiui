@@ -32,9 +32,11 @@ var src_exports = {};
 __export(src_exports, {
   Accordion: () => Accordion,
   AccordionItem: () => AccordionItem,
+  Autocomplete: () => Autocomplete,
   Button: () => Button,
   Calendar: () => Calendar,
   Checkbox: () => Checkbox,
+  Dropdown: () => Dropdown,
   HakiProvider: () => HakiProvider,
   Input: () => Input,
   Modal: () => Modal,
@@ -437,13 +439,218 @@ var Modal = ({ isOpen, onClose, title, children }) => {
     )
   ] });
 };
+
+// src/components/ui/dropdown.tsx
+var import_react7 = require("react");
+var import_lucide_react7 = require("lucide-react");
+var import_jsx_runtime14 = require("react/jsx-runtime");
+var Dropdown = ({
+  options,
+  value,
+  defaultValue,
+  onChange,
+  placeholder = "Select an option",
+  label,
+  radius = "md",
+  disabled = false,
+  className = ""
+}) => {
+  const containerRef = (0, import_react7.useRef)(null);
+  const [isOpen, setIsOpen] = (0, import_react7.useState)(false);
+  const [internalValue, setInternalValue] = (0, import_react7.useState)(defaultValue ?? "");
+  const selectedValue = value ?? internalValue;
+  const selectedOption = (0, import_react7.useMemo)(
+    () => options.find((option) => option.value === selectedValue),
+    [options, selectedValue]
+  );
+  (0, import_react7.useEffect)(() => {
+    const handleOutsideClick = (event) => {
+      if (!containerRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
+  const handleSelect = (nextValue) => {
+    if (value === void 0) setInternalValue(nextValue);
+    onChange?.(nextValue);
+    setIsOpen(false);
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `w-full ${className}`, children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("label", { className: "mb-1.5 block text-sm font-medium text-gray-300", children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { ref: containerRef, className: "relative w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+        "button",
+        {
+          type: "button",
+          disabled,
+          onClick: () => setIsOpen((prev) => !prev),
+          className: "w-full min-h-11 bg-[#27272a] border border-[#3f3f46] hover:border-[#52525b] disabled:opacity-60 disabled:cursor-not-allowed px-3 py-2.5 text-left text-sm text-white transition-colors flex items-center justify-between gap-3",
+          style: getRadiusStyle(radius),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: `truncate ${selectedOption ? "text-white" : "text-gray-500"}`, children: selectedOption?.label ?? placeholder }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              import_lucide_react7.ChevronDown,
+              {
+                size: 16,
+                className: `shrink-0 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`
+              }
+            )
+          ]
+        }
+      ),
+      isOpen && !disabled && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        "div",
+        {
+          className: "absolute z-50 mt-2 w-full bg-[#18181b] border border-[#27272a] p-1.5 shadow-xl max-h-64 overflow-y-auto",
+          style: getRadiusStyle(radius),
+          children: options.map((option) => {
+            const isSelected = option.value === selectedValue;
+            return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+              "button",
+              {
+                type: "button",
+                disabled: option.disabled,
+                onClick: () => handleSelect(option.value),
+                className: "w-full text-left px-2.5 py-2 rounded-md hover:bg-[#27272a] disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-start justify-between gap-2",
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: `text-sm truncate ${isSelected ? "text-white font-medium" : "text-gray-200"}`, children: option.label }),
+                    option.description && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "text-xs text-gray-500 mt-0.5 truncate", children: option.description })
+                  ] }),
+                  isSelected && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_lucide_react7.Check, { size: 16, className: "mt-0.5 text-(--ui-primary) shrink-0" })
+                ]
+              },
+              option.value
+            );
+          })
+        }
+      )
+    ] })
+  ] });
+};
+
+// src/components/ui/autocomplete.tsx
+var import_react8 = require("react");
+var import_lucide_react8 = require("lucide-react");
+var import_jsx_runtime15 = require("react/jsx-runtime");
+var Autocomplete = ({
+  options,
+  value,
+  defaultValue,
+  onChange,
+  onInputChange,
+  placeholder = "Search...",
+  emptyMessage = "No options found",
+  label,
+  radius = "md",
+  disabled = false,
+  className = ""
+}) => {
+  const containerRef = (0, import_react8.useRef)(null);
+  const [isOpen, setIsOpen] = (0, import_react8.useState)(false);
+  const [internalValue, setInternalValue] = (0, import_react8.useState)(defaultValue ?? "");
+  const [query, setQuery] = (0, import_react8.useState)("");
+  const selectedValue = value ?? internalValue;
+  const selectedOption = (0, import_react8.useMemo)(
+    () => options.find((option) => option.value === selectedValue),
+    [options, selectedValue]
+  );
+  const filteredOptions = (0, import_react8.useMemo)(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return options;
+    return options.filter((option) => {
+      const labelText = option.label.toLowerCase();
+      const valueText = option.value.toLowerCase();
+      const descriptionText = typeof option.description === "string" ? option.description.toLowerCase() : "";
+      return labelText.includes(needle) || valueText.includes(needle) || descriptionText.includes(needle);
+    });
+  }, [options, query]);
+  (0, import_react8.useEffect)(() => {
+    const handleOutsideClick = (event) => {
+      if (!containerRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
+  const handleSelect = (nextValue) => {
+    if (value === void 0) setInternalValue(nextValue);
+    onChange?.(nextValue);
+    setIsOpen(false);
+    setQuery("");
+  };
+  const displayValue = isOpen ? query : selectedOption?.label ?? "";
+  return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: `w-full ${className}`, children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("label", { className: "mb-1.5 block text-sm font-medium text-gray-300", children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { ref: containerRef, className: "relative w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(
+        "div",
+        {
+          className: "w-full bg-[#27272a] border border-[#3f3f46] focus-within:border-(--ui-primary) px-3 py-2 text-sm transition-colors flex items-center gap-2",
+          style: getRadiusStyle(radius),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(import_lucide_react8.Search, { size: 16, className: "text-gray-500 shrink-0" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+              "input",
+              {
+                type: "text",
+                disabled,
+                value: displayValue,
+                onFocus: () => setIsOpen(true),
+                onChange: (event) => {
+                  setIsOpen(true);
+                  setQuery(event.target.value);
+                  onInputChange?.(event.target.value);
+                },
+                placeholder,
+                className: "w-full bg-transparent text-white outline-none placeholder:text-gray-500 disabled:opacity-60",
+                style: { fontFamily: "var(--ui-font)" }
+              }
+            )
+          ]
+        }
+      ),
+      isOpen && !disabled && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+        "div",
+        {
+          className: "absolute z-50 mt-2 w-full bg-[#18181b] border border-[#27272a] p-1.5 shadow-xl max-h-64 overflow-y-auto",
+          style: getRadiusStyle(radius),
+          children: filteredOptions.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "px-2.5 py-2 text-sm text-gray-500", children: emptyMessage }) : filteredOptions.map((option) => {
+            const isSelected = option.value === selectedValue;
+            return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(
+              "button",
+              {
+                type: "button",
+                onClick: () => handleSelect(option.value),
+                className: "w-full text-left px-2.5 py-2 rounded-md hover:bg-[#27272a] transition-colors flex items-start justify-between gap-2",
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: `text-sm truncate ${isSelected ? "text-white font-medium" : "text-gray-200"}`, children: option.label }),
+                    option.description && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "text-xs text-gray-500 mt-0.5 truncate", children: option.description })
+                  ] }),
+                  isSelected && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(import_lucide_react8.Check, { size: 16, className: "mt-0.5 text-(--ui-primary) shrink-0" })
+                ]
+              },
+              option.value
+            );
+          })
+        }
+      )
+    ] })
+  ] });
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   Accordion,
   AccordionItem,
+  Autocomplete,
   Button,
   Calendar,
   Checkbox,
+  Dropdown,
   HakiProvider,
   Input,
   Modal,

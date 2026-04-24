@@ -13,5 +13,7 @@ export { Checkbox } from './checkbox.js';
 export { Radio } from './radio.js';
 export { Calendar } from './calendar.js';
 export { Modal, ModalProps } from './modal.js';
+export { Dropdown, DropdownOption, DropdownProps } from './dropdown.js';
+export { Autocomplete, AutocompleteOption, AutocompleteProps } from './autocomplete.js';
 import 'react';
 import 'react/jsx-runtime';

@@ -1,4 +1,10 @@
 import {
+  Dropdown
+} from "./chunk-ZXG4R4BT.js";
+import {
+  Autocomplete
+} from "./chunk-V77SKEDD.js";
+import {
   Tooltip
 } from "./chunk-EZ6R2TRV.js";
 import {
@@ -54,9 +60,11 @@ import {
 export {
   Accordion,
   AccordionItem,
+  Autocomplete,
   Button,
   Calendar,
   Checkbox,
+  Dropdown,
   HakiProvider,
   Input,
   Modal,
