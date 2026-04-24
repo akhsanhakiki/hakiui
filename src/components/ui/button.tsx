@@ -2,7 +2,7 @@ import React from "react";
 import { getRadiusStyle, type Radius } from "../../lib/radius";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "solid" | "bordered" | "light" | "flat";
+  variant?: "primary" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   radius?: Radius;
 }
@@ -11,7 +11,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className = "",
-      variant = "solid",
+      variant = "primary",
       size = "md",
       radius = "md",
       children,
@@ -26,28 +26,30 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     let variantStyle: React.CSSProperties = {};
-    if (variant === "solid") {
+    if (variant === "primary") {
       variantStyle = {
         background: "var(--ui-primary-bg)",
         color: "#ffffff",
         border: "none",
       };
-    } else if (variant === "bordered") {
+    } else if (variant === "secondary") {
       variantStyle = {
-        backgroundColor: "transparent",
-        color: "var(--ui-primary)",
-        border: "2px solid var(--ui-primary)",
-      };
-    } else if (variant === "light") {
-      variantStyle = {
-        backgroundColor: "transparent",
+        backgroundColor: "rgb(var(--ui-primary-rgb) / 0.12)",
         color: "var(--ui-primary)",
         border: "none",
       };
-    } else if (variant === "flat") {
+    } else if (variant === "outline") {
       variantStyle = {
-        backgroundColor: "rgb(var(--ui-primary-rgb) / 0.2)",
-        color: "var(--ui-primary)",
+        backgroundColor: "transparent",
+        color: "var(--text)",
+        border: "1px solid var(--border)",
+        outline: "1px solid var(--border)",
+        outlineOffset: 0,
+      };
+    } else if (variant === "ghost") {
+      variantStyle = {
+        backgroundColor: "transparent",
+        color: "var(--text)",
         border: "none",
       };
     }

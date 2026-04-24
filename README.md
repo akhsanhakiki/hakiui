@@ -71,7 +71,7 @@ export default function App() {
     <HakiProvider>
       <div className="p-6 space-y-4 bg-black min-h-screen">
         <Input placeholder="Email address" />
-        <Button variant="solid">Continue</Button>
+        <Button variant="primary">Continue</Button>
       </div>
     </HakiProvider>
   );
