@@ -46,7 +46,7 @@ export const AccordionItem = ({
       >
         <div
           ref={contentRef}
-          className="pb-4 text-sm text-(--text-muted)"
+          className="pb-4 text-sm text-(--text-muted) opacity-70"
         >
           {children}
         </div>

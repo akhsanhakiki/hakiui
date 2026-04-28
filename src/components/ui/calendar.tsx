@@ -44,8 +44,14 @@ export const Calendar = ({ radius = "md" }: { radius?: Radius }) => {
 
   return (
     <div
-      className="w-[280px] select-none border border-(--border) bg-(--surface) p-4"
-      style={getRadiusStyle(radius)}
+      className="w-[280px] select-none p-4"
+      style={{
+        ...getRadiusStyle(radius),
+        backgroundColor: "color-mix(in srgb, var(--bg-soft) 30%, transparent)",
+        border: "0.5px solid var(--border)",
+        outline: "0.5px solid var(--border)",
+        outlineOffset: 0,
+      }}
     >
       <div className="flex items-center justify-between mb-4">
         <button
