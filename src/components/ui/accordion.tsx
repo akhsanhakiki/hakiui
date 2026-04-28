@@ -1,6 +1,5 @@
 import React, { useRef, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
-import { getRadiusStyle, type Radius } from "../../lib/radius";
 
 export const Accordion = ({
   children,
@@ -9,29 +8,27 @@ export const Accordion = ({
   children: ReactNode;
   className?: string;
 }) => (
-  <div className={`flex flex-col w-full ${className}`}>{children}</div>
+  <div className={`flex flex-col gap-2 w-full ${className}`}>{children}</div>
 );
 
 export const AccordionItem = ({
   title,
   children,
-  radius = "md",
 }: {
   title: string;
   children: ReactNode;
-  radius?: Radius;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   return (
     <div
-      className="overflow-hidden border-b border-(--border) last:border-b-0"
-      style={getRadiusStyle(radius)}
+      className="overflow-hidden"
+      style={{ borderBottom: "0.5px solid var(--border)" }}
     >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between px-4 py-5 text-left"
+        className="flex w-full items-center justify-between py-4 text-left transition-colors"
       >
         <span className="font-medium text-(--text)">{title}</span>
         <ChevronDown
@@ -49,7 +46,7 @@ export const AccordionItem = ({
       >
         <div
           ref={contentRef}
-          className="pb-5 px-4 text-sm text-(--text-muted)"
+          className="pb-4 text-sm text-(--text-muted)"
         >
           {children}
         </div>
