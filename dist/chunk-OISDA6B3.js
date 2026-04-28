@@ -47,11 +47,14 @@ var Input = React.forwardRef(
       /* @__PURE__ */ jsx(
         "div",
         {
-          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-[color:var(--ui-primary)]/35 ${currentSize.container}`,
+          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${currentSize.container}`,
           style: {
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
-            color: "var(--text)"
+            color: "var(--text)",
+            border: "0.5px solid var(--border)",
+            outline: "0.5px solid var(--border)",
+            outlineOffset: 0
           },
           children: /* @__PURE__ */ jsxs("div", { className: "flex items-center w-full gap-2", children: [
             startContent && /* @__PURE__ */ jsx("div", { className: "flex shrink-0 items-center justify-center text-(--text-muted)", children: startContent }),
@@ -107,4 +110,4 @@ Input.displayName = "Input";
 export {
   Input
 };
-//# sourceMappingURL=chunk-YPJJDYLS.js.map
+//# sourceMappingURL=chunk-OISDA6B3.js.map

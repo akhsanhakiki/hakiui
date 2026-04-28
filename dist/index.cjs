@@ -115,6 +115,7 @@ var HakiProvider = ({
 // src/components/ui/button.tsx
 var import_react2 = __toESM(require("react"), 1);
 var import_jsx_runtime2 = require("react/jsx-runtime");
+var PRESS_SPRING = "cubic-bezier(0.34, 1.55, 0.48, 1)";
 var Button = import_react2.default.forwardRef(
   ({
     className = "",
@@ -122,28 +123,52 @@ var Button = import_react2.default.forwardRef(
     size = "md",
     radius = "md",
     children,
+    disabled,
+    onMouseEnter,
+    onMouseLeave,
+    onPointerDown,
+    onPointerUp,
+    onPointerLeave,
+    onPointerCancel,
+    style: styleProp,
     ...props
   }, ref) => {
+    const [isHovered, setIsHovered] = (0, import_react2.useState)(false);
+    const [isPressed, setIsPressed] = (0, import_react2.useState)(false);
+    const [reduceMotion, setReduceMotion] = (0, import_react2.useState)(false);
+    (0, import_react2.useEffect)(() => {
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const sync = () => setReduceMotion(mq.matches);
+      sync();
+      mq.addEventListener("change", sync);
+      return () => mq.removeEventListener("change", sync);
+    }, []);
+    const showHover = isHovered && !disabled;
     const sizeClasses = {
       sm: "h-8 px-3 text-sm",
       md: "h-10 px-4 text-sm",
       lg: "h-12 px-6 text-base"
     };
-    let variantStyle = {};
+    let variantStyle = {
+      transition: "box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease"
+    };
     if (variant === "primary") {
       variantStyle = {
+        ...variantStyle,
         background: "var(--ui-primary-bg)",
         color: "#ffffff",
         border: "none"
       };
     } else if (variant === "secondary") {
       variantStyle = {
+        ...variantStyle,
         backgroundColor: "rgb(var(--ui-primary-rgb) / 0.12)",
         color: "var(--ui-primary)",
         border: "none"
       };
     } else if (variant === "outline") {
       variantStyle = {
+        ...variantStyle,
         backgroundColor: "transparent",
         color: "var(--text)",
         border: "1px solid var(--border)",
@@ -152,20 +177,72 @@ var Button = import_react2.default.forwardRef(
       };
     } else if (variant === "ghost") {
       variantStyle = {
+        ...variantStyle,
         backgroundColor: "transparent",
         color: "var(--text)",
         border: "none"
       };
     }
+    if (showHover) {
+      if (variant === "primary") {
+        variantStyle = {
+          ...variantStyle,
+          boxShadow: "inset 0 0 0 9999px rgba(0, 0, 0, 0.08)"
+        };
+      } else if (variant === "secondary") {
+        variantStyle = {
+          ...variantStyle,
+          backgroundColor: "rgb(var(--ui-primary-rgb) / 0.2)"
+        };
+      } else if (variant === "outline" || variant === "ghost") {
+        variantStyle = {
+          ...variantStyle,
+          backgroundColor: "var(--hover)"
+        };
+      }
+    }
+    const transformTransition = reduceMotion ? "transform 70ms linear" : `transform 420ms ${PRESS_SPRING}`;
+    const pressStyle = disabled || reduceMotion ? {} : {
+      transform: isPressed ? "scale(0.9)" : "scale(1)",
+      willChange: "transform",
+      transition: `${variantStyle.transition}, ${transformTransition}`
+    };
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
       "button",
       {
         ref,
-        className: `font-medium transition-transform active:scale-95 inline-flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer ${sizeClasses[size]} ${className}`,
+        disabled,
+        className: `font-medium inline-flex touch-manipulation items-center justify-center gap-2 disabled:opacity-50 cursor-pointer ${sizeClasses[size]} ${className}`,
         style: {
           ...getRadiusStyle(radius),
           fontFamily: "var(--ui-font)",
-          ...variantStyle
+          ...variantStyle,
+          ...styleProp,
+          ...pressStyle
+        },
+        onMouseEnter: (e) => {
+          onMouseEnter?.(e);
+          if (!disabled) setIsHovered(true);
+        },
+        onMouseLeave: (e) => {
+          onMouseLeave?.(e);
+          setIsHovered(false);
+        },
+        onPointerDown: (e) => {
+          onPointerDown?.(e);
+          if (!disabled && e.button === 0) setIsPressed(true);
+        },
+        onPointerUp: (e) => {
+          onPointerUp?.(e);
+          setIsPressed(false);
+        },
+        onPointerLeave: (e) => {
+          onPointerLeave?.(e);
+          setIsPressed(false);
+        },
+        onPointerCancel: (e) => {
+          onPointerCancel?.(e);
+          setIsPressed(false);
         },
         ...props,
         children
@@ -220,11 +297,14 @@ var Input = import_react3.default.forwardRef(
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "div",
         {
-          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-[color:var(--ui-primary)]/35 ${currentSize.container}`,
+          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${currentSize.container}`,
           style: {
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
-            color: "var(--text)"
+            color: "var(--text)",
+            border: "0.5px solid var(--border)",
+            outline: "0.5px solid var(--border)",
+            outlineOffset: 0
           },
           children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex items-center w-full gap-2", children: [
             startContent && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "flex shrink-0 items-center justify-center text-(--text-muted)", children: startContent }),
@@ -299,7 +379,7 @@ var Pagination = ({
         type: "button",
         onClick: () => onChange(Math.max(1, page - 1)),
         disabled: page === 1,
-        className: "flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50",
+        className: "flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50 cursor-pointer",
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_lucide_react2.ChevronLeft, { size: 16 }),
           " Previous"
@@ -322,7 +402,7 @@ var Pagination = ({
         {
           type: "button",
           onClick: () => onChange(p),
-          className: `flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors ${isActive ? "text-white" : "bg-transparent text-(--text) hover:bg-(--hover)"}`,
+          className: `flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors cursor-pointer ${isActive ? "text-white" : "bg-transparent text-(--text) hover:bg-(--hover)"}`,
           style: isActive ? { background: "var(--ui-primary-bg)" } : {},
           children: p
         },
@@ -335,7 +415,7 @@ var Pagination = ({
         type: "button",
         onClick: () => onChange(Math.min(total, page + 1)),
         disabled: page === total,
-        className: "flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50",
+        className: "flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50 cursor-pointer",
         children: [
           "Next ",
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_lucide_react2.ChevronRight, { size: 16 })
@@ -661,6 +741,15 @@ var import_lucide_react6 = require("lucide-react");
 var import_jsx_runtime13 = require("react/jsx-runtime");
 var Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
+  const panelShell = {
+    ...getRadiusStyle("md"),
+    fontFamily: "var(--ui-font)",
+    backgroundColor: "var(--bg-soft)",
+    color: "var(--text)",
+    border: "0.5px solid var(--border)",
+    outline: "0.5px solid var(--border)",
+    outlineOffset: 0
+  };
   return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4", children: [
     /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       "div",
@@ -673,25 +762,33 @@ var Modal = ({ isOpen, onClose, title, children }) => {
     /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
       "div",
       {
-        className: "relative flex w-full max-w-md flex-col border border-(--border) bg-(--surface) text-(--text) shadow-2xl animate-in fade-in zoom-in-95 duration-200",
-        style: {
-          borderRadius: "var(--ui-radius)",
-          fontFamily: "var(--ui-font)"
-        },
+        className: "relative flex w-full max-w-md min-h-0 flex-col overflow-hidden text-(--text) shadow-2xl animate-in fade-in zoom-in-95 duration-200",
+        style: panelShell,
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-labelledby": "modal-title",
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "flex items-center justify-between border-b border-(--border) p-4", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { className: "font-semibold text-lg", children: title }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
-              "button",
-              {
-                type: "button",
-                onClick: onClose,
-                className: "p-1 text-(--text-muted) transition-colors hover:text-(--text)",
-                children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_lucide_react6.X, { size: 20 })
-              }
-            )
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "p-4 overflow-y-auto", children })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+            "header",
+            {
+              className: "flex shrink-0 items-center gap-3 px-4 py-3",
+              style: { borderBottom: "0.5px solid var(--border)" },
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h3", { id: "modal-title", className: "min-w-0 flex-1 truncate text-base font-semibold", children: title }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: onClose,
+                    className: "flex shrink-0 rounded-md p-1.5 text-(--text-muted) transition-colors hover:bg-(--hover) hover:text-(--text)",
+                    "aria-label": "Close",
+                    children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_lucide_react6.X, { size: 18, strokeWidth: 2 })
+                  }
+                )
+              ]
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "min-h-0 flex-1 overflow-y-auto px-4 py-4", children })
         ]
       }
     )
@@ -750,7 +847,7 @@ var getReadableTextColors = (backgroundColor) => {
   };
 };
 var resolveMenuPortalTokens = (computedStyle) => {
-  const resolvedBg = computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
+  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
   const resolvedBorder = computedStyle.getPropertyValue("--border").trim() || "rgba(0, 0, 0, 0.08)";
   const resolvedHover = computedStyle.getPropertyValue("--hover").trim() || "rgba(0, 0, 0, 0.06)";
   const resolvedRadius = computedStyle.borderRadius || "12px";
@@ -773,8 +870,8 @@ var resolveMenuPortalTokens = (computedStyle) => {
   };
 };
 var defaultMenuPortalStyle = () => ({
-  backgroundColor: "#fff",
-  borderColor: "rgba(0, 0, 0, 0.08)",
+  backgroundColor: "var(--bg-soft)",
+  borderColor: "var(--border)",
   borderRadius: "12px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
   "--dropdown-hover-fg": "#111827",
@@ -808,7 +905,9 @@ var Dropdown = ({
     left: 0,
     width: 0
   });
-  const [menuStyle, setMenuStyle] = (0, import_react7.useState)(defaultMenuPortalStyle);
+  const [menuStyle, setMenuStyle] = (0, import_react7.useState)(
+    defaultMenuPortalStyle
+  );
   const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
@@ -887,6 +986,8 @@ var Dropdown = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
         "aria-hidden": !isOpen,
@@ -948,8 +1049,8 @@ var Dropdown = ({
     ),
     document.body
   );
-  return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `w-full ${className}`, children: [
-    label && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("label", { className: "mb-1.5 block text-sm font-medium text-(--text)", children: label }),
+  return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `flex flex-col gap-1.5 w-full ${className}`, children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("label", { className: "block text-sm font-medium text-(--text)", children: label }),
     /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { ref: containerRef, className: "relative w-full", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
       "button",
       {
@@ -1019,7 +1120,9 @@ var Autocomplete = ({
     left: 0,
     width: 0
   });
-  const [menuStyle, setMenuStyle] = (0, import_react8.useState)(defaultMenuPortalStyle);
+  const [menuStyle, setMenuStyle] = (0, import_react8.useState)(
+    defaultMenuPortalStyle
+  );
   const sizeStyles = {
     sm: {
       container: "px-2.5 py-1 min-h-9",
@@ -1109,6 +1212,8 @@ var Autocomplete = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
         "aria-hidden": !isOpen,
@@ -1176,8 +1281,8 @@ var Autocomplete = ({
     ),
     document.body
   );
-  return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: `w-full ${className}`, children: [
-    label && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("label", { className: "mb-1.5 block text-sm font-medium text-(--text)", children: label }),
+  return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: `flex flex-col gap-1.5 w-full ${className}`, children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("label", { className: "block text-sm font-medium text-(--text)", children: label }),
     /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { ref: containerRef, className: "relative w-full", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(
       "div",
       {
@@ -1192,7 +1297,13 @@ var Autocomplete = ({
           boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.09), inset 0 -1px 1px rgba(0, 0, 0, 0.04)"
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(import_lucide_react8.Search, { size: currentSize.icon, className: "shrink-0 text-(--text-muted)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+            import_lucide_react8.Search,
+            {
+              size: currentSize.icon,
+              className: "shrink-0 text-(--text-muted)"
+            }
+          ),
           /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
             "input",
             {

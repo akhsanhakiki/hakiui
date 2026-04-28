@@ -24,7 +24,7 @@ export const Pagination = ({
         type="button"
         onClick={() => onChange(Math.max(1, page - 1))}
         disabled={page === 1}
-        className="flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50"
+        className="flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50 cursor-pointer"
       >
         <ChevronLeft size={16} /> Previous
       </button>
@@ -45,7 +45,7 @@ export const Pagination = ({
               type="button"
               key={`page-${p}`}
               onClick={() => onChange(p as number)}
-              className={`flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors ${isActive ? "text-white" : "bg-transparent text-(--text) hover:bg-(--hover)"}`}
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors cursor-pointer ${isActive ? "text-white" : "bg-transparent text-(--text) hover:bg-(--hover)"}`}
               style={isActive ? { background: "var(--ui-primary-bg)" } : {}}
             >
               {p}
@@ -57,7 +57,7 @@ export const Pagination = ({
         type="button"
         onClick={() => onChange(Math.min(total, page + 1))}
         disabled={page === total}
-        className="flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50"
+        className="flex items-center gap-1 border-0 bg-transparent px-3 py-1.5 text-sm text-(--text-muted) transition-colors hover:text-(--text) disabled:opacity-50 cursor-pointer"
       >
         Next <ChevronRight size={16} />
       </button>

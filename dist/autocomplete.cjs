@@ -83,7 +83,7 @@ var getReadableTextColors = (backgroundColor) => {
   };
 };
 var resolveMenuPortalTokens = (computedStyle) => {
-  const resolvedBg = computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
+  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
   const resolvedBorder = computedStyle.getPropertyValue("--border").trim() || "rgba(0, 0, 0, 0.08)";
   const resolvedHover = computedStyle.getPropertyValue("--hover").trim() || "rgba(0, 0, 0, 0.06)";
   const resolvedRadius = computedStyle.borderRadius || "12px";
@@ -106,8 +106,8 @@ var resolveMenuPortalTokens = (computedStyle) => {
   };
 };
 var defaultMenuPortalStyle = () => ({
-  backgroundColor: "#fff",
-  borderColor: "rgba(0, 0, 0, 0.08)",
+  backgroundColor: "var(--bg-soft)",
+  borderColor: "var(--border)",
   borderRadius: "12px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
   "--dropdown-hover-fg": "#111827",
@@ -145,7 +145,9 @@ var Autocomplete = ({
     left: 0,
     width: 0
   });
-  const [menuStyle, setMenuStyle] = (0, import_react.useState)(defaultMenuPortalStyle);
+  const [menuStyle, setMenuStyle] = (0, import_react.useState)(
+    defaultMenuPortalStyle
+  );
   const sizeStyles = {
     sm: {
       container: "px-2.5 py-1 min-h-9",
@@ -235,6 +237,8 @@ var Autocomplete = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
         "aria-hidden": !isOpen,
@@ -302,8 +306,8 @@ var Autocomplete = ({
     ),
     document.body
   );
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `w-full ${className}`, children: [
-    label && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "mb-1.5 block text-sm font-medium text-(--text)", children: label }),
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `flex flex-col gap-1.5 w-full ${className}`, children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-medium text-(--text)", children: label }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { ref: containerRef, className: "relative w-full", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
       "div",
       {
@@ -318,7 +322,13 @@ var Autocomplete = ({
           boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.09), inset 0 -1px 1px rgba(0, 0, 0, 0.04)"
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_lucide_react.Search, { size: currentSize.icon, className: "shrink-0 text-(--text-muted)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            import_lucide_react.Search,
+            {
+              size: currentSize.icon,
+              className: "shrink-0 text-(--text-muted)"
+            }
+          ),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "input",
             {

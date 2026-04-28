@@ -1,12 +1,12 @@
 import {
   defaultMenuPortalStyle,
   resolveMenuPortalTokens
-} from "./chunk-XOI6MQ27.js";
+} from "./chunk-SGAAVMYN.js";
 import {
   getRadiusStyle
 } from "./chunk-H5DXVADS.js";
 
-// src/components/ui/autocomplete.tsx
+// src/components/ui/dropdown.tsx
 import {
   useEffect,
   useMemo,
@@ -14,69 +14,57 @@ import {
   useState
 } from "react";
 import { createPortal } from "react-dom";
-import { Check, Search } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { jsx, jsxs } from "react/jsx-runtime";
-var Autocomplete = ({
+var Dropdown = ({
   options,
   size = "lg",
   value,
   defaultValue,
   onChange,
-  onInputChange,
-  placeholder = "Search...",
-  emptyMessage = "No options found",
+  placeholder = "Select an option",
   label,
   radius = "md",
   disabled = false,
   className = ""
 }) => {
   const containerRef = useRef(null);
-  const fieldRef = useRef(null);
-  const inputRef = useRef(null);
+  const triggerRef = useRef(null);
   const menuRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredValue, setHoveredValue] = useState(null);
   const [internalValue, setInternalValue] = useState(defaultValue ?? "");
-  const [query, setQuery] = useState("");
   const [menuPosition, setMenuPosition] = useState({
     top: 0,
     left: 0,
     width: 0
   });
-  const [menuStyle, setMenuStyle] = useState(defaultMenuPortalStyle);
+  const [menuStyle, setMenuStyle] = useState(
+    defaultMenuPortalStyle
+  );
+  const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
-      container: "px-2.5 py-1 min-h-9",
+      trigger: "px-2.5 py-1 min-h-9",
       text: "text-xs",
       icon: 14
     },
     md: {
-      container: "px-3 py-1.5 min-h-10",
+      trigger: "px-3 py-1.5 min-h-10",
       text: "text-sm",
       icon: 15
     },
     lg: {
-      container: "px-3 py-2 min-h-11",
+      trigger: "px-3 py-2 min-h-11",
       text: "text-base",
       icon: 16
     }
   };
   const currentSize = sizeStyles[size];
-  const selectedValue = value ?? internalValue;
   const selectedOption = useMemo(
     () => options.find((option) => option.value === selectedValue),
     [options, selectedValue]
   );
-  const filteredOptions = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    if (!needle) return options;
-    return options.filter((option) => {
-      const labelText = option.label.toLowerCase();
-      const valueText = option.value.toLowerCase();
-      const descriptionText = typeof option.description === "string" ? option.description.toLowerCase() : "";
-      return labelText.includes(needle) || valueText.includes(needle) || descriptionText.includes(needle);
-    });
-  }, [options, query]);
   useEffect(() => {
     const handleOutsideClick = (event) => {
       const target = event.target;
@@ -92,7 +80,6 @@ var Autocomplete = ({
     onChange?.(nextValue);
     setHoveredValue(null);
     setIsOpen(false);
-    setQuery("");
   };
   useEffect(() => {
     if (isOpen) return;
@@ -101,10 +88,11 @@ var Autocomplete = ({
   useEffect(() => {
     if (!isOpen) return;
     const updatePosition = () => {
-      const fieldEl = fieldRef.current;
-      if (!fieldEl) return;
-      const rect = fieldEl.getBoundingClientRect();
-      const computedStyle = window.getComputedStyle(fieldEl);
+      const triggerEl = triggerRef.current;
+      if (!triggerEl) return;
+      const rect = triggerEl?.getBoundingClientRect();
+      if (!rect) return;
+      const computedStyle = window.getComputedStyle(triggerEl);
       setMenuPosition({
         top: rect.bottom + 8,
         left: rect.left,
@@ -120,8 +108,7 @@ var Autocomplete = ({
       window.removeEventListener("scroll", updatePosition, true);
     };
   }, [isOpen]);
-  const displayValue = isOpen ? query : selectedOption?.label ?? "";
-  const autocompleteMenu = !disabled && createPortal(
+  const dropdownMenu = !disabled && createPortal(
     /* @__PURE__ */ jsx(
       "div",
       {
@@ -133,23 +120,19 @@ var Autocomplete = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
         "aria-hidden": !isOpen,
-        children: filteredOptions.length === 0 ? /* @__PURE__ */ jsx(
-          "div",
-          {
-            className: "px-2.5 py-2 text-sm",
-            style: { color: menuStyle["--dropdown-text-muted"] },
-            children: emptyMessage
-          }
-        ) : /* @__PURE__ */ jsx("ul", { className: "m-0 list-none p-0", children: filteredOptions.map((option) => {
+        children: /* @__PURE__ */ jsx("ul", { className: "m-0 list-none p-0", children: options.map((option) => {
           const isSelected = option.value === selectedValue;
-          const isHovered = hoveredValue === option.value;
+          const isHovered = hoveredValue === option.value && !option.disabled;
           return /* @__PURE__ */ jsx("li", { className: "m-0 p-0", children: /* @__PURE__ */ jsxs(
             "button",
             {
               type: "button",
+              disabled: option.disabled,
               onClick: () => handleSelect(option.value),
               onMouseEnter: () => setHoveredValue(option.value),
               onMouseLeave: () => setHoveredValue(
@@ -200,49 +183,46 @@ var Autocomplete = ({
     ),
     document.body
   );
-  return /* @__PURE__ */ jsxs("div", { className: `w-full ${className}`, children: [
-    label && /* @__PURE__ */ jsx("label", { className: "mb-1.5 block text-sm font-medium text-(--text)", children: label }),
+  return /* @__PURE__ */ jsxs("div", { className: `flex flex-col gap-1.5 w-full ${className}`, children: [
+    label && /* @__PURE__ */ jsx("label", { className: "block text-sm font-medium text-(--text)", children: label }),
     /* @__PURE__ */ jsx("div", { ref: containerRef, className: "relative w-full", children: /* @__PURE__ */ jsxs(
-      "div",
+      "button",
       {
-        ref: fieldRef,
-        className: `flex w-full items-center gap-2 overflow-hidden transition-colors focus-within:border-(--ui-primary) ${currentSize.container}`,
+        ref: triggerRef,
+        type: "button",
+        disabled,
+        onClick: () => setIsOpen((prev) => !prev),
+        className: `flex w-full items-center justify-between gap-3 text-left text-(--text) transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:border-(--ui-primary) disabled:cursor-not-allowed disabled:opacity-60 ${currentSize.trigger} ${currentSize.text}`,
         style: {
           ...getRadiusStyle(radius),
           backgroundColor: "var(--bg-soft)",
           border: "0.5px solid var(--border)",
           outline: "0.5px solid var(--border)",
-          outlineOffset: 0,
-          boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.09), inset 0 -1px 1px rgba(0, 0, 0, 0.04)"
+          outlineOffset: 0
         },
         children: [
-          /* @__PURE__ */ jsx(Search, { size: currentSize.icon, className: "shrink-0 text-(--text-muted)" }),
           /* @__PURE__ */ jsx(
-            "input",
+            "span",
             {
-              ref: inputRef,
-              type: "text",
-              disabled,
-              value: displayValue,
-              onFocus: () => setIsOpen(true),
-              onChange: (event) => {
-                setIsOpen(true);
-                setQuery(event.target.value);
-                onInputChange?.(event.target.value);
-              },
-              placeholder,
-              className: `w-full bg-transparent text-(--text) outline-none placeholder:text-(--text-muted) disabled:opacity-60 ${currentSize.text}`,
-              style: { fontFamily: "var(--ui-font)" }
+              className: `truncate ${selectedOption ? "text-(--text)" : "text-(--text-muted)"} ${currentSize.text}`,
+              children: selectedOption?.label ?? placeholder
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            ChevronDown,
+            {
+              size: currentSize.icon,
+              className: `shrink-0 text-(--text-muted) transition-transform duration-200 ease-out motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`
             }
           )
         ]
       }
     ) }),
-    autocompleteMenu
+    dropdownMenu
   ] });
 };
 
 export {
-  Autocomplete
+  Dropdown
 };
-//# sourceMappingURL=chunk-7S5MHRE5.js.map
+//# sourceMappingURL=chunk-E3I3YQYN.js.map

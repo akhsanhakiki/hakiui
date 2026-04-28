@@ -62,7 +62,9 @@ export const Autocomplete = ({
     left: 0,
     width: 0,
   });
-  const [menuStyle, setMenuStyle] = useState<MenuPortalStyle>(defaultMenuPortalStyle);
+  const [menuStyle, setMenuStyle] = useState<MenuPortalStyle>(
+    defaultMenuPortalStyle,
+  );
 
   const sizeStyles = {
     sm: {
@@ -174,6 +176,8 @@ export const Autocomplete = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius,
         }}
         aria-hidden={!isOpen}
@@ -252,9 +256,9 @@ export const Autocomplete = ({
     );
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`flex flex-col gap-1.5 w-full ${className}`}>
       {label && (
-        <label className="mb-1.5 block text-sm font-medium text-(--text)">
+        <label className="block text-sm font-medium text-(--text)">
           {label}
         </label>
       )}
@@ -272,7 +276,10 @@ export const Autocomplete = ({
               "inset 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.09), inset 0 -1px 1px rgba(0, 0, 0, 0.04)",
           }}
         >
-          <Search size={currentSize.icon} className="shrink-0 text-(--text-muted)" />
+          <Search
+            size={currentSize.icon}
+            className="shrink-0 text-(--text-muted)"
+          />
           <input
             ref={inputRef}
             type="text"

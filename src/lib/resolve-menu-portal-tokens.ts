@@ -77,6 +77,7 @@ export const resolveMenuPortalTokens = (
   borderRadius: string;
 } => {
   const resolvedBg =
+    computedStyle.getPropertyValue("--bg-soft").trim() ||
     computedStyle.getPropertyValue("--bg").trim() ||
     computedStyle.backgroundColor ||
     "#fff";
@@ -115,8 +116,8 @@ export const resolveMenuPortalTokens = (
 };
 
 export const defaultMenuPortalStyle = (): MenuPortalStyle => ({
-  backgroundColor: "#fff",
-  borderColor: "rgba(0, 0, 0, 0.08)",
+  backgroundColor: "var(--bg-soft)",
+  borderColor: "var(--border)",
   borderRadius: "12px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
   "--dropdown-hover-fg": "#111827",

@@ -45,7 +45,7 @@ var getReadableTextColors = (backgroundColor) => {
   };
 };
 var resolveMenuPortalTokens = (computedStyle) => {
-  const resolvedBg = computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
+  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
   const resolvedBorder = computedStyle.getPropertyValue("--border").trim() || "rgba(0, 0, 0, 0.08)";
   const resolvedHover = computedStyle.getPropertyValue("--hover").trim() || "rgba(0, 0, 0, 0.06)";
   const resolvedRadius = computedStyle.borderRadius || "12px";
@@ -68,8 +68,8 @@ var resolveMenuPortalTokens = (computedStyle) => {
   };
 };
 var defaultMenuPortalStyle = () => ({
-  backgroundColor: "#fff",
-  borderColor: "rgba(0, 0, 0, 0.08)",
+  backgroundColor: "var(--bg-soft)",
+  borderColor: "var(--border)",
   borderRadius: "12px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
   "--dropdown-hover-fg": "#111827",
@@ -82,4 +82,4 @@ export {
   resolveMenuPortalTokens,
   defaultMenuPortalStyle
 };
-//# sourceMappingURL=chunk-XOI6MQ27.js.map
+//# sourceMappingURL=chunk-SGAAVMYN.js.map

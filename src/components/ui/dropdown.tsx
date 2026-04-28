@@ -150,6 +150,8 @@ export const Dropdown = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius,
         }}
         aria-hidden={!isOpen}

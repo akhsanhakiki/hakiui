@@ -83,7 +83,7 @@ var getReadableTextColors = (backgroundColor) => {
   };
 };
 var resolveMenuPortalTokens = (computedStyle) => {
-  const resolvedBg = computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
+  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
   const resolvedBorder = computedStyle.getPropertyValue("--border").trim() || "rgba(0, 0, 0, 0.08)";
   const resolvedHover = computedStyle.getPropertyValue("--hover").trim() || "rgba(0, 0, 0, 0.06)";
   const resolvedRadius = computedStyle.borderRadius || "12px";
@@ -106,8 +106,8 @@ var resolveMenuPortalTokens = (computedStyle) => {
   };
 };
 var defaultMenuPortalStyle = () => ({
-  backgroundColor: "#fff",
-  borderColor: "rgba(0, 0, 0, 0.08)",
+  backgroundColor: "var(--bg-soft)",
+  borderColor: "var(--border)",
   borderRadius: "12px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
   "--dropdown-hover-fg": "#111827",
@@ -141,7 +141,9 @@ var Dropdown = ({
     left: 0,
     width: 0
   });
-  const [menuStyle, setMenuStyle] = (0, import_react.useState)(defaultMenuPortalStyle);
+  const [menuStyle, setMenuStyle] = (0, import_react.useState)(
+    defaultMenuPortalStyle
+  );
   const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
@@ -220,6 +222,8 @@ var Dropdown = ({
           width: menuPosition.width,
           backgroundColor: menuStyle.backgroundColor,
           border: `0.5px solid ${menuStyle.borderColor}`,
+          outline: `0.5px solid ${menuStyle.borderColor}`,
+          outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
         "aria-hidden": !isOpen,
@@ -281,8 +285,8 @@ var Dropdown = ({
     ),
     document.body
   );
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `w-full ${className}`, children: [
-    label && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "mb-1.5 block text-sm font-medium text-(--text)", children: label }),
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `flex flex-col gap-1.5 w-full ${className}`, children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-medium text-(--text)", children: label }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { ref: containerRef, className: "relative w-full", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
       "button",
       {
