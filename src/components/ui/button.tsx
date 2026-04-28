@@ -51,7 +51,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     let variantStyle: React.CSSProperties = {
-      transition: "box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease",
+      transition:
+        "box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease",
     };
 
     if (variant === "primary") {
