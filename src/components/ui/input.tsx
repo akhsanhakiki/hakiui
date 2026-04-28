@@ -59,10 +59,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputContainer = (
       <div className="flex flex-col gap-1.5 w-full">
         <div
-          className={`flex w-full items-center overflow-hidden transition-colors focus-within:border-(--ui-primary) ${currentSize.container}`}
+          className={`flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${currentSize.container}`}
           style={{
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
+            color: "var(--text)",
             border: "0.5px solid var(--border)",
             outline: "0.5px solid var(--border)",
             outlineOffset: 0,
@@ -77,8 +78,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <input
               ref={ref}
               type={inputType}
-              className={`w-full bg-transparent text-(--text) outline-none placeholder:text-(--text-muted) ${currentSize.input} ${className}`}
-              style={{ fontFamily: "var(--ui-font)" }}
+              className={`w-full bg-transparent outline-none placeholder:text-(--text-muted) ${currentSize.input} ${className}`}
+              style={{
+                fontFamily: "var(--ui-font)",
+                color: "var(--text)",
+                caretColor: "var(--ui-primary)",
+              }}
               {...props}
             />
             {isPassword ? (

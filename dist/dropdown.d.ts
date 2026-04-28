@@ -10,6 +10,7 @@ interface DropdownOption {
 }
 interface DropdownProps {
     options: DropdownOption[];
+    size?: "sm" | "md" | "lg";
     value?: string;
     defaultValue?: string;
     onChange?: (value: string) => void;
@@ -19,6 +20,6 @@ interface DropdownProps {
     disabled?: boolean;
     className?: string;
 }
-declare const Dropdown: ({ options, value, defaultValue, onChange, placeholder, label, radius, disabled, className }: DropdownProps) => react_jsx_runtime.JSX.Element;
+declare const Dropdown: ({ options, size, value, defaultValue, onChange, placeholder, label, radius, disabled, className, }: DropdownProps) => react_jsx_runtime.JSX.Element;
 
 export { Dropdown, type DropdownOption, type DropdownProps };

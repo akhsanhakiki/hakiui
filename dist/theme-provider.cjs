@@ -48,7 +48,11 @@ var useTheme = () => {
   if (!context) throw new Error("useTheme must be used within a HakiProvider");
   return context;
 };
-var HakiProvider = ({ children, initialTheme = defaultTheme, className = "" }) => {
+var HakiProvider = ({
+  children,
+  initialTheme = defaultTheme,
+  className = ""
+}) => {
   const [theme, setTheme] = (0, import_react.useState)(initialTheme);
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThemeContext.Provider, { value: { theme, setTheme }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",

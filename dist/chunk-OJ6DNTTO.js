@@ -3,7 +3,11 @@ import {
 } from "./chunk-TIRNZKPP.js";
 
 // src/components/theme-provider.tsx
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState
+} from "react";
 import { jsx } from "react/jsx-runtime";
 var defaultTheme = {
   primaryColor: "#006FEE",
@@ -18,7 +22,11 @@ var useTheme = () => {
   if (!context) throw new Error("useTheme must be used within a HakiProvider");
   return context;
 };
-var HakiProvider = ({ children, initialTheme = defaultTheme, className = "" }) => {
+var HakiProvider = ({
+  children,
+  initialTheme = defaultTheme,
+  className = ""
+}) => {
   const [theme, setTheme] = useState(initialTheme);
   return /* @__PURE__ */ jsx(ThemeContext.Provider, { value: { theme, setTheme }, children: /* @__PURE__ */ jsx(
     "div",
@@ -42,4 +50,4 @@ export {
   useTheme,
   HakiProvider
 };
-//# sourceMappingURL=chunk-H5EAZYQH.js.map
+//# sourceMappingURL=chunk-OJ6DNTTO.js.map

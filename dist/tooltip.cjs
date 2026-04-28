@@ -51,7 +51,7 @@ var Tooltip = ({
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "div",
       {
-        className: `absolute z-50 whitespace-nowrap px-2.5 py-1.5 bg-[#27272a] text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none ${positionClasses[position]}`,
+        className: `pointer-events-none absolute z-50 whitespace-nowrap bg-(--surface) px-2.5 py-1.5 text-xs text-(--text) opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
         style: getRadiusStyle("sm"),
         children: content
       }

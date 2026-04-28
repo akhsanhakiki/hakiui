@@ -1,6 +1,6 @@
 import {
   Modal
-} from "./chunk-ZV3F4M62.js";
+} from "./chunk-WG4D5KTQ.js";
 export {
   Modal
 };

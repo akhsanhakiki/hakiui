@@ -29,9 +29,24 @@ var Radio = ({
   onChange,
   children
 }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { className: "flex items-center gap-2 cursor-pointer group w-fit", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `w-5 h-5 rounded-full flex items-center justify-center transition-colors ${!checked ? "border-2 border-[#27272a] group-hover:border-gray-400" : ""}`, style: checked ? { background: "var(--ui-primary-bg)" } : {}, children: checked && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "w-2 h-2 rounded-full bg-white" }) }),
-  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { type: "radio", className: "hidden", checked, onChange }),
-  children && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-sm text-gray-300 select-none", children })
+  /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    "div",
+    {
+      className: `flex h-5 w-5 items-center justify-center rounded-full transition-colors ${!checked ? "border-2 border-(--border) group-hover:border-(--ui-primary)" : ""}`,
+      style: checked ? { background: "var(--ui-primary-bg)" } : {},
+      children: checked && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "w-2 h-2 rounded-full bg-white" })
+    }
+  ),
+  /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    "input",
+    {
+      type: "radio",
+      className: "hidden",
+      checked,
+      onChange
+    }
+  ),
+  children && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "select-none text-sm text-(--text)", children })
 ] });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

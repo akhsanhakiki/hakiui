@@ -47,32 +47,57 @@ var getRadiusStyle = (radius = "md") => {
 // src/components/ui/button.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
 var Button = import_react.default.forwardRef(
-  ({ className = "", variant = "solid", size = "md", radius = "md", children, ...props }, ref) => {
+  ({
+    className = "",
+    variant = "primary",
+    size = "md",
+    radius = "md",
+    children,
+    ...props
+  }, ref) => {
     const sizeClasses = {
       sm: "h-8 px-3 text-sm",
       md: "h-10 px-4 text-sm",
       lg: "h-12 px-6 text-base"
     };
     let variantStyle = {};
-    if (variant === "solid") {
-      variantStyle = { background: "var(--ui-primary-bg)", color: "#ffffff", border: "none" };
-    } else if (variant === "bordered") {
+    if (variant === "primary") {
+      variantStyle = {
+        background: "var(--ui-primary-bg)",
+        color: "#ffffff",
+        border: "none"
+      };
+    } else if (variant === "secondary") {
+      variantStyle = {
+        backgroundColor: "rgb(var(--ui-primary-rgb) / 0.12)",
+        color: "var(--ui-primary)",
+        border: "none"
+      };
+    } else if (variant === "outline") {
       variantStyle = {
         backgroundColor: "transparent",
-        color: "var(--ui-primary)",
-        border: "2px solid var(--ui-primary)"
+        color: "var(--text)",
+        border: "1px solid var(--border)",
+        outline: "1px solid var(--border)",
+        outlineOffset: 0
       };
-    } else if (variant === "light") {
-      variantStyle = { backgroundColor: "transparent", color: "var(--ui-primary)", border: "none" };
-    } else if (variant === "flat") {
-      variantStyle = { backgroundColor: "rgb(var(--ui-primary-rgb) / 0.2)", color: "var(--ui-primary)", border: "none" };
+    } else if (variant === "ghost") {
+      variantStyle = {
+        backgroundColor: "transparent",
+        color: "var(--text)",
+        border: "none"
+      };
     }
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "button",
       {
         ref,
-        className: `font-medium transition-transform active:scale-95 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses[size]} ${className}`,
-        style: { ...getRadiusStyle(radius), fontFamily: "var(--ui-font)", ...variantStyle },
+        className: `font-medium transition-transform active:scale-95 inline-flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer ${sizeClasses[size]} ${className}`,
+        style: {
+          ...getRadiusStyle(radius),
+          fontFamily: "var(--ui-font)",
+          ...variantStyle
+        },
         ...props,
         children
       }

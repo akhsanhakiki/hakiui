@@ -25,20 +25,22 @@ __export(tabs_exports, {
 module.exports = __toCommonJS(tabs_exports);
 var import_react = require("react");
 var import_jsx_runtime = require("react/jsx-runtime");
-var Tabs = ({ items }) => {
+var Tabs = ({
+  items
+}) => {
   const [active, setActive] = (0, import_react.useState)(items[0]?.id ?? "");
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-col gap-4", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex border-b border-[#27272a] w-full", children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex w-full border-b border-(--border)", children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "button",
       {
         type: "button",
         onClick: () => setActive(item.id),
-        className: `px-4 py-3 text-sm font-medium border-b-2 transition-colors -mb-[1px] ${active === item.id ? "border-[color:var(--ui-primary)] text-white" : "border-transparent text-gray-400 hover:text-gray-200"}`,
+        className: `-mb-px border-b-2 px-4 py-3 text-sm font-medium transition-colors ${active === item.id ? "border-(--ui-primary) text-(--text)" : "border-transparent text-(--text-muted) hover:text-(--text)"}`,
         children: item.label
       },
       item.id
     )) }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "px-2 py-2 text-gray-300", children: items.find((i) => i.id === active)?.content })
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "px-2 py-2 text-(--text)", children: items.find((i) => i.id === active)?.content })
   ] });
 };
 // Annotate the CommonJS export names for ESM import in node:

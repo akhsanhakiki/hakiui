@@ -48,25 +48,65 @@ var getRadiusStyle = (radius = "md") => {
 // src/components/ui/input.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
 var Input = import_react.default.forwardRef(
-  ({ className = "", label, labelPlacement = "top", description, startContent, endContent, radius = "md", type, ...props }, ref) => {
+  ({
+    className = "",
+    size = "lg",
+    label,
+    labelPlacement = "top",
+    description,
+    startContent,
+    endContent,
+    radius = "md",
+    type,
+    ...props
+  }, ref) => {
     const [showPassword, setShowPassword] = (0, import_react.useState)(false);
     const isPassword = type === "password";
     const inputType = isPassword ? showPassword ? "text" : "password" : type;
+    const sizeStyles = {
+      sm: {
+        container: "px-2.5 py-1",
+        input: "text-xs",
+        icon: 14,
+        labelLeftOffset: "mt-1.5"
+      },
+      md: {
+        container: "px-3 py-1.5",
+        input: "text-sm",
+        icon: 15,
+        labelLeftOffset: "mt-2"
+      },
+      lg: {
+        container: "px-3 py-2",
+        input: "text-base",
+        icon: 16,
+        labelLeftOffset: "mt-2.5"
+      }
+    };
+    const currentSize = sizeStyles[size];
     const inputContainer = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-col gap-1.5 w-full", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "div",
         {
-          className: "flex items-center w-full bg-[#27272a] border-2 border-transparent focus-within:border-[color:var(--ui-primary)] transition-colors overflow-hidden px-3 py-2",
-          style: getRadiusStyle(radius),
+          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-[color:var(--ui-primary)]/35 ${currentSize.container}`,
+          style: {
+            ...getRadiusStyle(radius),
+            backgroundColor: "var(--bg-soft)",
+            color: "var(--text)"
+          },
           children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center w-full gap-2", children: [
-            startContent && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-gray-400 shrink-0 flex items-center justify-center", children: startContent }),
+            startContent && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex shrink-0 items-center justify-center text-(--text-muted)", children: startContent }),
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
               "input",
               {
                 ref,
                 type: inputType,
-                className: `w-full bg-transparent text-white outline-none placeholder:text-gray-500 ${className}`,
-                style: { fontFamily: "var(--ui-font)" },
+                className: `w-full bg-transparent outline-none placeholder:text-(--text-muted) ${currentSize.input} ${className}`,
+                style: {
+                  fontFamily: "var(--ui-font)",
+                  color: "var(--text)",
+                  caretColor: "var(--ui-primary)"
+                },
                 ...props
               }
             ),
@@ -75,20 +115,32 @@ var Input = import_react.default.forwardRef(
               {
                 type: "button",
                 onClick: () => setShowPassword(!showPassword),
-                className: "text-gray-400 hover:text-white shrink-0 flex items-center justify-center transition-colors",
-                children: showPassword ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_lucide_react.EyeOff, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_lucide_react.Eye, { size: 16 })
+                className: "flex shrink-0 items-center justify-center text-(--text-muted) transition-colors hover:text-(--text)",
+                children: showPassword ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_lucide_react.EyeOff, { size: currentSize.icon }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_lucide_react.Eye, { size: currentSize.icon })
               }
-            ) : endContent ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-gray-400 shrink-0 flex items-center justify-center", children: endContent }) : null
+            ) : endContent ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex shrink-0 items-center justify-center text-(--text-muted)", children: endContent }) : null
           ] })
         }
       ),
-      description && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-xs text-gray-500 pl-1", children: description })
+      description && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "pl-1 text-xs text-(--text-muted)", children: description })
     ] });
     if (!label) return inputContainer;
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `flex ${labelPlacement === "left" ? "flex-row items-start gap-4" : "flex-col gap-1.5"} w-full`, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: `text-sm font-medium text-gray-300 whitespace-nowrap ${labelPlacement === "left" ? "mt-2.5" : ""}`, children: label }),
-      inputContainer
-    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      "div",
+      {
+        className: `flex ${labelPlacement === "left" ? "flex-row items-start gap-4" : "flex-col gap-1.5"} w-full`,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "label",
+            {
+              className: `whitespace-nowrap text-sm font-medium text-(--text) ${labelPlacement === "left" ? currentSize.labelLeftOffset : ""}`,
+              children: label
+            }
+          ),
+          inputContainer
+        ]
+      }
+    );
   }
 );
 Input.displayName = "Input";

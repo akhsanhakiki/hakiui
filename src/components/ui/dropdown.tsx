@@ -8,6 +8,11 @@ import React, {
 import { createPortal } from "react-dom";
 import { Check, ChevronDown } from "lucide-react";
 import { getRadiusStyle, type Radius } from "../../lib/radius";
+import {
+  defaultMenuPortalStyle,
+  resolveMenuPortalTokens,
+  type MenuPortalStyle,
+} from "../../lib/resolve-menu-portal-tokens";
 
 export interface DropdownOption {
   label: string;
@@ -45,8 +50,16 @@ export const Dropdown = ({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredValue, setHoveredValue] = useState<string | null>(null);
   const [internalValue, setInternalValue] = useState(defaultValue ?? "");
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [menuPosition, setMenuPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+  const [menuStyle, setMenuStyle] = useState<MenuPortalStyle>(
+    defaultMenuPortalStyle,
+  );
   const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
@@ -89,19 +102,31 @@ export const Dropdown = ({
   const handleSelect = (nextValue: string) => {
     if (value === undefined) setInternalValue(nextValue);
     onChange?.(nextValue);
+    setHoveredValue(null);
     setIsOpen(false);
   };
 
   useEffect(() => {
+    if (isOpen) return;
+    setHoveredValue(null);
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
     const updatePosition = () => {
-      const rect = triggerRef.current?.getBoundingClientRect();
+      const triggerEl = triggerRef.current;
+      if (!triggerEl) return;
+      const rect = triggerEl?.getBoundingClientRect();
       if (!rect) return;
+
+      const computedStyle = window.getComputedStyle(triggerEl);
+
       setMenuPosition({
         top: rect.bottom + 8,
         left: rect.left,
         width: rect.width,
       });
+      setMenuStyle(resolveMenuPortalTokens(computedStyle));
     };
 
     updatePosition();
@@ -118,58 +143,87 @@ export const Dropdown = ({
     createPortal(
       <div
         ref={menuRef}
-        className={`fixed z-9999 max-h-64 overflow-y-auto p-1.5 shadow-xl transition-all duration-200 ease-out motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1 scale-[0.98] opacity-0"}`}
+        className={`fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`}
         style={{
-          ...getRadiusStyle(radius),
           top: menuPosition.top,
           left: menuPosition.left,
           width: menuPosition.width,
-          backgroundColor: "var(--bg)",
-          border: "0.5px solid var(--border)",
-          outline: "0.5px solid var(--border)",
-          outlineOffset: 0,
+          backgroundColor: menuStyle.backgroundColor,
+          border: `0.5px solid ${menuStyle.borderColor}`,
+          borderRadius: menuStyle.borderRadius,
         }}
         aria-hidden={!isOpen}
       >
-        {options.map((option) => {
-          const isSelected = option.value === selectedValue;
-          return (
-            <button
-              type="button"
-              key={option.value}
-              disabled={option.disabled}
-              onClick={() => handleSelect(option.value)}
-              className="flex w-full items-start justify-between gap-2 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-(--hover) disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <div className="min-w-0">
-                <div
-                  className={`truncate text-sm ${isSelected ? "font-medium text-(--text)" : "text-(--text)"}`}
+        <ul className="m-0 list-none p-0">
+          {options.map((option) => {
+            const isSelected = option.value === selectedValue;
+            const isHovered = hoveredValue === option.value && !option.disabled;
+
+            return (
+              <li key={option.value} className="m-0 p-0">
+                <button
+                  type="button"
+                  disabled={option.disabled}
+                  onClick={() => handleSelect(option.value)}
+                  onMouseEnter={() => setHoveredValue(option.value)}
+                  onMouseLeave={() =>
+                    setHoveredValue((current) =>
+                      current === option.value ? null : current,
+                    )
+                  }
+                  className="flex w-full items-start justify-between gap-2 rounded-lg px-2.5 py-2 text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40"
+                  style={{
+                    transform: isHovered
+                      ? "translateY(-0.5px) scale(1.003)"
+                      : "translateY(0) scale(1)",
+                    boxShadow: isHovered
+                      ? "inset 0 0 0 0.5px color-mix(in oklab, var(--border) 50%, transparent)"
+                      : "none",
+                    backgroundColor: isHovered
+                      ? `color-mix(in oklab, ${menuStyle.backgroundColor} 88%, ${menuStyle["--dropdown-hover-bg"]} 35%)`
+                      : "transparent",
+                    color: menuStyle["--dropdown-text"],
+                  }}
                 >
-                  {option.label}
-                </div>
-                {option.description && (
-                  <div className="mt-0.5 truncate text-xs text-(--text-muted)">
-                    {option.description}
+                  <div className="min-w-0">
+                    <div
+                      className={`truncate text-sm transition-colors duration-200 ${isSelected ? "font-medium" : ""}`}
+                      style={{
+                        color: menuStyle["--dropdown-text"],
+                      }}
+                    >
+                      {option.label}
+                    </div>
+                    {option.description && (
+                      <div
+                        className="mt-0.5 truncate text-xs transition-colors duration-200"
+                        style={{
+                          color: menuStyle["--dropdown-text-muted"],
+                        }}
+                      >
+                        {option.description}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              {isSelected && (
-                <Check
-                  size={16}
-                  className="mt-0.5 text-(--ui-primary) shrink-0"
-                />
-              )}
-            </button>
-          );
-        })}
+                  {isSelected && (
+                    <Check
+                      size={16}
+                      className="mt-0.5 shrink-0 text-(--ui-primary)"
+                    />
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>,
       document.body,
     );
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`flex flex-col gap-1.5 w-full ${className}`}>
       {label && (
-        <label className="mb-1.5 block text-sm font-medium text-(--text)">
+        <label className="block text-sm font-medium text-(--text)">
           {label}
         </label>
       )}

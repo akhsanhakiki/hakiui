@@ -1,6 +1,6 @@
 import {
   Pagination
-} from "./chunk-WX5HS7MU.js";
+} from "./chunk-HPUECJFP.js";
 export {
   Pagination
 };

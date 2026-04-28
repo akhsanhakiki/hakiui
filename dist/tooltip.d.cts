@@ -1,7 +1,7 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
 
-declare const Tooltip: ({ content, position, children }: {
+declare const Tooltip: ({ content, position, children, }: {
     content: ReactNode;
     position?: "top" | "bottom" | "left" | "right";
     children: ReactNode;

@@ -5,7 +5,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow
-} from "./chunk-K3HWB2JW.js";
+} from "./chunk-NLNCFXYD.js";
 import "./chunk-H5DXVADS.js";
 export {
   Table,

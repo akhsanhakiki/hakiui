@@ -9,6 +9,7 @@ interface AutocompleteOption {
 }
 interface AutocompleteProps {
     options: AutocompleteOption[];
+    size?: "sm" | "md" | "lg";
     value?: string;
     defaultValue?: string;
     onChange?: (value: string) => void;
@@ -20,6 +21,6 @@ interface AutocompleteProps {
     disabled?: boolean;
     className?: string;
 }
-declare const Autocomplete: ({ options, value, defaultValue, onChange, onInputChange, placeholder, emptyMessage, label, radius, disabled, className }: AutocompleteProps) => react_jsx_runtime.JSX.Element;
+declare const Autocomplete: ({ options, size, value, defaultValue, onChange, onInputChange, placeholder, emptyMessage, label, radius, disabled, className, }: AutocompleteProps) => react_jsx_runtime.JSX.Element;
 
 export { Autocomplete, type AutocompleteOption, type AutocompleteProps };

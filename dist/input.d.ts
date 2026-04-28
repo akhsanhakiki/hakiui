@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Radius } from './radius.js';
 
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
+    size?: "sm" | "md" | "lg";
     label?: string;
     labelPlacement?: "top" | "left";
     description?: ReactNode;

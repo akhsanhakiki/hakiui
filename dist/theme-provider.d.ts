@@ -19,6 +19,6 @@ type HakiProviderProps = {
     initialTheme?: Theme;
     className?: string;
 };
-declare const HakiProvider: ({ children, initialTheme, className }: HakiProviderProps) => react_jsx_runtime.JSX.Element;
+declare const HakiProvider: ({ children, initialTheme, className, }: HakiProviderProps) => react_jsx_runtime.JSX.Element;
 
 export { HakiProvider, type HakiProviderProps, type Theme, defaultTheme, useTheme };

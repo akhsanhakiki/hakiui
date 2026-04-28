@@ -1,7 +1,7 @@
 import {
   Accordion,
   AccordionItem
-} from "./chunk-BL4Z7D57.js";
+} from "./chunk-F6Y46EKV.js";
 import "./chunk-H5DXVADS.js";
 export {
   Accordion,

@@ -2,7 +2,7 @@ import React from 'react';
 import { Radius } from './radius.js';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: "solid" | "bordered" | "light" | "flat";
+    variant?: "primary" | "secondary" | "outline" | "ghost";
     size?: "sm" | "md" | "lg";
     radius?: Radius;
 }

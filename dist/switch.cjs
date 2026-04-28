@@ -36,8 +36,28 @@ var Switch = ({
   };
   const current = sizes[size];
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { className: "flex items-center cursor-pointer", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `relative ${current.w} ${current.h} rounded-full transition-colors ${!checked ? "bg-[#3f3f46]" : ""}`, style: checked ? { background: "var(--ui-primary-bg)" } : {}, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `absolute top-0.5 left-0.5 bg-white rounded-full transition-transform ${current.circle} ${checked ? current.translate : "translate-x-0"}` }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { type: "checkbox", className: "hidden", checked, onChange: (e) => onChange(e.target.checked) })
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "div",
+      {
+        className: `relative ${current.w} ${current.h} rounded-full transition-colors ${!checked ? "bg-(--input)" : ""}`,
+        style: checked ? { background: "var(--ui-primary-bg)" } : {},
+        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "div",
+          {
+            className: `absolute top-0.5 left-0.5 bg-white rounded-full transition-transform ${current.circle} ${checked ? current.translate : "translate-x-0"}`
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "input",
+      {
+        type: "checkbox",
+        className: "hidden",
+        checked,
+        onChange: (e) => onChange(e.target.checked)
+      }
+    )
   ] });
 };
 // Annotate the CommonJS export names for ESM import in node:

@@ -38,16 +38,44 @@ var getRadiusStyle = (radius = "md") => {
 
 // src/components/ui/accordion.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
-var Accordion = ({ children, className = "" }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `flex flex-col gap-2 w-full ${className}`, children });
-var AccordionItem = ({ title, children, radius = "md" }) => {
+var Accordion = ({
+  children,
+  className = ""
+}) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `flex flex-col gap-2 w-full ${className}`, children });
+var AccordionItem = ({
+  title,
+  children,
+  radius = "md"
+}) => {
   const [isOpen, setIsOpen] = (0, import_react.useState)(false);
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "bg-[#18181b] border border-[#27272a] overflow-hidden", style: getRadiusStyle(radius), children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { type: "button", onClick: () => setIsOpen(!isOpen), className: "w-full flex items-center justify-between p-4 text-left hover:bg-[#27272a]/50 transition-colors", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "font-medium text-white", children: title }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_lucide_react.ChevronDown, { size: 18, className: `text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}` })
-    ] }),
-    isOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "p-4 pt-0 text-gray-400 text-sm border-t border-[#27272a] mt-2", children })
-  ] });
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+    "div",
+    {
+      className: "overflow-hidden border border-(--border) bg-(--surface)",
+      style: getRadiusStyle(radius),
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "button",
+          {
+            type: "button",
+            onClick: () => setIsOpen(!isOpen),
+            className: "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-(--hover)",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "font-medium text-(--text)", children: title }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                import_lucide_react.ChevronDown,
+                {
+                  size: 18,
+                  className: `text-(--text-muted) transition-transform ${isOpen ? "rotate-180" : ""}`
+                }
+              )
+            ]
+          }
+        ),
+        isOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mt-2 border-t border-(--border) p-4 pt-0 text-sm text-(--text-muted)", children })
+      ]
+    }
+  );
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

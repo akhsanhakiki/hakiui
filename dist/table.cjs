@@ -40,11 +40,21 @@ var getRadiusStyle = (radius = "md") => {
 
 // src/components/ui/table.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
-var Table = ({ children, radius = "lg" }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "w-full overflow-hidden border border-[#27272a] bg-[#18181b]", style: getRadiusStyle(radius), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", { className: "w-full text-left border-collapse", children }) });
-var TableHeader = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { className: "bg-[#27272a]/40 text-gray-400 text-sm", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", { className: "border-b border-[#27272a]", children }) });
+var Table = ({
+  children,
+  radius = "lg"
+}) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+  "div",
+  {
+    className: "w-full overflow-hidden border border-(--border) bg-(--surface)",
+    style: getRadiusStyle(radius),
+    children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", { className: "w-full text-left border-collapse", children })
+  }
+);
+var TableHeader = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { className: "bg-(--bg-soft) text-(--text-muted) text-sm", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", { className: "border-b border-(--border)", children }) });
 var TableColumn = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { className: "px-4 py-3 font-medium font-sans", children });
-var TableBody = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { className: "text-sm text-gray-300", children });
-var TableRow = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", { className: "border-b border-[#27272a] last:border-0 hover:bg-[#27272a]/20 transition-colors", children });
+var TableBody = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { className: "text-sm text-(--text)", children });
+var TableRow = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", { className: "border-b border-(--border) transition-colors hover:bg-(--hover) last:border-0", children });
 var TableCell = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { className: "px-4 py-3", children });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
