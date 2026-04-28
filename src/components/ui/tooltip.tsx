@@ -22,8 +22,8 @@ export const Tooltip = ({
       <div
         className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`}
         style={{
-          backgroundColor: "rgb(var(--ui-primary-rgb) / 0.12)",
-          color: "var(--ui-primary)",
+          backgroundColor: "color-mix(in srgb, var(--bg-soft) 80%, white)",
+          color: "var(--text)",
           fontFamily: "var(--ui-font)",
         }}
       >
