@@ -1,5 +1,4 @@
 import React, { type ReactNode } from "react";
-import { getRadiusStyle } from "../../lib/radius";
 
 export const Tooltip = ({
   content,
@@ -21,8 +20,12 @@ export const Tooltip = ({
     <div className="relative group flex items-center justify-center">
       {children}
       <div
-        className={`pointer-events-none absolute z-50 whitespace-nowrap bg-(--surface) px-2.5 py-1.5 text-xs text-(--text) opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`}
-        style={getRadiusStyle("sm")}
+        className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`}
+        style={{
+          backgroundColor: "rgb(var(--ui-primary-rgb) / 0.12)",
+          color: "var(--ui-primary)",
+          fontFamily: "var(--ui-font)",
+        }}
       >
         {content}
       </div>

@@ -19,8 +19,10 @@ export const Switch = ({
   return (
     <label className="flex items-center cursor-pointer">
       <div
-        className={`relative ${current.w} ${current.h} rounded-full transition-colors ${!checked ? "bg-(--input)" : ""}`}
-        style={checked ? { background: "var(--ui-primary-bg)" } : {}}
+        className={`relative ${current.w} ${current.h} rounded-full transition-colors`}
+        style={{
+          backgroundColor: checked ? "var(--ui-primary-bg)" : "var(--bg-soft)",
+        }}
       >
         <div
           className={`absolute top-0.5 left-0.5 bg-white rounded-full transition-transform ${current.circle} ${checked ? current.translate : "translate-x-0"}`}

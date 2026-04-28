@@ -8,7 +8,10 @@ export const Tabs = ({
   const [active, setActive] = useState(items[0]?.id ?? "");
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex w-full border-b border-(--border)">
+      <div
+        className="flex w-full border-b"
+        style={{ borderColor: "color-mix(in srgb, var(--border) 50%, transparent)" }}
+      >
         {items.map((item) => (
           <button
             type="button"
