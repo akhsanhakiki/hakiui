@@ -149,9 +149,27 @@ This package uses Tailwind utility classes and CSS variables. `HakiProvider` pro
 
 ## Publish (maintainer)
 
+Releases are published to npm via [Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) (OIDC) from GitHub Actions — no long-lived `NPM_TOKEN` required.
+
+1. On [npm package settings](https://www.npmjs.com/package/@hakistudio/hakiui/access), add a Trusted Publisher:
+   - Organization or user: `akhsanhakiki`
+   - Repository: `hakiui`
+   - Workflow filename: `publish.yml`
+   - Environment name: leave blank
+   - Allowed actions: `npm publish`
+2. Bump `version` in `package.json`, commit, then tag and push:
+
+```bash
+# after bumping package.json "version" (e.g. 2.0.1)
+git tag v2.0.1
+git push origin v2.0.1
+```
+
+The `.github/workflows/publish.yml` workflow runs on `v*` tags and publishes `@hakistudio/hakiui`.
+
+Manual fallback (local):
+
 ```bash
 npm login
 npm publish --access public
 ```
-
-Scoped package `@hakistudio/hakiui` publishes under the `hakistudio` npm org or user; ensure you are logged in as that account.

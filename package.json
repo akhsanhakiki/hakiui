@@ -4,6 +4,14 @@
   "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akhsanhakiki/hakiui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akhsanhakiki/hakiui/issues"
+  },
+  "homepage": "https://github.com/akhsanhakiki/hakiui#readme",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -196,6 +204,7 @@
     "hakiui"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
