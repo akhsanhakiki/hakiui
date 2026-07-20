@@ -67,6 +67,30 @@ var resolveMenuPortalTokens = (computedStyle) => {
     "--dropdown-text-muted": resolvedTextMuted || "#6E6A5E"
   };
 };
+var PORTAL_THEME_VARS = [
+  "--ui-primary",
+  "--ui-primary-rgb",
+  "--ui-gradient",
+  "--ui-primary-bg",
+  "--ui-font",
+  "--ui-radius",
+  "--bg",
+  "--bg-soft",
+  "--surface",
+  "--border",
+  "--input",
+  "--text",
+  "--text-muted",
+  "--hover"
+];
+var resolveThemeVarStyle = (computedStyle) => {
+  const style = {};
+  for (const name of PORTAL_THEME_VARS) {
+    const value = computedStyle.getPropertyValue(name).trim();
+    if (value) style[name] = value;
+  }
+  return style;
+};
 var defaultMenuPortalStyle = () => ({
   backgroundColor: "var(--bg-soft)",
   borderColor: "var(--border)",
@@ -80,6 +104,7 @@ var defaultMenuPortalStyle = () => ({
 
 export {
   resolveMenuPortalTokens,
+  resolveThemeVarStyle,
   defaultMenuPortalStyle
 };
-//# sourceMappingURL=chunk-U5LN2XUF.js.map
+//# sourceMappingURL=chunk-SA6EOMZP.js.map

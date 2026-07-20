@@ -105,6 +105,30 @@ var resolveMenuPortalTokens = (computedStyle) => {
     "--dropdown-text-muted": resolvedTextMuted || "#6E6A5E"
   };
 };
+var PORTAL_THEME_VARS = [
+  "--ui-primary",
+  "--ui-primary-rgb",
+  "--ui-gradient",
+  "--ui-primary-bg",
+  "--ui-font",
+  "--ui-radius",
+  "--bg",
+  "--bg-soft",
+  "--surface",
+  "--border",
+  "--input",
+  "--text",
+  "--text-muted",
+  "--hover"
+];
+var resolveThemeVarStyle = (computedStyle) => {
+  const style = {};
+  for (const name of PORTAL_THEME_VARS) {
+    const value = computedStyle.getPropertyValue(name).trim();
+    if (value) style[name] = value;
+  }
+  return style;
+};
 var defaultMenuPortalStyle = () => ({
   backgroundColor: "var(--bg-soft)",
   borderColor: "var(--border)",
@@ -148,6 +172,7 @@ var Autocomplete = ({
   const [menuStyle, setMenuStyle] = (0, import_react.useState)(
     defaultMenuPortalStyle
   );
+  const [themeVars, setThemeVars] = (0, import_react.useState)({});
   const sizeStyles = {
     sm: {
       container: "px-2.5 py-1 min-h-9",
@@ -215,6 +240,7 @@ var Autocomplete = ({
         width: rect.width
       });
       setMenuStyle(resolveMenuPortalTokens(computedStyle));
+      setThemeVars(resolveThemeVarStyle(computedStyle));
     };
     updatePosition();
     window.addEventListener("resize", updatePosition);
@@ -232,6 +258,7 @@ var Autocomplete = ({
         ref: menuRef,
         className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`,
         style: {
+          ...themeVars,
           top: menuPosition.top,
           left: menuPosition.left,
           width: menuPosition.width,

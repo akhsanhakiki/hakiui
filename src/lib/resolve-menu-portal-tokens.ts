@@ -115,6 +115,39 @@ export const resolveMenuPortalTokens = (
   };
 };
 
+const PORTAL_THEME_VARS = [
+  "--ui-primary",
+  "--ui-primary-rgb",
+  "--ui-gradient",
+  "--ui-primary-bg",
+  "--ui-font",
+  "--ui-radius",
+  "--bg",
+  "--bg-soft",
+  "--surface",
+  "--border",
+  "--input",
+  "--text",
+  "--text-muted",
+  "--hover",
+] as const;
+
+/**
+ * Copy the theme CSS variables from an element inside the themed tree so a
+ * portal rendered on document.body (outside the HakiProvider scope) can still
+ * resolve var(--ui-primary), var(--surface), etc.
+ */
+export const resolveThemeVarStyle = (
+  computedStyle: CSSStyleDeclaration,
+): Record<string, string> => {
+  const style: Record<string, string> = {};
+  for (const name of PORTAL_THEME_VARS) {
+    const value = computedStyle.getPropertyValue(name).trim();
+    if (value) style[name] = value;
+  }
+  return style;
+};
+
 export const defaultMenuPortalStyle = (): MenuPortalStyle => ({
   backgroundColor: "var(--bg-soft)",
   borderColor: "var(--border)",

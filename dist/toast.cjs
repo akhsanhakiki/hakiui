@@ -37,6 +37,32 @@ var getRadiusStyle = (radius = "md") => {
   return { borderRadius: "var(--ui-radius)" };
 };
 
+// src/lib/resolve-menu-portal-tokens.ts
+var PORTAL_THEME_VARS = [
+  "--ui-primary",
+  "--ui-primary-rgb",
+  "--ui-gradient",
+  "--ui-primary-bg",
+  "--ui-font",
+  "--ui-radius",
+  "--bg",
+  "--bg-soft",
+  "--surface",
+  "--border",
+  "--input",
+  "--text",
+  "--text-muted",
+  "--hover"
+];
+var resolveThemeVarStyle = (computedStyle) => {
+  const style = {};
+  for (const name of PORTAL_THEME_VARS) {
+    const value = computedStyle.getPropertyValue(name).trim();
+    if (value) style[name] = value;
+  }
+  return style;
+};
+
 // src/components/ui/toast.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
 var ToastContext = (0, import_react.createContext)(void 0);
@@ -61,13 +87,19 @@ var ToastProvider = ({
 }) => {
   const [toasts, setToasts] = (0, import_react.useState)([]);
   const [mounted, setMounted] = (0, import_react.useState)(false);
+  const [themeVars, setThemeVars] = (0, import_react.useState)({});
   const idRef = (0, import_react.useRef)(0);
+  const anchorRef = (0, import_react.useRef)(null);
   const timersRef = (0, import_react.useRef)(/* @__PURE__ */ new Map());
   (0, import_react.useEffect)(() => {
     setMounted(true);
     const timers = timersRef.current;
     return () => timers.forEach((t) => clearTimeout(t));
   }, []);
+  (0, import_react.useEffect)(() => {
+    if (toasts.length === 0 || !anchorRef.current) return;
+    setThemeVars(resolveThemeVarStyle(getComputedStyle(anchorRef.current)));
+  }, [toasts.length]);
   const dismiss = (0, import_react.useCallback)((id) => {
     const pending = timersRef.current.get(id);
     if (pending) {
@@ -113,11 +145,13 @@ var ToastProvider = ({
   const fromTop = position.startsWith("top");
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ToastContext.Provider, { value: contextValue, children: [
     children,
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { ref: anchorRef, hidden: true, "aria-hidden": true }),
     mounted && (0, import_react_dom.createPortal)(
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "div",
         {
           className: `pointer-events-none fixed z-9999 flex w-full max-w-sm flex-col gap-2 ${positionClasses}`,
+          style: themeVars,
           role: "region",
           "aria-label": "Notifications",
           children: toasts.map((t) => {

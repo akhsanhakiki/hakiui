@@ -17,6 +17,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { getRadiusStyle, type Radius } from "../../lib/radius";
+import { resolveThemeVarStyle } from "../../lib/resolve-menu-portal-tokens";
 
 export type ToastVariant = "default" | "success" | "error" | "warning" | "info";
 
@@ -72,7 +73,9 @@ export const ToastProvider = ({
 }: ToastProviderProps) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [themeVars, setThemeVars] = useState<Record<string, string>>({});
   const idRef = useRef(0);
+  const anchorRef = useRef<HTMLSpanElement>(null);
   const timersRef = useRef(new Map<number, ReturnType<typeof setTimeout>>());
 
   useEffect(() => {
@@ -80,6 +83,13 @@ export const ToastProvider = ({
     const timers = timersRef.current;
     return () => timers.forEach((t) => clearTimeout(t));
   }, []);
+
+  // The stack portals to document.body, outside the themed tree — snapshot the
+  // theme variables from inside it whenever toasts are shown.
+  useEffect(() => {
+    if (toasts.length === 0 || !anchorRef.current) return;
+    setThemeVars(resolveThemeVarStyle(getComputedStyle(anchorRef.current)));
+  }, [toasts.length]);
 
   const dismiss = useCallback((id: number) => {
     const pending = timersRef.current.get(id);
@@ -131,10 +141,12 @@ export const ToastProvider = ({
   return (
     <ToastContext.Provider value={contextValue}>
       {children}
+      <span ref={anchorRef} hidden aria-hidden />
       {mounted &&
         createPortal(
           <div
             className={`pointer-events-none fixed z-9999 flex w-full max-w-sm flex-col gap-2 ${positionClasses}`}
+            style={themeVars as React.CSSProperties}
             role="region"
             aria-label="Notifications"
           >

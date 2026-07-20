@@ -11,6 +11,7 @@ import { getRadiusStyle, type Radius } from "../../lib/radius";
 import {
   defaultMenuPortalStyle,
   resolveMenuPortalTokens,
+  resolveThemeVarStyle,
   type MenuPortalStyle,
 } from "../../lib/resolve-menu-portal-tokens";
 
@@ -65,6 +66,7 @@ export const Autocomplete = ({
   const [menuStyle, setMenuStyle] = useState<MenuPortalStyle>(
     defaultMenuPortalStyle,
   );
+  const [themeVars, setThemeVars] = useState<Record<string, string>>({});
 
   const sizeStyles = {
     sm: {
@@ -151,6 +153,7 @@ export const Autocomplete = ({
         width: rect.width,
       });
       setMenuStyle(resolveMenuPortalTokens(computedStyle));
+      setThemeVars(resolveThemeVarStyle(computedStyle));
     };
 
     updatePosition();
@@ -171,6 +174,7 @@ export const Autocomplete = ({
         ref={menuRef}
         className={`fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`}
         style={{
+          ...(themeVars as React.CSSProperties),
           top: menuPosition.top,
           left: menuPosition.left,
           width: menuPosition.width,

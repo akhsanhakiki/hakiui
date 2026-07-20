@@ -5,6 +5,7 @@ import { getRadiusStyle, type Radius } from "../../lib/radius";
 import {
   defaultMenuPortalStyle,
   resolveMenuPortalTokens,
+  resolveThemeVarStyle,
   type MenuPortalStyle,
 } from "../../lib/resolve-menu-portal-tokens";
 
@@ -84,6 +85,7 @@ export const DatePicker = ({
   const [portalStyle, setPortalStyle] = useState<MenuPortalStyle>(
     defaultMenuPortalStyle,
   );
+  const [themeVars, setThemeVars] = useState<Record<string, string>>({});
 
   const sizeStyles = {
     sm: { trigger: "px-2.5 py-1 min-h-9 text-xs", icon: 14 },
@@ -131,7 +133,9 @@ export const DatePicker = ({
         top: openUp ? rect.top - popoverHeight - 8 : rect.bottom + 8,
         left: Math.min(rect.left, Math.max(8, window.innerWidth - 296)),
       });
-      setPortalStyle(resolveMenuPortalTokens(window.getComputedStyle(el)));
+      const computedStyle = window.getComputedStyle(el);
+      setPortalStyle(resolveMenuPortalTokens(computedStyle));
+      setThemeVars(resolveThemeVarStyle(computedStyle));
     };
     updatePosition();
     window.addEventListener("resize", updatePosition);
@@ -173,6 +177,7 @@ export const DatePicker = ({
         ref={popoverRef}
         className={`fixed z-9999 w-[280px] select-none p-4 shadow-2xl transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`}
         style={{
+          ...(themeVars as React.CSSProperties),
           top: position.top,
           left: position.left,
           backgroundColor: portalStyle.backgroundColor,

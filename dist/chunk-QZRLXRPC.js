@@ -1,4 +1,7 @@
 import {
+  resolveThemeVarStyle
+} from "./chunk-SA6EOMZP.js";
+import {
   getRadiusStyle
 } from "./chunk-H5DXVADS.js";
 
@@ -43,13 +46,19 @@ var ToastProvider = ({
 }) => {
   const [toasts, setToasts] = useState([]);
   const [mounted, setMounted] = useState(false);
+  const [themeVars, setThemeVars] = useState({});
   const idRef = useRef(0);
+  const anchorRef = useRef(null);
   const timersRef = useRef(/* @__PURE__ */ new Map());
   useEffect(() => {
     setMounted(true);
     const timers = timersRef.current;
     return () => timers.forEach((t) => clearTimeout(t));
   }, []);
+  useEffect(() => {
+    if (toasts.length === 0 || !anchorRef.current) return;
+    setThemeVars(resolveThemeVarStyle(getComputedStyle(anchorRef.current)));
+  }, [toasts.length]);
   const dismiss = useCallback((id) => {
     const pending = timersRef.current.get(id);
     if (pending) {
@@ -95,11 +104,13 @@ var ToastProvider = ({
   const fromTop = position.startsWith("top");
   return /* @__PURE__ */ jsxs(ToastContext.Provider, { value: contextValue, children: [
     children,
+    /* @__PURE__ */ jsx("span", { ref: anchorRef, hidden: true, "aria-hidden": true }),
     mounted && createPortal(
       /* @__PURE__ */ jsx(
         "div",
         {
           className: `pointer-events-none fixed z-9999 flex w-full max-w-sm flex-col gap-2 ${positionClasses}`,
+          style: themeVars,
           role: "region",
           "aria-label": "Notifications",
           children: toasts.map((t) => {
@@ -160,4 +171,4 @@ export {
   useToast,
   ToastProvider
 };
-//# sourceMappingURL=chunk-KPUPSX7Z.js.map
+//# sourceMappingURL=chunk-QZRLXRPC.js.map
