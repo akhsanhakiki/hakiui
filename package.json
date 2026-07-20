@@ -1,6 +1,6 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
@@ -98,6 +98,71 @@
       "types": "./dist/autocomplete.d.ts",
       "import": "./dist/autocomplete.js",
       "require": "./dist/autocomplete.cjs"
+    },
+    "./chart": {
+      "types": "./dist/chart.d.ts",
+      "import": "./dist/chart.js",
+      "require": "./dist/chart.cjs"
+    },
+    "./bar-chart": {
+      "types": "./dist/bar-chart.d.ts",
+      "import": "./dist/bar-chart.js",
+      "require": "./dist/bar-chart.cjs"
+    },
+    "./line-chart": {
+      "types": "./dist/line-chart.d.ts",
+      "import": "./dist/line-chart.js",
+      "require": "./dist/line-chart.cjs"
+    },
+    "./date-picker": {
+      "types": "./dist/date-picker.d.ts",
+      "import": "./dist/date-picker.js",
+      "require": "./dist/date-picker.cjs"
+    },
+    "./toast": {
+      "types": "./dist/toast.d.ts",
+      "import": "./dist/toast.js",
+      "require": "./dist/toast.cjs"
+    },
+    "./alert": {
+      "types": "./dist/alert.d.ts",
+      "import": "./dist/alert.js",
+      "require": "./dist/alert.cjs"
+    },
+    "./badge": {
+      "types": "./dist/badge.d.ts",
+      "import": "./dist/badge.js",
+      "require": "./dist/badge.cjs"
+    },
+    "./avatar": {
+      "types": "./dist/avatar.d.ts",
+      "import": "./dist/avatar.js",
+      "require": "./dist/avatar.cjs"
+    },
+    "./progress": {
+      "types": "./dist/progress.d.ts",
+      "import": "./dist/progress.js",
+      "require": "./dist/progress.cjs"
+    },
+    "./skeleton": {
+      "types": "./dist/skeleton.d.ts",
+      "import": "./dist/skeleton.js",
+      "require": "./dist/skeleton.cjs"
+    },
+    "./spinner": {
+      "types": "./dist/spinner.d.ts",
+      "import": "./dist/spinner.js",
+      "require": "./dist/spinner.cjs"
+    },
+    "./slider": {
+      "types": "./dist/slider.d.ts",
+      "import": "./dist/slider.js",
+      "require": "./dist/slider.cjs"
+    },
+    "./breadcrumbs": {
+      "types": "./dist/breadcrumbs.d.ts",
+      "import": "./dist/breadcrumbs.js",
+      "require": "./dist/breadcrumbs.cjs"
     }
   },
   "files": [

@@ -27,13 +27,36 @@ __export(theme_provider_exports, {
   useTheme: () => useTheme
 });
 module.exports = __toCommonJS(theme_provider_exports);
-var import_react = require("react");
+var import_react2 = require("react");
 
 // src/lib/hex-to-rgb.ts
 var hexToRgb = (hex) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : "0 111 238";
 };
+
+// src/lib/chart.ts
+var import_react = require("react");
+var LIGHT_CHART_COLORS = [
+  "#F05423",
+  "#4A3AA7",
+  "#E34948",
+  "#2A78D6",
+  "#008300",
+  "#E87BA4",
+  "#EDA100",
+  "#1BAF7A"
+];
+var DARK_CHART_COLORS = [
+  "#F05423",
+  "#9085E9",
+  "#E66767",
+  "#3987E5",
+  "#008300",
+  "#D55181",
+  "#C98500",
+  "#199E70"
+];
 
 // src/components/theme-provider.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
@@ -65,9 +88,9 @@ var defaultTheme = {
   borderRadius: 4,
   mode: "light"
 };
-var ThemeContext = (0, import_react.createContext)(void 0);
+var ThemeContext = (0, import_react2.createContext)(void 0);
 var useTheme = () => {
-  const context = (0, import_react.useContext)(ThemeContext);
+  const context = (0, import_react2.useContext)(ThemeContext);
   if (!context) throw new Error("useTheme must be used within a HakiProvider");
   return context;
 };
@@ -76,9 +99,13 @@ var HakiProvider = ({
   initialTheme = defaultTheme,
   className = ""
 }) => {
-  const [theme, setTheme] = (0, import_react.useState)(initialTheme);
+  const [theme, setTheme] = (0, import_react2.useState)(initialTheme);
   const mode = theme.mode ?? "light";
   const neutrals = mode === "dark" ? darkNeutrals : lightNeutrals;
+  const chartColors = mode === "dark" ? DARK_CHART_COLORS : LIGHT_CHART_COLORS;
+  const chartVars = Object.fromEntries(
+    chartColors.map((color, i) => [`--chart-${i + 1}`, color])
+  );
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThemeContext.Provider, { value: { theme, setTheme }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",
     {
@@ -98,6 +125,7 @@ var HakiProvider = ({
         "--text": neutrals.text,
         "--text-muted": neutrals.textMuted,
         "--hover": neutrals.hover,
+        ...chartVars,
         color: "var(--text)"
       },
       children

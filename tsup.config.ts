@@ -14,14 +14,27 @@ const ui = [
   "calendar",
   "modal",
   "dropdown",
-  "autocomplete"
+  "autocomplete",
+  "bar-chart",
+  "line-chart",
+  "date-picker",
+  "toast",
+  "alert",
+  "badge",
+  "avatar",
+  "progress",
+  "skeleton",
+  "spinner",
+  "slider",
+  "breadcrumbs"
 ] as const;
 
 const entry: Record<string, string> = {
   index: "src/index.ts",
   "theme-provider": "src/components/theme-provider.tsx",
   "hex-to-rgb": "src/lib/hex-to-rgb.ts",
-  radius: "src/lib/radius.ts"
+  radius: "src/lib/radius.ts",
+  chart: "src/lib/chart.ts"
 };
 
 for (const name of ui) {

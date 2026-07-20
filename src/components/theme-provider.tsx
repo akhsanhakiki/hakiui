@@ -5,6 +5,7 @@ import React, {
   type ReactNode,
 } from "react";
 import { hexToRgb } from "../lib/hex-to-rgb";
+import { DARK_CHART_COLORS, LIGHT_CHART_COLORS } from "../lib/chart";
 
 export type ThemeMode = "light" | "dark";
 
@@ -89,6 +90,10 @@ export const HakiProvider = ({
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const mode: ThemeMode = theme.mode ?? "light";
   const neutrals = mode === "dark" ? darkNeutrals : lightNeutrals;
+  const chartColors = mode === "dark" ? DARK_CHART_COLORS : LIGHT_CHART_COLORS;
+  const chartVars = Object.fromEntries(
+    chartColors.map((color, i) => [`--chart-${i + 1}`, color]),
+  );
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
@@ -112,6 +117,7 @@ export const HakiProvider = ({
             "--text": neutrals.text,
             "--text-muted": neutrals.textMuted,
             "--hover": neutrals.hover,
+            ...chartVars,
             color: "var(--text)",
           } as React.CSSProperties
         }

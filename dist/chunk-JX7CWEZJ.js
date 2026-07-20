@@ -1,6 +1,10 @@
 import {
   hexToRgb
 } from "./chunk-TIRNZKPP.js";
+import {
+  DARK_CHART_COLORS,
+  LIGHT_CHART_COLORS
+} from "./chunk-A6P4IFYE.js";
 
 // src/components/theme-provider.tsx
 import {
@@ -51,6 +55,10 @@ var HakiProvider = ({
   const [theme, setTheme] = useState(initialTheme);
   const mode = theme.mode ?? "light";
   const neutrals = mode === "dark" ? darkNeutrals : lightNeutrals;
+  const chartColors = mode === "dark" ? DARK_CHART_COLORS : LIGHT_CHART_COLORS;
+  const chartVars = Object.fromEntries(
+    chartColors.map((color, i) => [`--chart-${i + 1}`, color])
+  );
   return /* @__PURE__ */ jsx(ThemeContext.Provider, { value: { theme, setTheme }, children: /* @__PURE__ */ jsx(
     "div",
     {
@@ -70,6 +78,7 @@ var HakiProvider = ({
         "--text": neutrals.text,
         "--text-muted": neutrals.textMuted,
         "--hover": neutrals.hover,
+        ...chartVars,
         color: "var(--text)"
       },
       children
@@ -84,4 +93,4 @@ export {
   useTheme,
   HakiProvider
 };
-//# sourceMappingURL=chunk-HGDIT7HH.js.map
+//# sourceMappingURL=chunk-JX7CWEZJ.js.map
