@@ -1,7 +1,17 @@
 export { hexToRgb } from "./lib/hex-to-rgb";
 export { getRadiusStyle, type Radius } from "./lib/radius";
 
-export { HakiProvider, useTheme, defaultTheme, type Theme, type HakiProviderProps } from "./components/theme-provider";
+export {
+  HakiProvider,
+  useTheme,
+  defaultTheme,
+  lightNeutrals,
+  darkNeutrals,
+  type Theme,
+  type ThemeMode,
+  type NeutralTokens,
+  type HakiProviderProps,
+} from "./components/theme-provider";
 
 export { Button, type ButtonProps } from "./components/ui/button";
 export { Input, type InputProps } from "./components/ui/input";

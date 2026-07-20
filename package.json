@@ -1,7 +1,7 @@
 {
   "name": "@hakistudio/hakiui",
   "version": "1.0.1",
-  "description": "Dark-themed React UI components with CSS variable theming.",
+  "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",

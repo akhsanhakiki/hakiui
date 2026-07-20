@@ -1,6 +1,6 @@
 # @hakistudio/hakiui
 
-Dark-themed React UI components powered by CSS variables and Tailwind utility classes. Source is split per component under `src/components/ui/` for maintainability, granular installs, and tree-shaking-friendly subpath exports.
+Pixel-orange React UI components powered by CSS variables and Tailwind utility classes, with built-in light (warm paper-white) and dark (warm charcoal) modes. Source is split per component under `src/components/ui/` for maintainability, granular installs, and tree-shaking-friendly subpath exports.
 
 ## Install
 
@@ -64,12 +64,16 @@ HakiUI components use Tailwind utility classes. To ensure those classes are gene
 ## Usage (barrel import)
 
 ```tsx
-import { HakiProvider, Button, Input } from "@hakistudio/hakiui";
+import { HakiProvider, Button, Input, defaultTheme } from "@hakistudio/hakiui";
 
 export default function App() {
   return (
-    <HakiProvider>
-      <div className="p-6 space-y-4 bg-black min-h-screen">
+    // mode: "light" (default) or "dark"
+    <HakiProvider initialTheme={{ ...defaultTheme, mode: "light" }}>
+      <div
+        className="p-6 space-y-4 min-h-screen"
+        style={{ background: "var(--bg)" }}
+      >
         <Input placeholder="Email address" />
         <Button variant="primary">Continue</Button>
       </div>
@@ -77,6 +81,29 @@ export default function App() {
   );
 }
 ```
+
+### Light / dark mode
+
+`HakiProvider` ships two built-in neutral palettes and applies one based on `theme.mode` (`"light"` by default). Toggle at runtime with `useTheme`:
+
+```tsx
+import { useTheme } from "@hakistudio/hakiui";
+
+const ModeToggle = () => {
+  const { theme, setTheme } = useTheme();
+  return (
+    <button
+      onClick={() =>
+        setTheme({ ...theme, mode: theme.mode === "dark" ? "light" : "dark" })
+      }
+    >
+      Toggle mode
+    </button>
+  );
+};
+```
+
+The default brand theme is pixel orange (`#F05423`) on a warm white background with `IBM Plex Mono` and a 4px radius. Every token can be overridden via `initialTheme` or `setTheme`.
 
 ## Usage (per-component import, best for bundle size)
 
@@ -107,7 +134,7 @@ Adjust import paths to match your project aliases.
 
 ## Styling note
 
-This package uses Tailwind utility classes and CSS variables. `HakiProvider` provides the `--ui-*` variables consumed by components, so it should wrap every area where you render HakiUI components.
+This package uses Tailwind utility classes and CSS variables. `HakiProvider` provides the `--ui-*` brand variables plus the neutral tokens (`--bg`, `--bg-soft`, `--surface`, `--border`, `--input`, `--text`, `--text-muted`, `--hover`) for the active mode, so it should wrap every area where you render HakiUI components. To use your own neutrals, override those variables on a descendant element (or import `lightNeutrals` / `darkNeutrals` as a starting point).
 
 ## Package exports
 

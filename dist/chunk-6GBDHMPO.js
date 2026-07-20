@@ -1,7 +1,3 @@
-import {
-  getRadiusStyle
-} from "./chunk-H5DXVADS.js";
-
 // src/components/ui/tooltip.tsx
 import { jsx, jsxs } from "react/jsx-runtime";
 var Tooltip = ({
@@ -20,8 +16,12 @@ var Tooltip = ({
     /* @__PURE__ */ jsx(
       "div",
       {
-        className: `pointer-events-none absolute z-50 whitespace-nowrap bg-(--surface) px-2.5 py-1.5 text-xs text-(--text) opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
-        style: getRadiusStyle("sm"),
+        className: `pointer-events-none absolute z-50 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
+        style: {
+          backgroundColor: "color-mix(in srgb, var(--bg-soft) 80%, white)",
+          color: "var(--text)",
+          fontFamily: "var(--ui-font)"
+        },
         children: content
       }
     )
@@ -31,4 +31,4 @@ var Tooltip = ({
 export {
   Tooltip
 };
-//# sourceMappingURL=chunk-QCW2N7DQ.js.map
+//# sourceMappingURL=chunk-6GBDHMPO.js.map

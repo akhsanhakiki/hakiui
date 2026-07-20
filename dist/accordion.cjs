@@ -26,17 +26,6 @@ __export(accordion_exports, {
 module.exports = __toCommonJS(accordion_exports);
 var import_react = require("react");
 var import_lucide_react = require("lucide-react");
-
-// src/lib/radius.ts
-var getRadiusStyle = (radius = "md") => {
-  if (radius === "none") return { borderRadius: 0 };
-  if (radius === "sm") return { borderRadius: "calc(var(--ui-radius) * 0.5)" };
-  if (radius === "lg") return { borderRadius: "calc(var(--ui-radius) * 1.5)" };
-  if (radius === "full") return { borderRadius: "9999px" };
-  return { borderRadius: "var(--ui-radius)" };
-};
-
-// src/components/ui/accordion.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
 var Accordion = ({
   children,
@@ -44,35 +33,53 @@ var Accordion = ({
 }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `flex flex-col gap-2 w-full ${className}`, children });
 var AccordionItem = ({
   title,
-  children,
-  radius = "md"
+  children
 }) => {
   const [isOpen, setIsOpen] = (0, import_react.useState)(false);
+  const contentRef = (0, import_react.useRef)(null);
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
     "div",
     {
-      className: "overflow-hidden border border-(--border) bg-(--surface)",
-      style: getRadiusStyle(radius),
+      className: "overflow-hidden",
+      style: { borderBottom: "0.5px solid var(--border)" },
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
           "button",
           {
             type: "button",
             onClick: () => setIsOpen(!isOpen),
-            className: "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-(--hover)",
+            className: "flex w-full items-center justify-between py-4 text-left transition-colors",
             children: [
               /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "font-medium text-(--text)", children: title }),
               /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                 import_lucide_react.ChevronDown,
                 {
                   size: 18,
-                  className: `text-(--text-muted) transition-transform ${isOpen ? "rotate-180" : ""}`
+                  className: `text-(--text-muted) transition-transform duration-300 ease-out motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`
                 }
               )
             ]
           }
         ),
-        isOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mt-2 border-t border-(--border) p-4 pt-0 text-sm text-(--text-muted)", children })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "div",
+          {
+            className: "overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out motion-reduce:transition-none",
+            style: {
+              maxHeight: isOpen ? `${contentRef.current?.scrollHeight ?? 0}px` : "0px",
+              opacity: isOpen ? 1 : 0,
+              transform: isOpen ? "translateY(0)" : "translateY(-4px)"
+            },
+            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+              "div",
+              {
+                ref: contentRef,
+                className: "pb-4 text-sm text-(--text-muted) opacity-70",
+                children
+              }
+            )
+          }
+        )
       ]
     }
   );

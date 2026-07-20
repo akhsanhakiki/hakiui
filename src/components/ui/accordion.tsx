@@ -39,7 +39,9 @@ export const AccordionItem = ({
       <div
         className="overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out motion-reduce:transition-none"
         style={{
-          maxHeight: isOpen ? `${contentRef.current?.scrollHeight ?? 0}px` : "0px",
+          maxHeight: isOpen
+            ? `${contentRef.current?.scrollHeight ?? 0}px`
+            : "0px",
           opacity: isOpen ? 1 : 0,
           transform: isOpen ? "translateY(0)" : "translateY(-4px)",
         }}

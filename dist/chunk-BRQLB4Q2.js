@@ -1,7 +1,7 @@
 import {
   defaultMenuPortalStyle,
   resolveMenuPortalTokens
-} from "./chunk-SGAAVMYN.js";
+} from "./chunk-U5LN2XUF.js";
 import {
   getRadiusStyle
 } from "./chunk-H5DXVADS.js";
@@ -225,4 +225,4 @@ var Dropdown = ({
 export {
   Dropdown
 };
-//# sourceMappingURL=chunk-E3I3YQYN.js.map
+//# sourceMappingURL=chunk-BRQLB4Q2.js.map

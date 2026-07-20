@@ -15,8 +15,10 @@ var Switch = ({
     /* @__PURE__ */ jsx(
       "div",
       {
-        className: `relative ${current.w} ${current.h} rounded-full transition-colors ${!checked ? "bg-(--input)" : ""}`,
-        style: checked ? { background: "var(--ui-primary-bg)" } : {},
+        className: `relative ${current.w} ${current.h} rounded-full transition-colors`,
+        style: {
+          backgroundColor: checked ? "var(--ui-primary-bg)" : "var(--bg-soft)"
+        },
         children: /* @__PURE__ */ jsx(
           "div",
           {
@@ -40,4 +42,4 @@ var Switch = ({
 export {
   Switch
 };
-//# sourceMappingURL=chunk-N2D4UNOQ.js.map
+//# sourceMappingURL=chunk-E5EPLT4C.js.map

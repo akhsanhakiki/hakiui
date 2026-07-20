@@ -51,9 +51,11 @@ __export(src_exports, {
   TableRow: () => TableRow,
   Tabs: () => Tabs,
   Tooltip: () => Tooltip,
+  darkNeutrals: () => darkNeutrals,
   defaultTheme: () => defaultTheme,
   getRadiusStyle: () => getRadiusStyle,
   hexToRgb: () => hexToRgb,
+  lightNeutrals: () => lightNeutrals,
   useTheme: () => useTheme
 });
 module.exports = __toCommonJS(src_exports);
@@ -76,12 +78,33 @@ var getRadiusStyle = (radius = "md") => {
 // src/components/theme-provider.tsx
 var import_react = require("react");
 var import_jsx_runtime = require("react/jsx-runtime");
+var lightNeutrals = {
+  bg: "#FAF9F5",
+  bgSoft: "#F2EFE8",
+  surface: "#FFFFFF",
+  border: "#E5E1D5",
+  input: "#F2EFE8",
+  text: "#1C1B17",
+  textMuted: "#6E6A5E",
+  hover: "#EBE7DC"
+};
+var darkNeutrals = {
+  bg: "#141311",
+  bgSoft: "#1C1A17",
+  surface: "#22201B",
+  border: "#37342C",
+  input: "#282521",
+  text: "#F5F3EC",
+  textMuted: "#A8A294",
+  hover: "#322E27"
+};
 var defaultTheme = {
-  primaryColor: "#006FEE",
-  gradientColor: "#5EA2EF",
+  primaryColor: "#F05423",
+  gradientColor: "#FF8C42",
   useGradient: false,
-  fontFamily: "'Inter', sans-serif",
-  borderRadius: 12
+  fontFamily: "'IBM Plex Mono', monospace",
+  borderRadius: 4,
+  mode: "light"
 };
 var ThemeContext = (0, import_react.createContext)(void 0);
 var useTheme = () => {
@@ -95,17 +118,28 @@ var HakiProvider = ({
   className = ""
 }) => {
   const [theme, setTheme] = (0, import_react.useState)(initialTheme);
+  const mode = theme.mode ?? "light";
+  const neutrals = mode === "dark" ? darkNeutrals : lightNeutrals;
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThemeContext.Provider, { value: { theme, setTheme }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",
     {
-      className,
+      className: `${mode} ${className}`,
       style: {
         "--ui-primary": theme.primaryColor,
         "--ui-primary-rgb": hexToRgb(theme.primaryColor),
         "--ui-gradient": `linear-gradient(to right, ${theme.primaryColor}, ${theme.gradientColor})`,
         "--ui-primary-bg": theme.useGradient ? "var(--ui-gradient)" : "var(--ui-primary)",
         "--ui-font": theme.fontFamily,
-        "--ui-radius": `${theme.borderRadius}px`
+        "--ui-radius": `${theme.borderRadius}px`,
+        "--bg": neutrals.bg,
+        "--bg-soft": neutrals.bgSoft,
+        "--surface": neutrals.surface,
+        "--border": neutrals.border,
+        "--input": neutrals.input,
+        "--text": neutrals.text,
+        "--text-muted": neutrals.textMuted,
+        "--hover": neutrals.hover,
+        color: "var(--text)"
       },
       children
     }
@@ -402,7 +436,7 @@ var Pagination = ({
         {
           type: "button",
           onClick: () => onChange(p),
-          className: `flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors cursor-pointer ${isActive ? "text-white" : "bg-transparent text-(--text) hover:bg-(--hover)"}`,
+          className: `flex h-8 w-8 items-center justify-center rounded-full text-sm cursor-pointer transform-gpu transition-all duration-250 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none ${isActive ? "scale-100 text-white shadow-sm" : "bg-transparent text-(--text) scale-[0.98] hover:scale-100 hover:bg-(--hover)"}`,
           style: isActive ? { background: "var(--ui-primary-bg)" } : {},
           children: p
         },
@@ -442,8 +476,10 @@ var Switch = ({
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       "div",
       {
-        className: `relative ${current.w} ${current.h} rounded-full transition-colors ${!checked ? "bg-(--input)" : ""}`,
-        style: checked ? { background: "var(--ui-primary-bg)" } : {},
+        className: `relative ${current.w} ${current.h} rounded-full transition-colors`,
+        style: {
+          backgroundColor: checked ? "var(--ui-primary-bg)" : "var(--bg-soft)"
+        },
         children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           "div",
           {
@@ -482,8 +518,12 @@ var Tooltip = ({
     /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
       "div",
       {
-        className: `pointer-events-none absolute z-50 whitespace-nowrap bg-(--surface) px-2.5 py-1.5 text-xs text-(--text) opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
-        style: getRadiusStyle("sm"),
+        className: `pointer-events-none absolute z-50 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
+        style: {
+          backgroundColor: "color-mix(in srgb, var(--bg-soft) 80%, white)",
+          color: "var(--text)",
+          fontFamily: "var(--ui-font)"
+        },
         children: content
       }
     )
@@ -494,19 +534,42 @@ var Tooltip = ({
 var import_jsx_runtime7 = require("react/jsx-runtime");
 var Table = ({
   children,
-  radius = "lg"
+  radius = "lg",
+  variant = "default"
 }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
   "div",
   {
-    className: "w-full overflow-hidden border border-(--border) bg-(--surface)",
-    style: getRadiusStyle(radius),
+    className: "w-full overflow-hidden",
+    style: {
+      ...getRadiusStyle(variant === "rounded" ? "full" : radius),
+      backgroundColor: "color-mix(in srgb, var(--bg-soft) 30%, transparent)",
+      border: "0.5px solid var(--border)",
+      outline: "0.5px solid var(--border)",
+      outlineOffset: 0
+    },
     children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("table", { className: "w-full text-left border-collapse", children })
   }
 );
-var TableHeader = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("thead", { className: "bg-(--bg-soft) text-(--text-muted) text-sm", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tr", { className: "border-b border-(--border)", children }) });
-var TableColumn = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { className: "px-4 py-3 font-medium font-sans", children });
+var TableHeader = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+  "thead",
+  {
+    className: "text-(--text-muted) text-xs",
+    style: {
+      backgroundColor: "color-mix(in srgb, var(--bg-soft) 60%, transparent)"
+    },
+    children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tr", { className: "border-b", style: { borderColor: "var(--border)" }, children })
+  }
+);
+var TableColumn = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("th", { className: "px-4 py-2 font-medium font-sans", children });
 var TableBody = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tbody", { className: "text-sm text-(--text)", children });
-var TableRow = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("tr", { className: "border-b border-(--border) transition-colors hover:bg-(--hover) last:border-0", children });
+var TableRow = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+  "tr",
+  {
+    className: "border-b transition-colors hover:bg-(--hover) last:border-0",
+    style: { borderColor: "var(--border)" },
+    children
+  }
+);
 var TableCell = ({ children }) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("td", { className: "px-4 py-3", children });
 
 // src/components/ui/tabs.tsx
@@ -517,16 +580,23 @@ var Tabs = ({
 }) => {
   const [active, setActive] = (0, import_react4.useState)(items[0]?.id ?? "");
   return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex flex-col gap-4", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "flex w-full border-b border-(--border)", children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-      "button",
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      "div",
       {
-        type: "button",
-        onClick: () => setActive(item.id),
-        className: `-mb-px border-b-2 px-4 py-3 text-sm font-medium transition-colors ${active === item.id ? "border-(--ui-primary) text-(--text)" : "border-transparent text-(--text-muted) hover:text-(--text)"}`,
-        children: item.label
-      },
-      item.id
-    )) }),
+        className: "flex w-full border-b",
+        style: { borderColor: "color-mix(in srgb, var(--border) 50%, transparent)" },
+        children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            type: "button",
+            onClick: () => setActive(item.id),
+            className: `-mb-px border-b-2 px-4 py-3 text-sm font-medium transition-colors ${active === item.id ? "border-(--ui-primary) text-(--text)" : "border-transparent text-(--text-muted) hover:text-(--text)"}`,
+            children: item.label
+          },
+          item.id
+        ))
+      }
+    ),
     /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "px-2 py-2 text-(--text)", children: items.find((i) => i.id === active)?.content })
   ] });
 };
@@ -541,35 +611,53 @@ var Accordion = ({
 }) => /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: `flex flex-col gap-2 w-full ${className}`, children });
 var AccordionItem = ({
   title,
-  children,
-  radius = "md"
+  children
 }) => {
   const [isOpen, setIsOpen] = (0, import_react5.useState)(false);
+  const contentRef = (0, import_react5.useRef)(null);
   return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
     "div",
     {
-      className: "overflow-hidden border border-(--border) bg-(--surface)",
-      style: getRadiusStyle(radius),
+      className: "overflow-hidden",
+      style: { borderBottom: "0.5px solid var(--border)" },
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
           "button",
           {
             type: "button",
             onClick: () => setIsOpen(!isOpen),
-            className: "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-(--hover)",
+            className: "flex w-full items-center justify-between py-4 text-left transition-colors",
             children: [
               /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "font-medium text-(--text)", children: title }),
               /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
                 import_lucide_react3.ChevronDown,
                 {
                   size: 18,
-                  className: `text-(--text-muted) transition-transform ${isOpen ? "rotate-180" : ""}`
+                  className: `text-(--text-muted) transition-transform duration-300 ease-out motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`
                 }
               )
             ]
           }
         ),
-        isOpen && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "mt-2 border-t border-(--border) p-4 pt-0 text-sm text-(--text-muted)", children })
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          "div",
+          {
+            className: "overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out motion-reduce:transition-none",
+            style: {
+              maxHeight: isOpen ? `${contentRef.current?.scrollHeight ?? 0}px` : "0px",
+              opacity: isOpen ? 1 : 0,
+              transform: isOpen ? "translateY(0)" : "translateY(-4px)"
+            },
+            children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+              "div",
+              {
+                ref: contentRef,
+                className: "pb-4 text-sm text-(--text-muted) opacity-70",
+                children
+              }
+            )
+          }
+        )
       ]
     }
   );
@@ -675,8 +763,14 @@ var Calendar = ({ radius = "md" }) => {
   return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
     "div",
     {
-      className: "w-[280px] select-none border border-(--border) bg-(--surface) p-4",
-      style: getRadiusStyle(radius),
+      className: "w-[280px] select-none p-4",
+      style: {
+        ...getRadiusStyle(radius),
+        backgroundColor: "color-mix(in srgb, var(--bg-soft) 30%, transparent)",
+        border: "0.5px solid var(--border)",
+        outline: "0.5px solid var(--border)",
+        outlineOffset: 0
+      },
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "flex items-center justify-between mb-4", children: [
           /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
@@ -842,15 +936,15 @@ var getReadableTextColors = (backgroundColor) => {
   const luminance = getRelativeLuminance(rgb);
   const isDarkBackground = luminance < 0.38;
   return {
-    foreground: isDarkBackground ? "#F5F6F8" : "#111827",
-    muted: isDarkBackground ? "rgba(245, 246, 248, 0.78)" : "#4B5563"
+    foreground: isDarkBackground ? "#F5F3EC" : "#1C1B17",
+    muted: isDarkBackground ? "rgba(245, 243, 236, 0.78)" : "#6E6A5E"
   };
 };
 var resolveMenuPortalTokens = (computedStyle) => {
-  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
+  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#FAF9F5";
   const resolvedBorder = computedStyle.getPropertyValue("--border").trim() || "rgba(0, 0, 0, 0.08)";
   const resolvedHover = computedStyle.getPropertyValue("--hover").trim() || "rgba(0, 0, 0, 0.06)";
-  const resolvedRadius = computedStyle.borderRadius || "12px";
+  const resolvedRadius = computedStyle.borderRadius || "4px";
   const resolvedText = computedStyle.getPropertyValue("--text").trim();
   const resolvedTextMuted = computedStyle.getPropertyValue("--text-muted").trim();
   const normalizedHover = resolvedHover.startsWith("rgb(") ? resolvedHover.replace("rgb(", "rgba(").replace(")", ", 0.14)") : resolvedHover.startsWith("rgba(") ? resolvedHover.replace(
@@ -865,19 +959,19 @@ var resolveMenuPortalTokens = (computedStyle) => {
     "--dropdown-hover-bg": normalizedHover,
     "--dropdown-hover-fg": hoverTextColors.foreground,
     "--dropdown-hover-muted": hoverTextColors.muted,
-    "--dropdown-text": resolvedText || computedStyle.color || "#111827",
-    "--dropdown-text-muted": resolvedTextMuted || "#6B7280"
+    "--dropdown-text": resolvedText || computedStyle.color || "#1C1B17",
+    "--dropdown-text-muted": resolvedTextMuted || "#6E6A5E"
   };
 };
 var defaultMenuPortalStyle = () => ({
   backgroundColor: "var(--bg-soft)",
   borderColor: "var(--border)",
-  borderRadius: "12px",
+  borderRadius: "4px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
-  "--dropdown-hover-fg": "#111827",
-  "--dropdown-hover-muted": "#4B5563",
-  "--dropdown-text": "#111827",
-  "--dropdown-text-muted": "#6B7280"
+  "--dropdown-hover-fg": "#1C1B17",
+  "--dropdown-hover-muted": "#6E6A5E",
+  "--dropdown-text": "#1C1B17",
+  "--dropdown-text-muted": "#6E6A5E"
 });
 
 // src/components/ui/dropdown.tsx
@@ -1351,9 +1445,11 @@ var Autocomplete = ({
   TableRow,
   Tabs,
   Tooltip,
+  darkNeutrals,
   defaultTheme,
   getRadiusStyle,
   hexToRgb,
+  lightNeutrals,
   useTheme
 });
 //# sourceMappingURL=index.cjs.map

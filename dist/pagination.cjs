@@ -67,7 +67,7 @@ var Pagination = ({
         {
           type: "button",
           onClick: () => onChange(p),
-          className: `flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors cursor-pointer ${isActive ? "text-white" : "bg-transparent text-(--text) hover:bg-(--hover)"}`,
+          className: `flex h-8 w-8 items-center justify-center rounded-full text-sm cursor-pointer transform-gpu transition-all duration-250 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none ${isActive ? "scale-100 text-white shadow-sm" : "bg-transparent text-(--text) scale-[0.98] hover:scale-100 hover:bg-(--hover)"}`,
           style: isActive ? { background: "var(--ui-primary-bg)" } : {},
           children: p
         },

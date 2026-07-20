@@ -23,17 +23,6 @@ __export(tooltip_exports, {
   Tooltip: () => Tooltip
 });
 module.exports = __toCommonJS(tooltip_exports);
-
-// src/lib/radius.ts
-var getRadiusStyle = (radius = "md") => {
-  if (radius === "none") return { borderRadius: 0 };
-  if (radius === "sm") return { borderRadius: "calc(var(--ui-radius) * 0.5)" };
-  if (radius === "lg") return { borderRadius: "calc(var(--ui-radius) * 1.5)" };
-  if (radius === "full") return { borderRadius: "9999px" };
-  return { borderRadius: "var(--ui-radius)" };
-};
-
-// src/components/ui/tooltip.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
 var Tooltip = ({
   content,
@@ -51,8 +40,12 @@ var Tooltip = ({
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "div",
       {
-        className: `pointer-events-none absolute z-50 whitespace-nowrap bg-(--surface) px-2.5 py-1.5 text-xs text-(--text) opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
-        style: getRadiusStyle("sm"),
+        className: `pointer-events-none absolute z-50 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${positionClasses[position]}`,
+        style: {
+          backgroundColor: "color-mix(in srgb, var(--bg-soft) 80%, white)",
+          color: "var(--text)",
+          fontFamily: "var(--ui-font)"
+        },
         children: content
       }
     )

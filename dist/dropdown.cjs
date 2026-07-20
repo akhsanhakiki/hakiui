@@ -78,15 +78,15 @@ var getReadableTextColors = (backgroundColor) => {
   const luminance = getRelativeLuminance(rgb);
   const isDarkBackground = luminance < 0.38;
   return {
-    foreground: isDarkBackground ? "#F5F6F8" : "#111827",
-    muted: isDarkBackground ? "rgba(245, 246, 248, 0.78)" : "#4B5563"
+    foreground: isDarkBackground ? "#F5F3EC" : "#1C1B17",
+    muted: isDarkBackground ? "rgba(245, 243, 236, 0.78)" : "#6E6A5E"
   };
 };
 var resolveMenuPortalTokens = (computedStyle) => {
-  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#fff";
+  const resolvedBg = computedStyle.getPropertyValue("--bg-soft").trim() || computedStyle.getPropertyValue("--bg").trim() || computedStyle.backgroundColor || "#FAF9F5";
   const resolvedBorder = computedStyle.getPropertyValue("--border").trim() || "rgba(0, 0, 0, 0.08)";
   const resolvedHover = computedStyle.getPropertyValue("--hover").trim() || "rgba(0, 0, 0, 0.06)";
-  const resolvedRadius = computedStyle.borderRadius || "12px";
+  const resolvedRadius = computedStyle.borderRadius || "4px";
   const resolvedText = computedStyle.getPropertyValue("--text").trim();
   const resolvedTextMuted = computedStyle.getPropertyValue("--text-muted").trim();
   const normalizedHover = resolvedHover.startsWith("rgb(") ? resolvedHover.replace("rgb(", "rgba(").replace(")", ", 0.14)") : resolvedHover.startsWith("rgba(") ? resolvedHover.replace(
@@ -101,19 +101,19 @@ var resolveMenuPortalTokens = (computedStyle) => {
     "--dropdown-hover-bg": normalizedHover,
     "--dropdown-hover-fg": hoverTextColors.foreground,
     "--dropdown-hover-muted": hoverTextColors.muted,
-    "--dropdown-text": resolvedText || computedStyle.color || "#111827",
-    "--dropdown-text-muted": resolvedTextMuted || "#6B7280"
+    "--dropdown-text": resolvedText || computedStyle.color || "#1C1B17",
+    "--dropdown-text-muted": resolvedTextMuted || "#6E6A5E"
   };
 };
 var defaultMenuPortalStyle = () => ({
   backgroundColor: "var(--bg-soft)",
   borderColor: "var(--border)",
-  borderRadius: "12px",
+  borderRadius: "4px",
   "--dropdown-hover-bg": "rgba(0, 0, 0, 0.06)",
-  "--dropdown-hover-fg": "#111827",
-  "--dropdown-hover-muted": "#4B5563",
-  "--dropdown-text": "#111827",
-  "--dropdown-text-muted": "#6B7280"
+  "--dropdown-hover-fg": "#1C1B17",
+  "--dropdown-hover-muted": "#6E6A5E",
+  "--dropdown-text": "#1C1B17",
+  "--dropdown-text-muted": "#6E6A5E"
 });
 
 // src/components/ui/dropdown.tsx

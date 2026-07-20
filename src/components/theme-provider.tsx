@@ -6,20 +6,60 @@ import React, {
 } from "react";
 import { hexToRgb } from "../lib/hex-to-rgb";
 
+export type ThemeMode = "light" | "dark";
+
 export type Theme = {
   primaryColor: string;
   gradientColor: string;
   useGradient: boolean;
   fontFamily: string;
   borderRadius: number;
+  /** Neutral palette mode. Defaults to "light" (warm white background). */
+  mode?: ThemeMode;
+};
+
+export type NeutralTokens = {
+  bg: string;
+  bgSoft: string;
+  surface: string;
+  border: string;
+  input: string;
+  text: string;
+  textMuted: string;
+  hover: string;
+};
+
+/** Warm paper-white neutrals — the default HakiUI look. */
+export const lightNeutrals: NeutralTokens = {
+  bg: "#FAF9F5",
+  bgSoft: "#F2EFE8",
+  surface: "#FFFFFF",
+  border: "#E5E1D5",
+  input: "#F2EFE8",
+  text: "#1C1B17",
+  textMuted: "#6E6A5E",
+  hover: "#EBE7DC",
+};
+
+/** Warm charcoal neutrals for dark mode. */
+export const darkNeutrals: NeutralTokens = {
+  bg: "#141311",
+  bgSoft: "#1C1A17",
+  surface: "#22201B",
+  border: "#37342C",
+  input: "#282521",
+  text: "#F5F3EC",
+  textMuted: "#A8A294",
+  hover: "#322E27",
 };
 
 export const defaultTheme: Theme = {
-  primaryColor: "#006FEE",
-  gradientColor: "#5EA2EF",
+  primaryColor: "#F05423",
+  gradientColor: "#FF8C42",
   useGradient: false,
-  fontFamily: "'Inter', sans-serif",
-  borderRadius: 12,
+  fontFamily: "'IBM Plex Mono', monospace",
+  borderRadius: 4,
+  mode: "light",
 };
 
 type ThemeContextType = {
@@ -47,11 +87,13 @@ export const HakiProvider = ({
   className = "",
 }: HakiProviderProps) => {
   const [theme, setTheme] = useState<Theme>(initialTheme);
+  const mode: ThemeMode = theme.mode ?? "light";
+  const neutrals = mode === "dark" ? darkNeutrals : lightNeutrals;
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <div
-        className={className}
+        className={`${mode} ${className}`}
         style={
           {
             "--ui-primary": theme.primaryColor,
@@ -62,6 +104,15 @@ export const HakiProvider = ({
               : "var(--ui-primary)",
             "--ui-font": theme.fontFamily,
             "--ui-radius": `${theme.borderRadius}px`,
+            "--bg": neutrals.bg,
+            "--bg-soft": neutrals.bgSoft,
+            "--surface": neutrals.surface,
+            "--border": neutrals.border,
+            "--input": neutrals.input,
+            "--text": neutrals.text,
+            "--text-muted": neutrals.textMuted,
+            "--hover": neutrals.hover,
+            color: "var(--text)",
           } as React.CSSProperties
         }
       >

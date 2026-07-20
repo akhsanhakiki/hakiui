@@ -39,8 +39,10 @@ var Switch = ({
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "div",
       {
-        className: `relative ${current.w} ${current.h} rounded-full transition-colors ${!checked ? "bg-(--input)" : ""}`,
-        style: checked ? { background: "var(--ui-primary-bg)" } : {},
+        className: `relative ${current.w} ${current.h} rounded-full transition-colors`,
+        style: {
+          backgroundColor: checked ? "var(--ui-primary-bg)" : "var(--bg-soft)"
+        },
         children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "div",
           {

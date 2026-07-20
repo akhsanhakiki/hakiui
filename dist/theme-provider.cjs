@@ -21,7 +21,9 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var theme_provider_exports = {};
 __export(theme_provider_exports, {
   HakiProvider: () => HakiProvider,
+  darkNeutrals: () => darkNeutrals,
   defaultTheme: () => defaultTheme,
+  lightNeutrals: () => lightNeutrals,
   useTheme: () => useTheme
 });
 module.exports = __toCommonJS(theme_provider_exports);
@@ -35,12 +37,33 @@ var hexToRgb = (hex) => {
 
 // src/components/theme-provider.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
+var lightNeutrals = {
+  bg: "#FAF9F5",
+  bgSoft: "#F2EFE8",
+  surface: "#FFFFFF",
+  border: "#E5E1D5",
+  input: "#F2EFE8",
+  text: "#1C1B17",
+  textMuted: "#6E6A5E",
+  hover: "#EBE7DC"
+};
+var darkNeutrals = {
+  bg: "#141311",
+  bgSoft: "#1C1A17",
+  surface: "#22201B",
+  border: "#37342C",
+  input: "#282521",
+  text: "#F5F3EC",
+  textMuted: "#A8A294",
+  hover: "#322E27"
+};
 var defaultTheme = {
-  primaryColor: "#006FEE",
-  gradientColor: "#5EA2EF",
+  primaryColor: "#F05423",
+  gradientColor: "#FF8C42",
   useGradient: false,
-  fontFamily: "'Inter', sans-serif",
-  borderRadius: 12
+  fontFamily: "'IBM Plex Mono', monospace",
+  borderRadius: 4,
+  mode: "light"
 };
 var ThemeContext = (0, import_react.createContext)(void 0);
 var useTheme = () => {
@@ -54,17 +77,28 @@ var HakiProvider = ({
   className = ""
 }) => {
   const [theme, setTheme] = (0, import_react.useState)(initialTheme);
+  const mode = theme.mode ?? "light";
+  const neutrals = mode === "dark" ? darkNeutrals : lightNeutrals;
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThemeContext.Provider, { value: { theme, setTheme }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",
     {
-      className,
+      className: `${mode} ${className}`,
       style: {
         "--ui-primary": theme.primaryColor,
         "--ui-primary-rgb": hexToRgb(theme.primaryColor),
         "--ui-gradient": `linear-gradient(to right, ${theme.primaryColor}, ${theme.gradientColor})`,
         "--ui-primary-bg": theme.useGradient ? "var(--ui-gradient)" : "var(--ui-primary)",
         "--ui-font": theme.fontFamily,
-        "--ui-radius": `${theme.borderRadius}px`
+        "--ui-radius": `${theme.borderRadius}px`,
+        "--bg": neutrals.bg,
+        "--bg-soft": neutrals.bgSoft,
+        "--surface": neutrals.surface,
+        "--border": neutrals.border,
+        "--input": neutrals.input,
+        "--text": neutrals.text,
+        "--text-muted": neutrals.textMuted,
+        "--hover": neutrals.hover,
+        color: "var(--text)"
       },
       children
     }
@@ -73,7 +107,9 @@ var HakiProvider = ({
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   HakiProvider,
+  darkNeutrals,
   defaultTheme,
+  lightNeutrals,
   useTheme
 });
 //# sourceMappingURL=theme-provider.cjs.map

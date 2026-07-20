@@ -1,6 +1,6 @@
 export { hexToRgb } from './hex-to-rgb.cjs';
 export { Radius, getRadiusStyle } from './radius.cjs';
-export { HakiProvider, HakiProviderProps, Theme, defaultTheme, useTheme } from './theme-provider.cjs';
+export { HakiProvider, HakiProviderProps, NeutralTokens, Theme, ThemeMode, darkNeutrals, defaultTheme, lightNeutrals, useTheme } from './theme-provider.cjs';
 export { Button, ButtonProps } from './button.cjs';
 export { Input, InputProps } from './input.cjs';
 export { Pagination } from './pagination.cjs';

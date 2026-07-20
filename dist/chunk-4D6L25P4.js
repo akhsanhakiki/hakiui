@@ -43,8 +43,14 @@ var Calendar = ({ radius = "md" }) => {
   return /* @__PURE__ */ jsxs(
     "div",
     {
-      className: "w-[280px] select-none border border-(--border) bg-(--surface) p-4",
-      style: getRadiusStyle(radius),
+      className: "w-[280px] select-none p-4",
+      style: {
+        ...getRadiusStyle(radius),
+        backgroundColor: "color-mix(in srgb, var(--bg-soft) 30%, transparent)",
+        border: "0.5px solid var(--border)",
+        outline: "0.5px solid var(--border)",
+        outlineOffset: 0
+      },
       children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-4", children: [
           /* @__PURE__ */ jsx(
@@ -107,4 +113,4 @@ var Calendar = ({ radius = "md" }) => {
 export {
   Calendar
 };
-//# sourceMappingURL=chunk-2DWANKW5.js.map
+//# sourceMappingURL=chunk-4D6L25P4.js.map
