@@ -1116,14 +1116,12 @@ var Dropdown = ({
   const containerRef = (0, import_react8.useRef)(null);
   const triggerRef = (0, import_react8.useRef)(null);
   const menuRef = (0, import_react8.useRef)(null);
+  const isClosingRef = (0, import_react8.useRef)(false);
   const [isOpen, setIsOpen] = (0, import_react8.useState)(false);
+  const [isEntered, setIsEntered] = (0, import_react8.useState)(false);
   const [hoveredValue, setHoveredValue] = (0, import_react8.useState)(null);
   const [internalValue, setInternalValue] = (0, import_react8.useState)(defaultValue ?? "");
-  const [menuPosition, setMenuPosition] = (0, import_react8.useState)({
-    top: 0,
-    left: 0,
-    width: 0
-  });
+  const [menuPosition, setMenuPosition] = (0, import_react8.useState)(null);
   const [menuStyle, setMenuStyle] = (0, import_react8.useState)(
     defaultMenuPortalStyle
   );
@@ -1151,43 +1149,70 @@ var Dropdown = ({
     () => options.find((option) => option.value === selectedValue),
     [options, selectedValue]
   );
+  const measureMenuLayout = () => {
+    const triggerEl = triggerRef.current;
+    if (!triggerEl) return null;
+    const rect = triggerEl.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(triggerEl);
+    const nextPosition = {
+      top: rect.bottom + 8,
+      left: rect.left,
+      width: rect.width
+    };
+    setMenuPosition(nextPosition);
+    setMenuStyle(resolveMenuPortalTokens(computedStyle));
+    setThemeVars(resolveThemeVarStyle(computedStyle));
+    return nextPosition;
+  };
+  const openMenu = () => {
+    if (!measureMenuLayout()) return;
+    isClosingRef.current = false;
+    setIsEntered(false);
+    setIsOpen(true);
+  };
+  const requestClose = () => {
+    if (!isOpen) return;
+    isClosingRef.current = true;
+    setIsEntered(false);
+    setHoveredValue(null);
+  };
   (0, import_react8.useEffect)(() => {
+    if (!isOpen) return;
     const handleOutsideClick = (event) => {
       const target = event.target;
       if (!containerRef.current?.contains(target) && !menuRef.current?.contains(target)) {
-        setIsOpen(false);
+        isClosingRef.current = true;
+        setIsEntered(false);
+        setHoveredValue(null);
       }
     };
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, []);
+  }, [isOpen]);
   const handleSelect = (nextValue) => {
     if (value === void 0) setInternalValue(nextValue);
     onChange?.(nextValue);
-    setHoveredValue(null);
-    setIsOpen(false);
+    requestClose();
   };
-  (0, import_react8.useEffect)(() => {
-    if (isOpen) return;
-    setHoveredValue(null);
+  (0, import_react8.useLayoutEffect)(() => {
+    if (!isOpen) return;
+    measureMenuLayout();
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!isClosingRef.current) setIsEntered(true);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
   }, [isOpen]);
   (0, import_react8.useEffect)(() => {
     if (!isOpen) return;
     const updatePosition = () => {
-      const triggerEl = triggerRef.current;
-      if (!triggerEl) return;
-      const rect = triggerEl?.getBoundingClientRect();
-      if (!rect) return;
-      const computedStyle = window.getComputedStyle(triggerEl);
-      setMenuPosition({
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: rect.width
-      });
-      setMenuStyle(resolveMenuPortalTokens(computedStyle));
-      setThemeVars(resolveThemeVarStyle(computedStyle));
+      measureMenuLayout();
     };
-    updatePosition();
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
     return () => {
@@ -1195,12 +1220,41 @@ var Dropdown = ({
       window.removeEventListener("scroll", updatePosition, true);
     };
   }, [isOpen]);
-  const dropdownMenu = !disabled && (0, import_react_dom.createPortal)(
+  (0, import_react8.useEffect)(() => {
+    if (!isOpen || isEntered || !isClosingRef.current) return;
+    const menuEl = menuRef.current;
+    if (!menuEl) {
+      setIsOpen(false);
+      isClosingRef.current = false;
+      return;
+    }
+    let done = false;
+    const finishClose = () => {
+      if (done) return;
+      done = true;
+      setIsOpen(false);
+      isClosingRef.current = false;
+    };
+    const handleTransitionEnd = (event) => {
+      if (event.target !== menuEl) return;
+      if (event.propertyName !== "opacity" && event.propertyName !== "transform") {
+        return;
+      }
+      finishClose();
+    };
+    menuEl.addEventListener("transitionend", handleTransitionEnd);
+    const timeoutId = window.setTimeout(finishClose, 300);
+    return () => {
+      menuEl.removeEventListener("transitionend", handleTransitionEnd);
+      window.clearTimeout(timeoutId);
+    };
+  }, [isOpen, isEntered]);
+  const dropdownMenu = !disabled && isOpen && menuPosition && (0, import_react_dom.createPortal)(
     /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
       "div",
       {
         ref: menuRef,
-        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`,
+        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isEntered ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1.5 opacity-0"}`,
         style: {
           ...themeVars,
           top: menuPosition.top,
@@ -1212,7 +1266,7 @@ var Dropdown = ({
           outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
-        "aria-hidden": !isOpen,
+        "aria-hidden": !isEntered,
         children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("ul", { className: "m-0 list-none p-0", children: options.map((option) => {
           const isSelected = option.value === selectedValue;
           const isHovered = hoveredValue === option.value && !option.disabled;
@@ -1279,7 +1333,10 @@ var Dropdown = ({
         ref: triggerRef,
         type: "button",
         disabled,
-        onClick: () => setIsOpen((prev) => !prev),
+        onClick: () => {
+          if (isOpen && isEntered) requestClose();
+          else if (!isOpen) openMenu();
+        },
         className: `flex w-full items-center justify-between gap-3 text-left text-(--text) transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:border-(--ui-primary) disabled:cursor-not-allowed disabled:opacity-60 ${currentSize.trigger} ${currentSize.text}`,
         style: {
           ...getRadiusStyle(radius),
@@ -1300,7 +1357,7 @@ var Dropdown = ({
             import_lucide_react7.ChevronDown,
             {
               size: currentSize.icon,
-              className: `shrink-0 text-(--text-muted) transition-transform duration-200 ease-out motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`
+              className: `shrink-0 text-(--text-muted) transition-transform duration-200 ease-out motion-reduce:transition-none ${isEntered ? "rotate-180" : ""}`
             }
           )
         ]
