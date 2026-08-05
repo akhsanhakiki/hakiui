@@ -160,13 +160,12 @@ export const ToastProvider = ({
                   className={`pointer-events-auto flex w-full items-start gap-3 px-4 py-3 shadow-lg transition-all duration-200 ease-out motion-reduce:transition-none ${t.leaving ? `opacity-0 ${fromTop ? "-translate-y-2" : "translate-y-2"} scale-[0.98]` : "translate-y-0 scale-100 opacity-100"}`}
                   style={{
                     ...getRadiusStyle(radius),
-                    backgroundColor: "var(--surface)",
-                    border: "0.5px solid var(--border)",
-                    outline: "0.5px solid var(--border)",
+                    backgroundColor: `color-mix(in srgb, ${meta.color} 9%, var(--surface))`,
+                    border: `0.5px solid color-mix(in srgb, ${meta.color} 35%, var(--border))`,
+                    outline: `0.5px solid color-mix(in srgb, ${meta.color} 35%, var(--border))`,
                     outlineOffset: 0,
                     color: "var(--text)",
                     fontFamily: "var(--ui-font)",
-                    borderLeft: `3px solid ${meta.color}`,
                   }}
                 >
                   {Icon && (

@@ -26,6 +26,7 @@ const ui = [
   "skeleton",
   "spinner",
   "slider",
+  "stepper",
   "breadcrumbs"
 ] as const;
 

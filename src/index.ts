@@ -58,4 +58,5 @@ export { Progress, type ProgressProps, type ProgressColor } from "./components/u
 export { Skeleton, type SkeletonProps } from "./components/ui/skeleton";
 export { Spinner, type SpinnerProps } from "./components/ui/spinner";
 export { Slider, type SliderProps } from "./components/ui/slider";
+export { Stepper, type StepperProps } from "./components/ui/stepper";
 export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from "./components/ui/breadcrumbs";

@@ -27,6 +27,7 @@ export { Progress, ProgressColor, ProgressProps } from './progress.js';
 export { Skeleton, SkeletonProps } from './skeleton.js';
 export { Spinner, SpinnerProps } from './spinner.js';
 export { Slider, SliderProps } from './slider.js';
+export { Stepper, StepperProps } from './stepper.js';
 export { BreadcrumbItem, Breadcrumbs, BreadcrumbsProps } from './breadcrumbs.js';
 import 'react';
 import 'react/jsx-runtime';

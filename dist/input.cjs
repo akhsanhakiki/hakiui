@@ -50,7 +50,7 @@ var import_jsx_runtime = require("react/jsx-runtime");
 var Input = import_react.default.forwardRef(
   ({
     className = "",
-    size = "lg",
+    size = "md",
     label,
     labelPlacement = "top",
     description,
@@ -65,22 +65,22 @@ var Input = import_react.default.forwardRef(
     const inputType = isPassword ? showPassword ? "text" : "password" : type;
     const sizeStyles = {
       sm: {
-        container: "px-2.5 py-1",
+        container: "px-2 py-1 min-h-8",
         input: "text-xs",
         icon: 14,
-        labelLeftOffset: "mt-1.5"
+        labelLeftOffset: "mt-1"
       },
       md: {
-        container: "px-3 py-1.5",
+        container: "px-3 py-2 min-h-9",
         input: "text-sm",
         icon: 15,
-        labelLeftOffset: "mt-2"
+        labelLeftOffset: "mt-1.5"
       },
       lg: {
-        container: "px-3 py-2",
+        container: "px-3.5 py-2.5 min-h-10",
         input: "text-base",
         icon: 16,
-        labelLeftOffset: "mt-2.5"
+        labelLeftOffset: "mt-2"
       }
     };
     const currentSize = sizeStyles[size];

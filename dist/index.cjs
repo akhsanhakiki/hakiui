@@ -56,6 +56,7 @@ __export(src_exports, {
   Skeleton: () => Skeleton,
   Slider: () => Slider,
   Spinner: () => Spinner,
+  Stepper: () => Stepper,
   Switch: () => Switch,
   Table: () => Table,
   TableBody: () => TableBody,
@@ -280,9 +281,9 @@ var Button = import_react3.default.forwardRef(
     }, []);
     const showHover = isHovered && !disabled;
     const sizeClasses = {
-      sm: "h-8 px-3 text-sm",
-      md: "h-10 px-4 text-sm",
-      lg: "h-12 px-6 text-base"
+      sm: "h-8 px-3 text-xs",
+      md: "h-9 px-4 text-sm",
+      lg: "h-10 px-6 text-base"
     };
     let variantStyle = {
       transition: "box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease"
@@ -306,8 +307,8 @@ var Button = import_react3.default.forwardRef(
         ...variantStyle,
         backgroundColor: "transparent",
         color: "var(--text)",
-        border: "1px solid var(--border)",
-        outline: "1px solid var(--border)",
+        border: "0.5px solid var(--border)",
+        outline: "0.5px solid var(--border)",
         outlineOffset: 0
       };
     } else if (variant === "ghost") {
@@ -394,7 +395,7 @@ var import_jsx_runtime3 = require("react/jsx-runtime");
 var Input = import_react4.default.forwardRef(
   ({
     className = "",
-    size = "lg",
+    size = "md",
     label,
     labelPlacement = "top",
     description,
@@ -409,22 +410,22 @@ var Input = import_react4.default.forwardRef(
     const inputType = isPassword ? showPassword ? "text" : "password" : type;
     const sizeStyles = {
       sm: {
-        container: "px-2.5 py-1",
+        container: "px-2 py-1 min-h-8",
         input: "text-xs",
         icon: 14,
-        labelLeftOffset: "mt-1.5"
+        labelLeftOffset: "mt-1"
       },
       md: {
-        container: "px-3 py-1.5",
+        container: "px-3 py-2 min-h-9",
         input: "text-sm",
         icon: 15,
-        labelLeftOffset: "mt-2"
+        labelLeftOffset: "mt-1.5"
       },
       lg: {
-        container: "px-3 py-2",
+        container: "px-3.5 py-2.5 min-h-10",
         input: "text-base",
         icon: 16,
-        labelLeftOffset: "mt-2.5"
+        labelLeftOffset: "mt-2"
       }
     };
     const currentSize = sizeStyles[size];
@@ -1103,7 +1104,7 @@ var defaultMenuPortalStyle = () => ({
 var import_jsx_runtime14 = require("react/jsx-runtime");
 var Dropdown = ({
   options,
-  size = "lg",
+  size = "md",
   value,
   defaultValue,
   onChange,
@@ -1129,34 +1130,34 @@ var Dropdown = ({
   const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
-      trigger: "px-1.5 py-0.5 min-h-6",
-      text: "text-[10px]",
-      icon: 12,
-      option: "px-1.5 py-0.5",
-      optionLabel: "text-[10px]",
-      optionDescription: "text-[9px]",
-      check: 12,
-      menu: "p-0.5"
-    },
-    md: {
-      trigger: "px-2 py-0.5 min-h-7",
-      text: "text-[11px]",
-      icon: 13,
-      option: "px-1.5 py-1",
-      optionLabel: "text-[11px]",
-      optionDescription: "text-[10px]",
-      check: 13,
-      menu: "p-0.5"
-    },
-    lg: {
-      trigger: "px-2.5 py-1 min-h-8",
+      trigger: "px-2 py-1 min-h-8",
       text: "text-xs",
       icon: 14,
-      option: "px-2 py-1.5",
+      option: "px-2 py-1",
       optionLabel: "text-xs",
       optionDescription: "text-[11px]",
       check: 14,
       menu: "p-1"
+    },
+    md: {
+      trigger: "px-3 py-2 min-h-9",
+      text: "text-sm",
+      icon: 15,
+      option: "px-2.5 py-1.5",
+      optionLabel: "text-sm",
+      optionDescription: "text-xs",
+      check: 15,
+      menu: "p-1"
+    },
+    lg: {
+      trigger: "px-3.5 py-2.5 min-h-10",
+      text: "text-base",
+      icon: 16,
+      option: "px-3 py-2",
+      optionLabel: "text-base",
+      optionDescription: "text-sm",
+      check: 16,
+      menu: "p-1.5"
     }
   };
   const currentSize = sizeStyles[size];
@@ -1389,7 +1390,7 @@ var import_lucide_react8 = require("lucide-react");
 var import_jsx_runtime15 = require("react/jsx-runtime");
 var Autocomplete = ({
   options,
-  size = "lg",
+  size = "md",
   value,
   defaultValue,
   onChange,
@@ -1405,34 +1406,47 @@ var Autocomplete = ({
   const fieldRef = (0, import_react9.useRef)(null);
   const inputRef = (0, import_react9.useRef)(null);
   const menuRef = (0, import_react9.useRef)(null);
+  const isClosingRef = (0, import_react9.useRef)(false);
   const [isOpen, setIsOpen] = (0, import_react9.useState)(false);
+  const [isEntered, setIsEntered] = (0, import_react9.useState)(false);
   const [hoveredValue, setHoveredValue] = (0, import_react9.useState)(null);
   const [internalValue, setInternalValue] = (0, import_react9.useState)(defaultValue ?? "");
   const [query, setQuery] = (0, import_react9.useState)("");
-  const [menuPosition, setMenuPosition] = (0, import_react9.useState)({
-    top: 0,
-    left: 0,
-    width: 0
-  });
+  const [menuPosition, setMenuPosition] = (0, import_react9.useState)(null);
   const [menuStyle, setMenuStyle] = (0, import_react9.useState)(
     defaultMenuPortalStyle
   );
   const [themeVars, setThemeVars] = (0, import_react9.useState)({});
   const sizeStyles = {
     sm: {
-      container: "px-2.5 py-1 min-h-9",
+      container: "px-2 py-1 min-h-8",
       text: "text-xs",
-      icon: 14
+      icon: 14,
+      option: "px-2 py-1",
+      optionLabel: "text-xs",
+      optionDescription: "text-[11px]",
+      check: 14,
+      menu: "p-1"
     },
     md: {
-      container: "px-3 py-1.5 min-h-10",
+      container: "px-3 py-2 min-h-9",
       text: "text-sm",
-      icon: 15
+      icon: 15,
+      option: "px-2.5 py-1.5",
+      optionLabel: "text-sm",
+      optionDescription: "text-xs",
+      check: 15,
+      menu: "p-1"
     },
     lg: {
-      container: "px-3 py-2 min-h-11",
+      container: "px-3.5 py-2.5 min-h-10",
       text: "text-base",
-      icon: 16
+      icon: 16,
+      option: "px-3 py-2",
+      optionLabel: "text-base",
+      optionDescription: "text-sm",
+      check: 16,
+      menu: "p-1.5"
     }
   };
   const currentSize = sizeStyles[size];
@@ -1451,43 +1465,72 @@ var Autocomplete = ({
       return labelText.includes(needle) || valueText.includes(needle) || descriptionText.includes(needle);
     });
   }, [options, query]);
+  const measureMenuLayout = () => {
+    const fieldEl = fieldRef.current;
+    if (!fieldEl) return null;
+    const rect = fieldEl.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(fieldEl);
+    const nextPosition = {
+      top: rect.bottom + 8,
+      left: rect.left,
+      width: rect.width
+    };
+    setMenuPosition(nextPosition);
+    setMenuStyle(resolveMenuPortalTokens(computedStyle));
+    setThemeVars(resolveThemeVarStyle(computedStyle));
+    return nextPosition;
+  };
+  const openMenu = () => {
+    if (isOpen) return;
+    if (!measureMenuLayout()) return;
+    isClosingRef.current = false;
+    setIsEntered(false);
+    setIsOpen(true);
+  };
+  const requestClose = () => {
+    if (!isOpen) return;
+    isClosingRef.current = true;
+    setIsEntered(false);
+    setHoveredValue(null);
+  };
   (0, import_react9.useEffect)(() => {
+    if (!isOpen) return;
     const handleOutsideClick = (event) => {
       const target = event.target;
       if (!containerRef.current?.contains(target) && !menuRef.current?.contains(target)) {
-        setIsOpen(false);
+        isClosingRef.current = true;
+        setIsEntered(false);
+        setHoveredValue(null);
       }
     };
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, []);
+  }, [isOpen]);
   const handleSelect = (nextValue) => {
     if (value === void 0) setInternalValue(nextValue);
     onChange?.(nextValue);
-    setHoveredValue(null);
-    setIsOpen(false);
     setQuery("");
+    requestClose();
   };
-  (0, import_react9.useEffect)(() => {
-    if (isOpen) return;
-    setHoveredValue(null);
+  (0, import_react9.useLayoutEffect)(() => {
+    if (!isOpen) return;
+    measureMenuLayout();
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!isClosingRef.current) setIsEntered(true);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
   }, [isOpen]);
   (0, import_react9.useEffect)(() => {
     if (!isOpen) return;
     const updatePosition = () => {
-      const fieldEl = fieldRef.current;
-      if (!fieldEl) return;
-      const rect = fieldEl.getBoundingClientRect();
-      const computedStyle = window.getComputedStyle(fieldEl);
-      setMenuPosition({
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: rect.width
-      });
-      setMenuStyle(resolveMenuPortalTokens(computedStyle));
-      setThemeVars(resolveThemeVarStyle(computedStyle));
+      measureMenuLayout();
     };
-    updatePosition();
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
     return () => {
@@ -1495,13 +1538,42 @@ var Autocomplete = ({
       window.removeEventListener("scroll", updatePosition, true);
     };
   }, [isOpen]);
+  (0, import_react9.useEffect)(() => {
+    if (!isOpen || isEntered || !isClosingRef.current) return;
+    const menuEl = menuRef.current;
+    if (!menuEl) {
+      setIsOpen(false);
+      isClosingRef.current = false;
+      return;
+    }
+    let done = false;
+    const finishClose = () => {
+      if (done) return;
+      done = true;
+      setIsOpen(false);
+      isClosingRef.current = false;
+    };
+    const handleTransitionEnd = (event) => {
+      if (event.target !== menuEl) return;
+      if (event.propertyName !== "opacity" && event.propertyName !== "transform") {
+        return;
+      }
+      finishClose();
+    };
+    menuEl.addEventListener("transitionend", handleTransitionEnd);
+    const timeoutId = window.setTimeout(finishClose, 300);
+    return () => {
+      menuEl.removeEventListener("transitionend", handleTransitionEnd);
+      window.clearTimeout(timeoutId);
+    };
+  }, [isOpen, isEntered]);
   const displayValue = isOpen ? query : selectedOption?.label ?? "";
-  const autocompleteMenu = !disabled && (0, import_react_dom2.createPortal)(
+  const autocompleteMenu = !disabled && isOpen && menuPosition && (0, import_react_dom2.createPortal)(
     /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
       "div",
       {
         ref: menuRef,
-        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`,
+        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${currentSize.menu} ${isEntered ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1.5 opacity-0"}`,
         style: {
           ...themeVars,
           top: menuPosition.top,
@@ -1513,11 +1585,11 @@ var Autocomplete = ({
           outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
-        "aria-hidden": !isOpen,
+        "aria-hidden": !isEntered,
         children: filteredOptions.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
           "div",
           {
-            className: "px-2.5 py-2 text-sm",
+            className: `${currentSize.option} ${currentSize.optionLabel}`,
             style: { color: menuStyle["--dropdown-text-muted"] },
             children: emptyMessage
           }
@@ -1533,7 +1605,7 @@ var Autocomplete = ({
               onMouseLeave: () => setHoveredValue(
                 (current) => current === option.value ? null : current
               ),
-              className: "flex w-full items-start justify-between gap-2 rounded-lg px-2.5 py-2 text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40",
+              className: `flex w-full items-start justify-between gap-2 rounded-lg text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40 ${currentSize.option}`,
               style: {
                 transform: isHovered ? "translateY(-0.5px) scale(1.003)" : "translateY(0) scale(1)",
                 boxShadow: isHovered ? "inset 0 0 0 0.5px color-mix(in oklab, var(--border) 50%, transparent)" : "none",
@@ -1545,7 +1617,7 @@ var Autocomplete = ({
                   /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
                     "div",
                     {
-                      className: `truncate text-sm transition-colors duration-200 ${isSelected ? "font-medium" : ""}`,
+                      className: `truncate transition-colors duration-200 ${currentSize.optionLabel} ${isSelected ? "font-medium" : ""}`,
                       style: {
                         color: menuStyle["--dropdown-text"]
                       },
@@ -1555,7 +1627,7 @@ var Autocomplete = ({
                   option.description && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
                     "div",
                     {
-                      className: "mt-0.5 truncate text-xs transition-colors duration-200",
+                      className: `mt-0.5 truncate transition-colors duration-200 ${currentSize.optionDescription}`,
                       style: {
                         color: menuStyle["--dropdown-text-muted"]
                       },
@@ -1566,7 +1638,7 @@ var Autocomplete = ({
                 isSelected && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
                   import_lucide_react8.Check,
                   {
-                    size: 16,
+                    size: currentSize.check,
                     className: "mt-0.5 shrink-0 text-(--ui-primary)"
                   }
                 )
@@ -1590,8 +1662,7 @@ var Autocomplete = ({
           backgroundColor: "var(--bg-soft)",
           border: "0.5px solid var(--border)",
           outline: "0.5px solid var(--border)",
-          outlineOffset: 0,
-          boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.09), inset 0 -1px 1px rgba(0, 0, 0, 0.04)"
+          outlineOffset: 0
         },
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
@@ -1608,9 +1679,9 @@ var Autocomplete = ({
               type: "text",
               disabled,
               value: displayValue,
-              onFocus: () => setIsOpen(true),
+              onFocus: openMenu,
               onChange: (event) => {
-                setIsOpen(true);
+                openMenu();
                 setQuery(event.target.value);
                 onInputChange?.(event.target.value);
               },
@@ -1868,7 +1939,7 @@ var BarChart = ({
               left: Math.min(pointer.x + 12, Math.max(0, width - 150)),
               top: Math.max(0, pointer.y - 8),
               backgroundColor: "var(--surface)",
-              border: "1px solid var(--border)",
+              border: "0.5px solid var(--border)",
               color: "var(--text)"
             },
             children: [
@@ -2141,7 +2212,7 @@ var LineChart = ({
               left: Math.min(xFor(hoverIndex) + 12, Math.max(0, width - 150)),
               top: margin.top,
               backgroundColor: "var(--surface)",
-              border: "1px solid var(--border)",
+              border: "0.5px solid var(--border)",
               color: "var(--text)"
             },
             children: [
@@ -2578,13 +2649,12 @@ var ToastProvider = ({
                 className: `pointer-events-auto flex w-full items-start gap-3 px-4 py-3 shadow-lg transition-all duration-200 ease-out motion-reduce:transition-none ${t.leaving ? `opacity-0 ${fromTop ? "-translate-y-2" : "translate-y-2"} scale-[0.98]` : "translate-y-0 scale-100 opacity-100"}`,
                 style: {
                   ...getRadiusStyle(radius),
-                  backgroundColor: "var(--surface)",
-                  border: "0.5px solid var(--border)",
-                  outline: "0.5px solid var(--border)",
+                  backgroundColor: `color-mix(in srgb, ${meta.color} 9%, var(--surface))`,
+                  border: `0.5px solid color-mix(in srgb, ${meta.color} 35%, var(--border))`,
+                  outline: `0.5px solid color-mix(in srgb, ${meta.color} 35%, var(--border))`,
                   outlineOffset: 0,
                   color: "var(--text)",
-                  fontFamily: "var(--ui-font)",
-                  borderLeft: `3px solid ${meta.color}`
+                  fontFamily: "var(--ui-font)"
                 },
                 children: [
                   Icon && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
@@ -3062,22 +3132,145 @@ var Slider = ({
   );
 };
 
-// src/components/ui/breadcrumbs.tsx
+// src/components/ui/stepper.tsx
+var import_react16 = require("react");
 var import_lucide_react12 = require("lucide-react");
 var import_jsx_runtime27 = require("react/jsx-runtime");
+var SIZE_STYLES = {
+  sm: { height: 28, button: 26, font: "text-xs", icon: 12, minW: 32 },
+  md: { height: 36, button: 34, font: "text-sm", icon: 14, minW: 40 },
+  lg: { height: 44, button: 42, font: "text-base", icon: 16, minW: 48 }
+};
+var Stepper = ({
+  value,
+  defaultValue = 0,
+  onChange,
+  min = -Infinity,
+  max = Infinity,
+  step = 1,
+  label,
+  labelPlacement = "top",
+  size = "md",
+  radius = "md",
+  disabled = false,
+  formatValue = (v) => String(v),
+  className = "",
+  "aria-label": ariaLabel
+}) => {
+  const id = (0, import_react16.useId)();
+  const [internalValue, setInternalValue] = (0, import_react16.useState)(defaultValue);
+  const current = value ?? internalValue;
+  const s = SIZE_STYLES[size];
+  const clamp = (n) => Math.min(max, Math.max(min, n));
+  const commit = (next) => {
+    const clamped = clamp(next);
+    if (value === void 0) setInternalValue(clamped);
+    onChange?.(clamped);
+  };
+  const decrement = () => commit(current - step);
+  const increment = () => commit(current + step);
+  const atMin = current <= min;
+  const atMax = current >= max;
+  const control = /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
+    "div",
+    {
+      className: `inline-flex items-stretch overflow-hidden ring-2 ring-transparent transition-[box-shadow,ring-color] focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${disabled ? "opacity-50" : ""} ${className}`,
+      style: {
+        ...getRadiusStyle(radius),
+        height: s.height,
+        backgroundColor: "var(--bg-soft)",
+        border: "0.5px solid var(--border)",
+        outline: "0.5px solid var(--border)",
+        outlineOffset: 0,
+        fontFamily: "var(--ui-font)"
+      },
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+          "button",
+          {
+            type: "button",
+            "aria-label": "Decrease value",
+            tabIndex: -1,
+            disabled: disabled || atMin,
+            onClick: decrement,
+            className: "flex shrink-0 cursor-pointer items-center justify-center text-(--text-muted) transition-colors hover:bg-(--hover) hover:text-(--text) disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent",
+            style: { width: s.button },
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_lucide_react12.Minus, { size: s.icon })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+          "div",
+          {
+            role: "spinbutton",
+            tabIndex: disabled ? -1 : 0,
+            "aria-valuenow": current,
+            "aria-valuemin": Number.isFinite(min) ? min : void 0,
+            "aria-valuemax": Number.isFinite(max) ? max : void 0,
+            "aria-label": ariaLabel ?? label,
+            onKeyDown: (e) => {
+              if (disabled) return;
+              if (e.key === "ArrowUp") {
+                e.preventDefault();
+                increment();
+              } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                decrement();
+              }
+            },
+            className: `flex flex-1 select-none items-center justify-center tabular-nums text-(--text) outline-none ${s.font}`,
+            style: {
+              minWidth: s.minW,
+              borderLeft: "0.5px solid var(--border)",
+              borderRight: "0.5px solid var(--border)"
+            },
+            children: formatValue(current)
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+          "button",
+          {
+            type: "button",
+            "aria-label": "Increase value",
+            tabIndex: -1,
+            disabled: disabled || atMax,
+            onClick: increment,
+            className: "flex shrink-0 cursor-pointer items-center justify-center text-(--text-muted) transition-colors hover:bg-(--hover) hover:text-(--text) disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent",
+            style: { width: s.button },
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_lucide_react12.Plus, { size: s.icon })
+          }
+        )
+      ]
+    }
+  );
+  if (!label) return control;
+  return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
+    "div",
+    {
+      className: `flex ${labelPlacement === "left" ? "w-fit flex-row items-center gap-4" : "w-full flex-col gap-1.5"}`,
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("label", { htmlFor: id, className: "whitespace-nowrap text-sm font-medium text-(--text)", children: label }),
+        control
+      ]
+    }
+  );
+};
+
+// src/components/ui/breadcrumbs.tsx
+var import_lucide_react13 = require("lucide-react");
+var import_jsx_runtime28 = require("react/jsx-runtime");
 var Breadcrumbs = ({
   items,
   separator,
   className = ""
-}) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+}) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
   "nav",
   {
     "aria-label": "Breadcrumb",
     className,
     style: { fontFamily: "var(--ui-font)" },
-    children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("ol", { className: "m-0 flex list-none flex-wrap items-center gap-1.5 p-0", children: items.map((item, i) => {
+    children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("ol", { className: "m-0 flex list-none flex-wrap items-center gap-1.5 p-0", children: items.map((item, i) => {
       const isLast = i === items.length - 1;
-      const content = isLast ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { "aria-current": "page", className: "font-medium text-(--text)", children: item.label }) : item.href || item.onClick ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+      const content = isLast ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { "aria-current": "page", className: "font-medium text-(--text)", children: item.label }) : item.href || item.onClick ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
         "a",
         {
           href: item.href ?? "#",
@@ -3090,10 +3283,10 @@ var Breadcrumbs = ({
           className: "text-(--text-muted) transition-colors hover:text-(--text) hover:underline",
           children: item.label
         }
-      ) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: "text-(--text-muted)", children: item.label });
-      return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("li", { className: "flex items-center gap-1.5 text-sm", children: [
+      ) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { className: "text-(--text-muted)", children: item.label });
+      return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("li", { className: "flex items-center gap-1.5 text-sm", children: [
         content,
-        !isLast && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { "aria-hidden": true, className: "flex text-(--text-muted) opacity-60", children: separator ?? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_lucide_react12.ChevronRight, { size: 14 }) })
+        !isLast && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { "aria-hidden": true, className: "flex text-(--text-muted) opacity-60", children: separator ?? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_lucide_react13.ChevronRight, { size: 14 }) })
       ] }, i);
     }) })
   }
@@ -3126,6 +3319,7 @@ var Breadcrumbs = ({
   Skeleton,
   Slider,
   Spinner,
+  Stepper,
   Switch,
   Table,
   TableBody,

@@ -267,7 +267,7 @@ export const LineChart = ({
             left: Math.min(xFor(hoverIndex) + 12, Math.max(0, width - 150)),
             top: margin.top,
             backgroundColor: "var(--surface)",
-            border: "1px solid var(--border)",
+            border: "0.5px solid var(--border)",
             color: "var(--text)",
           }}
         >

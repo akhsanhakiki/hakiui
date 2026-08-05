@@ -44,7 +44,7 @@ type MenuPosition = {
 
 export const Dropdown = ({
   options,
-  size = "lg",
+  size = "md",
   value,
   defaultValue,
   onChange,
@@ -71,34 +71,34 @@ export const Dropdown = ({
   const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
-      trigger: "px-1.5 py-0.5 min-h-6",
-      text: "text-[10px]",
-      icon: 12,
-      option: "px-1.5 py-0.5",
-      optionLabel: "text-[10px]",
-      optionDescription: "text-[9px]",
-      check: 12,
-      menu: "p-0.5",
-    },
-    md: {
-      trigger: "px-2 py-0.5 min-h-7",
-      text: "text-[11px]",
-      icon: 13,
-      option: "px-1.5 py-1",
-      optionLabel: "text-[11px]",
-      optionDescription: "text-[10px]",
-      check: 13,
-      menu: "p-0.5",
-    },
-    lg: {
-      trigger: "px-2.5 py-1 min-h-8",
+      trigger: "px-2 py-1 min-h-8",
       text: "text-xs",
       icon: 14,
-      option: "px-2 py-1.5",
+      option: "px-2 py-1",
       optionLabel: "text-xs",
       optionDescription: "text-[11px]",
       check: 14,
       menu: "p-1",
+    },
+    md: {
+      trigger: "px-3 py-2 min-h-9",
+      text: "text-sm",
+      icon: 15,
+      option: "px-2.5 py-1.5",
+      optionLabel: "text-sm",
+      optionDescription: "text-xs",
+      check: 15,
+      menu: "p-1",
+    },
+    lg: {
+      trigger: "px-3.5 py-2.5 min-h-10",
+      text: "text-base",
+      icon: 16,
+      option: "px-3 py-2",
+      optionLabel: "text-base",
+      optionDescription: "text-sm",
+      check: 16,
+      menu: "p-1.5",
     },
   } as const;
   const currentSize = sizeStyles[size];

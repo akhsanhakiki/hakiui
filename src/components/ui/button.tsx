@@ -45,9 +45,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const showHover = isHovered && !disabled;
 
     const sizeClasses = {
-      sm: "h-8 px-3 text-sm",
-      md: "h-10 px-4 text-sm",
-      lg: "h-12 px-6 text-base",
+      sm: "h-8 px-3 text-xs",
+      md: "h-9 px-4 text-sm",
+      lg: "h-10 px-6 text-base",
     };
 
     let variantStyle: React.CSSProperties = {
@@ -74,8 +74,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ...variantStyle,
         backgroundColor: "transparent",
         color: "var(--text)",
-        border: "1px solid var(--border)",
-        outline: "1px solid var(--border)",
+        border: "0.5px solid var(--border)",
+        outline: "0.5px solid var(--border)",
         outlineOffset: 0,
       };
     } else if (variant === "ghost") {

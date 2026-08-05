@@ -332,7 +332,7 @@ var BarChart = ({
               left: Math.min(pointer.x + 12, Math.max(0, width - 150)),
               top: Math.max(0, pointer.y - 8),
               backgroundColor: "var(--surface)",
-              border: "1px solid var(--border)",
+              border: "0.5px solid var(--border)",
               color: "var(--text)"
             },
             children: [

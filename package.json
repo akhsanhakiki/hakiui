@@ -1,6 +1,6 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
@@ -166,6 +166,11 @@
       "types": "./dist/slider.d.ts",
       "import": "./dist/slider.js",
       "require": "./dist/slider.cjs"
+    },
+    "./stepper": {
+      "types": "./dist/stepper.d.ts",
+      "import": "./dist/stepper.js",
+      "require": "./dist/stepper.cjs"
     },
     "./breadcrumbs": {
       "types": "./dist/breadcrumbs.d.ts",

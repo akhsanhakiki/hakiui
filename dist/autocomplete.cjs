@@ -144,7 +144,7 @@ var defaultMenuPortalStyle = () => ({
 var import_jsx_runtime = require("react/jsx-runtime");
 var Autocomplete = ({
   options,
-  size = "lg",
+  size = "md",
   value,
   defaultValue,
   onChange,
@@ -160,34 +160,47 @@ var Autocomplete = ({
   const fieldRef = (0, import_react.useRef)(null);
   const inputRef = (0, import_react.useRef)(null);
   const menuRef = (0, import_react.useRef)(null);
+  const isClosingRef = (0, import_react.useRef)(false);
   const [isOpen, setIsOpen] = (0, import_react.useState)(false);
+  const [isEntered, setIsEntered] = (0, import_react.useState)(false);
   const [hoveredValue, setHoveredValue] = (0, import_react.useState)(null);
   const [internalValue, setInternalValue] = (0, import_react.useState)(defaultValue ?? "");
   const [query, setQuery] = (0, import_react.useState)("");
-  const [menuPosition, setMenuPosition] = (0, import_react.useState)({
-    top: 0,
-    left: 0,
-    width: 0
-  });
+  const [menuPosition, setMenuPosition] = (0, import_react.useState)(null);
   const [menuStyle, setMenuStyle] = (0, import_react.useState)(
     defaultMenuPortalStyle
   );
   const [themeVars, setThemeVars] = (0, import_react.useState)({});
   const sizeStyles = {
     sm: {
-      container: "px-2.5 py-1 min-h-9",
+      container: "px-2 py-1 min-h-8",
       text: "text-xs",
-      icon: 14
+      icon: 14,
+      option: "px-2 py-1",
+      optionLabel: "text-xs",
+      optionDescription: "text-[11px]",
+      check: 14,
+      menu: "p-1"
     },
     md: {
-      container: "px-3 py-1.5 min-h-10",
+      container: "px-3 py-2 min-h-9",
       text: "text-sm",
-      icon: 15
+      icon: 15,
+      option: "px-2.5 py-1.5",
+      optionLabel: "text-sm",
+      optionDescription: "text-xs",
+      check: 15,
+      menu: "p-1"
     },
     lg: {
-      container: "px-3 py-2 min-h-11",
+      container: "px-3.5 py-2.5 min-h-10",
       text: "text-base",
-      icon: 16
+      icon: 16,
+      option: "px-3 py-2",
+      optionLabel: "text-base",
+      optionDescription: "text-sm",
+      check: 16,
+      menu: "p-1.5"
     }
   };
   const currentSize = sizeStyles[size];
@@ -206,43 +219,72 @@ var Autocomplete = ({
       return labelText.includes(needle) || valueText.includes(needle) || descriptionText.includes(needle);
     });
   }, [options, query]);
+  const measureMenuLayout = () => {
+    const fieldEl = fieldRef.current;
+    if (!fieldEl) return null;
+    const rect = fieldEl.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(fieldEl);
+    const nextPosition = {
+      top: rect.bottom + 8,
+      left: rect.left,
+      width: rect.width
+    };
+    setMenuPosition(nextPosition);
+    setMenuStyle(resolveMenuPortalTokens(computedStyle));
+    setThemeVars(resolveThemeVarStyle(computedStyle));
+    return nextPosition;
+  };
+  const openMenu = () => {
+    if (isOpen) return;
+    if (!measureMenuLayout()) return;
+    isClosingRef.current = false;
+    setIsEntered(false);
+    setIsOpen(true);
+  };
+  const requestClose = () => {
+    if (!isOpen) return;
+    isClosingRef.current = true;
+    setIsEntered(false);
+    setHoveredValue(null);
+  };
   (0, import_react.useEffect)(() => {
+    if (!isOpen) return;
     const handleOutsideClick = (event) => {
       const target = event.target;
       if (!containerRef.current?.contains(target) && !menuRef.current?.contains(target)) {
-        setIsOpen(false);
+        isClosingRef.current = true;
+        setIsEntered(false);
+        setHoveredValue(null);
       }
     };
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, []);
+  }, [isOpen]);
   const handleSelect = (nextValue) => {
     if (value === void 0) setInternalValue(nextValue);
     onChange?.(nextValue);
-    setHoveredValue(null);
-    setIsOpen(false);
     setQuery("");
+    requestClose();
   };
-  (0, import_react.useEffect)(() => {
-    if (isOpen) return;
-    setHoveredValue(null);
+  (0, import_react.useLayoutEffect)(() => {
+    if (!isOpen) return;
+    measureMenuLayout();
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!isClosingRef.current) setIsEntered(true);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
   }, [isOpen]);
   (0, import_react.useEffect)(() => {
     if (!isOpen) return;
     const updatePosition = () => {
-      const fieldEl = fieldRef.current;
-      if (!fieldEl) return;
-      const rect = fieldEl.getBoundingClientRect();
-      const computedStyle = window.getComputedStyle(fieldEl);
-      setMenuPosition({
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: rect.width
-      });
-      setMenuStyle(resolveMenuPortalTokens(computedStyle));
-      setThemeVars(resolveThemeVarStyle(computedStyle));
+      measureMenuLayout();
     };
-    updatePosition();
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
     return () => {
@@ -250,13 +292,42 @@ var Autocomplete = ({
       window.removeEventListener("scroll", updatePosition, true);
     };
   }, [isOpen]);
+  (0, import_react.useEffect)(() => {
+    if (!isOpen || isEntered || !isClosingRef.current) return;
+    const menuEl = menuRef.current;
+    if (!menuEl) {
+      setIsOpen(false);
+      isClosingRef.current = false;
+      return;
+    }
+    let done = false;
+    const finishClose = () => {
+      if (done) return;
+      done = true;
+      setIsOpen(false);
+      isClosingRef.current = false;
+    };
+    const handleTransitionEnd = (event) => {
+      if (event.target !== menuEl) return;
+      if (event.propertyName !== "opacity" && event.propertyName !== "transform") {
+        return;
+      }
+      finishClose();
+    };
+    menuEl.addEventListener("transitionend", handleTransitionEnd);
+    const timeoutId = window.setTimeout(finishClose, 300);
+    return () => {
+      menuEl.removeEventListener("transitionend", handleTransitionEnd);
+      window.clearTimeout(timeoutId);
+    };
+  }, [isOpen, isEntered]);
   const displayValue = isOpen ? query : selectedOption?.label ?? "";
-  const autocompleteMenu = !disabled && (0, import_react_dom.createPortal)(
+  const autocompleteMenu = !disabled && isOpen && menuPosition && (0, import_react_dom.createPortal)(
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "div",
       {
         ref: menuRef,
-        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1.5 scale-[0.98] opacity-0"}`,
+        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${currentSize.menu} ${isEntered ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1.5 opacity-0"}`,
         style: {
           ...themeVars,
           top: menuPosition.top,
@@ -268,11 +339,11 @@ var Autocomplete = ({
           outlineOffset: 0,
           borderRadius: menuStyle.borderRadius
         },
-        "aria-hidden": !isOpen,
+        "aria-hidden": !isEntered,
         children: filteredOptions.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "div",
           {
-            className: "px-2.5 py-2 text-sm",
+            className: `${currentSize.option} ${currentSize.optionLabel}`,
             style: { color: menuStyle["--dropdown-text-muted"] },
             children: emptyMessage
           }
@@ -288,7 +359,7 @@ var Autocomplete = ({
               onMouseLeave: () => setHoveredValue(
                 (current) => current === option.value ? null : current
               ),
-              className: "flex w-full items-start justify-between gap-2 rounded-lg px-2.5 py-2 text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40",
+              className: `flex w-full items-start justify-between gap-2 rounded-lg text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40 ${currentSize.option}`,
               style: {
                 transform: isHovered ? "translateY(-0.5px) scale(1.003)" : "translateY(0) scale(1)",
                 boxShadow: isHovered ? "inset 0 0 0 0.5px color-mix(in oklab, var(--border) 50%, transparent)" : "none",
@@ -300,7 +371,7 @@ var Autocomplete = ({
                   /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                     "div",
                     {
-                      className: `truncate text-sm transition-colors duration-200 ${isSelected ? "font-medium" : ""}`,
+                      className: `truncate transition-colors duration-200 ${currentSize.optionLabel} ${isSelected ? "font-medium" : ""}`,
                       style: {
                         color: menuStyle["--dropdown-text"]
                       },
@@ -310,7 +381,7 @@ var Autocomplete = ({
                   option.description && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                     "div",
                     {
-                      className: "mt-0.5 truncate text-xs transition-colors duration-200",
+                      className: `mt-0.5 truncate transition-colors duration-200 ${currentSize.optionDescription}`,
                       style: {
                         color: menuStyle["--dropdown-text-muted"]
                       },
@@ -321,7 +392,7 @@ var Autocomplete = ({
                 isSelected && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                   import_lucide_react.Check,
                   {
-                    size: 16,
+                    size: currentSize.check,
                     className: "mt-0.5 shrink-0 text-(--ui-primary)"
                   }
                 )
@@ -345,8 +416,7 @@ var Autocomplete = ({
           backgroundColor: "var(--bg-soft)",
           border: "0.5px solid var(--border)",
           outline: "0.5px solid var(--border)",
-          outlineOffset: 0,
-          boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.09), inset 0 -1px 1px rgba(0, 0, 0, 0.04)"
+          outlineOffset: 0
         },
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -363,9 +433,9 @@ var Autocomplete = ({
               type: "text",
               disabled,
               value: displayValue,
-              onFocus: () => setIsOpen(true),
+              onFocus: openMenu,
               onChange: (event) => {
-                setIsOpen(true);
+                openMenu();
                 setQuery(event.target.value);
                 onInputChange?.(event.target.value);
               },
