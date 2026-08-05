@@ -1129,19 +1129,34 @@ var Dropdown = ({
   const selectedValue = value ?? internalValue;
   const sizeStyles = {
     sm: {
-      trigger: "px-2.5 py-1 min-h-9",
-      text: "text-xs",
-      icon: 14
+      trigger: "px-1.5 py-0.5 min-h-6",
+      text: "text-[10px]",
+      icon: 12,
+      option: "px-1.5 py-0.5",
+      optionLabel: "text-[10px]",
+      optionDescription: "text-[9px]",
+      check: 12,
+      menu: "p-0.5"
     },
     md: {
-      trigger: "px-3 py-1.5 min-h-10",
-      text: "text-sm",
-      icon: 15
+      trigger: "px-2 py-0.5 min-h-7",
+      text: "text-[11px]",
+      icon: 13,
+      option: "px-1.5 py-1",
+      optionLabel: "text-[11px]",
+      optionDescription: "text-[10px]",
+      check: 13,
+      menu: "p-0.5"
     },
     lg: {
-      trigger: "px-3 py-2 min-h-11",
-      text: "text-base",
-      icon: 16
+      trigger: "px-2.5 py-1 min-h-8",
+      text: "text-xs",
+      icon: 14,
+      option: "px-2 py-1.5",
+      optionLabel: "text-xs",
+      optionDescription: "text-[11px]",
+      check: 14,
+      menu: "p-1"
     }
   };
   const currentSize = sizeStyles[size];
@@ -1254,7 +1269,7 @@ var Dropdown = ({
       "div",
       {
         ref: menuRef,
-        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl p-1.5 shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isEntered ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1.5 opacity-0"}`,
+        className: `fixed z-9999 max-h-64 origin-top overflow-y-auto rounded-xl shadow-2xl backdrop-blur-sm will-change-transform will-change-opacity transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${currentSize.menu} ${isEntered ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1.5 opacity-0"}`,
         style: {
           ...themeVars,
           top: menuPosition.top,
@@ -1280,7 +1295,7 @@ var Dropdown = ({
               onMouseLeave: () => setHoveredValue(
                 (current) => current === option.value ? null : current
               ),
-              className: "flex w-full items-start justify-between gap-2 rounded-lg px-2.5 py-2 text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40",
+              className: `flex w-full items-start justify-between gap-2 rounded-lg text-left transition-all duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40 ${currentSize.option}`,
               style: {
                 transform: isHovered ? "translateY(-0.5px) scale(1.003)" : "translateY(0) scale(1)",
                 boxShadow: isHovered ? "inset 0 0 0 0.5px color-mix(in oklab, var(--border) 50%, transparent)" : "none",
@@ -1292,7 +1307,7 @@ var Dropdown = ({
                   /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
                     "div",
                     {
-                      className: `truncate text-sm transition-colors duration-200 ${isSelected ? "font-medium" : ""}`,
+                      className: `truncate transition-colors duration-200 ${currentSize.optionLabel} ${isSelected ? "font-medium" : ""}`,
                       style: {
                         color: menuStyle["--dropdown-text"]
                       },
@@ -1302,7 +1317,7 @@ var Dropdown = ({
                   option.description && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
                     "div",
                     {
-                      className: "mt-0.5 truncate text-xs transition-colors duration-200",
+                      className: `mt-0.5 truncate transition-colors duration-200 ${currentSize.optionDescription}`,
                       style: {
                         color: menuStyle["--dropdown-text-muted"]
                       },
@@ -1313,7 +1328,7 @@ var Dropdown = ({
                 isSelected && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
                   import_lucide_react7.Check,
                   {
-                    size: 16,
+                    size: currentSize.check,
                     className: "mt-0.5 shrink-0 text-(--ui-primary)"
                   }
                 )
