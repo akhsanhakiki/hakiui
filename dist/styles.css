@@ -3,3 +3,14 @@
  * It tells Tailwind v4 to scan HakiUI component files in this package.
  */
 @source "./dist/**/*.{js,mjs,cjs}";
+
+/*
+ * Design tokens. Harmless alongside <HakiProvider> — the provider sets the
+ * same variables inline, which override these, so React apps can still
+ * retheme at runtime. Required if you use the components without the
+ * provider, or write plain HTML with .haki-* classes.
+ */
+@import "./theme.css";
+
+/* Semantic .haki-* classes for hand-written markup. */
+@import "./components.css";

@@ -30,6 +30,8 @@ __export(chart_exports, {
 });
 module.exports = __toCommonJS(chart_exports);
 var import_react = require("react");
+
+// src/lib/tokens.ts
 var LIGHT_CHART_COLORS = [
   "#F05423",
   "#4A3AA7",
@@ -50,6 +52,8 @@ var DARK_CHART_COLORS = [
   "#C98500",
   "#199E70"
 ];
+
+// src/lib/chart.ts
 var chartColor = (index) => {
   const slot = index % LIGHT_CHART_COLORS.length;
   return `var(--chart-${slot + 1}, ${LIGHT_CHART_COLORS[slot]})`;

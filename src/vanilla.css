@@ -1,0 +1,21 @@
+/*
+ * Source for the prebuilt dist/hakiui.css bundle.
+ *
+ * This is the "no build step" delivery path: it compiles Tailwind against the
+ * package's own dist output, so consumers get every utility the components
+ * actually use plus the design tokens, in one self-contained stylesheet.
+ *
+ * Do not import this file directly — import the compiled dist/hakiui.css.
+ * If you already run Tailwind v4, use dist/styles.css instead so your build
+ * generates the utilities (and yours can override ours in the cascade).
+ */
+@import "tailwindcss";
+
+/* Utilities used by the compiled components. */
+@source "../dist/**/*.js";
+
+/* Design tokens — generated from the same constants HakiProvider uses. */
+@import "../dist/theme.css";
+
+/* Semantic .haki-* classes so plain HTML doesn't need inline styles. */
+@import "./components.css";

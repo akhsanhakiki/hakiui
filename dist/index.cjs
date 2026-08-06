@@ -99,6 +99,28 @@ var import_react2 = require("react");
 
 // src/lib/chart.ts
 var import_react = require("react");
+
+// src/lib/tokens.ts
+var lightNeutrals = {
+  bg: "#FAF9F5",
+  bgSoft: "#F2EFE8",
+  surface: "#FFFFFF",
+  border: "#E5E1D5",
+  input: "#F2EFE8",
+  text: "#1C1B17",
+  textMuted: "#6E6A5E",
+  hover: "#EBE7DC"
+};
+var darkNeutrals = {
+  bg: "#141311",
+  bgSoft: "#1C1A17",
+  surface: "#22201B",
+  border: "#37342C",
+  input: "#282521",
+  text: "#F5F3EC",
+  textMuted: "#A8A294",
+  hover: "#322E27"
+};
 var LIGHT_CHART_COLORS = [
   "#F05423",
   "#4A3AA7",
@@ -119,6 +141,16 @@ var DARK_CHART_COLORS = [
   "#C98500",
   "#199E70"
 ];
+var defaultThemeTokens = {
+  primaryColor: "#F05423",
+  gradientColor: "#FF8C42",
+  useGradient: false,
+  fontFamily: "'IBM Plex Mono', monospace",
+  borderRadius: 4,
+  mode: "light"
+};
+
+// src/lib/chart.ts
 var chartColor = (index) => {
   const slot = index % LIGHT_CHART_COLORS.length;
   return `var(--chart-${slot + 1}, ${LIGHT_CHART_COLORS[slot]})`;
@@ -175,34 +207,7 @@ var useContainerWidth = () => {
 
 // src/components/theme-provider.tsx
 var import_jsx_runtime = require("react/jsx-runtime");
-var lightNeutrals = {
-  bg: "#FAF9F5",
-  bgSoft: "#F2EFE8",
-  surface: "#FFFFFF",
-  border: "#E5E1D5",
-  input: "#F2EFE8",
-  text: "#1C1B17",
-  textMuted: "#6E6A5E",
-  hover: "#EBE7DC"
-};
-var darkNeutrals = {
-  bg: "#141311",
-  bgSoft: "#1C1A17",
-  surface: "#22201B",
-  border: "#37342C",
-  input: "#282521",
-  text: "#F5F3EC",
-  textMuted: "#A8A294",
-  hover: "#322E27"
-};
-var defaultTheme = {
-  primaryColor: "#F05423",
-  gradientColor: "#FF8C42",
-  useGradient: false,
-  fontFamily: "'IBM Plex Mono', monospace",
-  borderRadius: 4,
-  mode: "light"
-};
+var defaultTheme = defaultThemeTokens;
 var ThemeContext = (0, import_react2.createContext)(void 0);
 var useTheme = () => {
   const context = (0, import_react2.useContext)(ThemeContext);

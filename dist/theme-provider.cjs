@@ -37,29 +37,8 @@ var hexToRgb = (hex) => {
 
 // src/lib/chart.ts
 var import_react = require("react");
-var LIGHT_CHART_COLORS = [
-  "#F05423",
-  "#4A3AA7",
-  "#E34948",
-  "#2A78D6",
-  "#008300",
-  "#E87BA4",
-  "#EDA100",
-  "#1BAF7A"
-];
-var DARK_CHART_COLORS = [
-  "#F05423",
-  "#9085E9",
-  "#E66767",
-  "#3987E5",
-  "#008300",
-  "#D55181",
-  "#C98500",
-  "#199E70"
-];
 
-// src/components/theme-provider.tsx
-var import_jsx_runtime = require("react/jsx-runtime");
+// src/lib/tokens.ts
 var lightNeutrals = {
   bg: "#FAF9F5",
   bgSoft: "#F2EFE8",
@@ -80,7 +59,27 @@ var darkNeutrals = {
   textMuted: "#A8A294",
   hover: "#322E27"
 };
-var defaultTheme = {
+var LIGHT_CHART_COLORS = [
+  "#F05423",
+  "#4A3AA7",
+  "#E34948",
+  "#2A78D6",
+  "#008300",
+  "#E87BA4",
+  "#EDA100",
+  "#1BAF7A"
+];
+var DARK_CHART_COLORS = [
+  "#F05423",
+  "#9085E9",
+  "#E66767",
+  "#3987E5",
+  "#008300",
+  "#D55181",
+  "#C98500",
+  "#199E70"
+];
+var defaultThemeTokens = {
   primaryColor: "#F05423",
   gradientColor: "#FF8C42",
   useGradient: false,
@@ -88,6 +87,10 @@ var defaultTheme = {
   borderRadius: 4,
   mode: "light"
 };
+
+// src/components/theme-provider.tsx
+var import_jsx_runtime = require("react/jsx-runtime");
+var defaultTheme = defaultThemeTokens;
 var ThemeContext = (0, import_react2.createContext)(void 0);
 var useTheme = () => {
   const context = (0, import_react2.useContext)(ThemeContext);

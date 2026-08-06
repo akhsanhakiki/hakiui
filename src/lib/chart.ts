@@ -1,32 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-/**
- * Categorical chart palettes, validated for CVD separation, normal-vision
- * separation, lightness band, and surface contrast (light: #FFFFFF/#FAF9F5,
- * dark: #22201B). Slot order is the safety mechanism — assign in order, never
- * cycle or reorder. Past 8 series, fold into "Other" or facet.
- */
-export const LIGHT_CHART_COLORS = [
-  "#F05423",
-  "#4A3AA7",
-  "#E34948",
-  "#2A78D6",
-  "#008300",
-  "#E87BA4",
-  "#EDA100",
-  "#1BAF7A",
-] as const;
-
-export const DARK_CHART_COLORS = [
-  "#F05423",
-  "#9085E9",
-  "#E66767",
-  "#3987E5",
-  "#008300",
-  "#D55181",
-  "#C98500",
-  "#199E70",
-] as const;
+// Palettes live in ./tokens so the React-free CSS build can read them too.
+export { LIGHT_CHART_COLORS, DARK_CHART_COLORS } from "./tokens";
+import { DARK_CHART_COLORS, LIGHT_CHART_COLORS } from "./tokens";
 
 /**
  * Series color for slot `index`: reads `--chart-N` (set per mode by

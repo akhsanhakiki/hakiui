@@ -35,7 +35,9 @@ const entry: Record<string, string> = {
   "theme-provider": "src/components/theme-provider.tsx",
   "hex-to-rgb": "src/lib/hex-to-rgb.ts",
   radius: "src/lib/radius.ts",
-  chart: "src/lib/chart.ts"
+  chart: "src/lib/chart.ts",
+  // React-free; the CSS build imports this from Node to emit theme.css.
+  tokens: "src/lib/tokens.ts"
 };
 
 for (const name of ui) {

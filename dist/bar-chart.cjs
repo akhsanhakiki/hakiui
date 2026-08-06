@@ -27,6 +27,8 @@ var import_react2 = require("react");
 
 // src/lib/chart.ts
 var import_react = require("react");
+
+// src/lib/tokens.ts
 var LIGHT_CHART_COLORS = [
   "#F05423",
   "#4A3AA7",
@@ -37,6 +39,8 @@ var LIGHT_CHART_COLORS = [
   "#EDA100",
   "#1BAF7A"
 ];
+
+// src/lib/chart.ts
 var chartColor = (index) => {
   const slot = index % LIGHT_CHART_COLORS.length;
   return `var(--chart-${slot + 1}, ${LIGHT_CHART_COLORS[slot]})`;

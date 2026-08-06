@@ -1,5 +1,6 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ChartSeries } from './chart.cjs';
+import './tokens.cjs';
 
 type LineChartDatum = Record<string, string | number>;
 interface LineChartProps {

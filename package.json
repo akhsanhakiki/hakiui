@@ -22,6 +22,15 @@
       "require": "./dist/index.cjs"
     },
     "./styles.css": "./dist/styles.css",
+    "./hakiui.css": "./dist/hakiui.css",
+    "./theme.css": "./dist/theme.css",
+    "./components.css": "./dist/components.css",
+    "./hakiui.js": "./dist/hakiui.js",
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js",
+      "require": "./dist/tokens.cjs"
+    },
     "./theme-provider": {
       "types": "./dist/theme-provider.d.ts",
       "import": "./dist/theme-provider.js",
@@ -187,7 +196,7 @@
     "./dist/styles.css"
   ],
   "scripts": {
-    "build": "tsup && node scripts/copy-styles.mjs",
+    "build": "tsup && node scripts/generate-theme-css.mjs && tailwindcss -i src/vanilla.css -o dist/hakiui.css --minify && node scripts/copy-styles.mjs",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
@@ -196,8 +205,10 @@
     "lucide-react": ">=0.460.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "tailwindcss": "^4.2.4",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },
