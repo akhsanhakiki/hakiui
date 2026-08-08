@@ -93,8 +93,8 @@ var Button = React.forwardRef(
     }
     const transformTransition = reduceMotion ? "transform 70ms linear" : `transform 420ms ${PRESS_SPRING}`;
     const pressStyle = disabled || reduceMotion ? {} : {
-      transform: isPressed ? "scale(0.9)" : "scale(1)",
-      willChange: "transform",
+      transform: isPressed ? "scale(0.9)" : void 0,
+      willChange: isPressed ? "transform" : void 0,
       transition: `${variantStyle.transition}, ${transformTransition}`
     };
     return /* @__PURE__ */ jsx(
@@ -145,4 +145,4 @@ Button.displayName = "Button";
 export {
   Button
 };
-//# sourceMappingURL=chunk-36DSJOGU.js.map
+//# sourceMappingURL=chunk-RJXVJ3PN.js.map

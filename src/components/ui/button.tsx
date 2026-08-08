@@ -110,12 +110,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ? "transform 70ms linear"
       : `transform 420ms ${PRESS_SPRING}`;
 
+    // will-change only while actually pressed: applied at rest (even as
+    // "scale(1)", a no-op transform), it permanently promotes the button
+    // into its own compositor layer. That layer's raster can go stale when
+    // an ancestor is later scaled by a separate CSS transform (e.g. the
+    // canvas editor's zoom) — Chromium doesn't always re-rasterize it at
+    // the new effective resolution, so the button's text renders as a
+    // blurry stretched bitmap instead of crisp vector text, while sibling
+    // elements without will-change stay sharp. Scoping it to the press
+    // itself keeps the bounce animation smooth without leaving the layer
+    // pinned once the button is idle.
     const pressStyle: React.CSSProperties =
       disabled || reduceMotion
         ? {}
         : {
-            transform: isPressed ? "scale(0.9)" : "scale(1)",
-            willChange: "transform",
+            transform: isPressed ? "scale(0.9)" : undefined,
+            willChange: isPressed ? "transform" : undefined,
             transition: `${variantStyle.transition}, ${transformTransition}`,
           };
 
