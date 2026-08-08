@@ -13,6 +13,7 @@ const ui = [
   "radio",
   "calendar",
   "modal",
+  "drawer",
   "dropdown",
   "autocomplete",
   "bar-chart",

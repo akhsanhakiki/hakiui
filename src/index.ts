@@ -25,6 +25,7 @@ export { Checkbox } from "./components/ui/checkbox";
 export { Radio } from "./components/ui/radio";
 export { Calendar } from "./components/ui/calendar";
 export { Modal, type ModalProps } from "./components/ui/modal";
+export { Drawer, type DrawerProps, type DrawerSide } from "./components/ui/drawer";
 export { Dropdown, type DropdownOption, type DropdownProps } from "./components/ui/dropdown";
 export { Autocomplete, type AutocompleteOption, type AutocompleteProps } from "./components/ui/autocomplete";
 
