@@ -1,6 +1,6 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
