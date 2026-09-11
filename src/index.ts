@@ -61,3 +61,23 @@ export { Spinner, type SpinnerProps } from "./components/ui/spinner";
 export { Slider, type SliderProps } from "./components/ui/slider";
 export { Stepper, type StepperProps } from "./components/ui/stepper";
 export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from "./components/ui/breadcrumbs";
+
+export { Chip, type ChipProps } from "./components/ui/chip";
+export { Kbd, type KbdProps } from "./components/ui/kbd";
+export { Menu, type MenuItem, type MenuProps } from "./components/ui/menu";
+export { OtpInput, type OtpInputProps } from "./components/ui/otp-input";
+export {
+  Sidebar,
+  SidebarSection,
+  SidebarItem,
+  type SidebarProps,
+  type SidebarSectionProps,
+  type SidebarItemProps,
+} from "./components/ui/sidebar";
+export { ModelSelector, type ModelOption, type ModelSelectorProps } from "./components/ui/model-selector";
+export { PromptInput, type PromptInputProps } from "./components/ui/prompt-input";
+export { ChatMessage, type ChatMessageProps } from "./components/ui/chat-message";
+export { ThinkingSteps, type ThinkingStepsProps } from "./components/ui/thinking-steps";
+export { ToolCalls, type ToolCall, type ToolCallStatus, type ToolCallsProps } from "./components/ui/tool-calls";
+export { PromptSuggestions, type PromptSuggestion, type PromptSuggestionsProps } from "./components/ui/prompt-suggestions";
+export { defaultStatusColors } from "./lib/tokens";

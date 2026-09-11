@@ -37,9 +37,9 @@ var getRadiusStyle = (radius = "md") => {
 var import_jsx_runtime = require("react/jsx-runtime");
 var COLOR_HEX = {
   primary: "var(--ui-primary-bg)",
-  success: "#0CA30C",
-  warning: "#B87A00",
-  danger: "#D03B3B"
+  success: "var(--ui-success, #0CA30C)",
+  warning: "var(--ui-warning, #B87A00)",
+  danger: "var(--ui-danger, #D03B3B)"
 };
 var HEIGHTS = { sm: "h-1", md: "h-2", lg: "h-3" };
 var Progress = ({

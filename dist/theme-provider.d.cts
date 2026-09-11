@@ -11,6 +11,10 @@ type Theme = {
     borderRadius: number;
     /** Neutral palette mode. Defaults to "light" (warm white background). */
     mode?: ThemeMode;
+    /** Status colours; default to the built-ins when omitted. */
+    successColor?: string;
+    warningColor?: string;
+    dangerColor?: string;
 };
 declare const defaultTheme: Theme;
 type ThemeContextType = {

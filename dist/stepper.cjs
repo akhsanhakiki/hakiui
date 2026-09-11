@@ -75,13 +75,18 @@ var Stepper = ({
   const control = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
     "div",
     {
-      className: `inline-flex items-stretch overflow-hidden ring-2 ring-transparent transition-[box-shadow,ring-color] focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${disabled ? "opacity-50" : ""} ${className}`,
+      className: `inline-flex items-stretch overflow-hidden ring-2 ring-transparent transition-[box-shadow,ring-color] focus-within:ring-(--ui-primary)/35 border-(--border) outline-(--border) focus-within:border-(--ui-primary) focus-within:outline-(--ui-primary) ${disabled ? "opacity-50" : ""} ${className}`,
       style: {
         ...getRadiusStyle(radius),
         height: s.height,
         backgroundColor: "var(--bg-soft)",
-        border: "0.5px solid var(--border)",
-        outline: "0.5px solid var(--border)",
+        // Hairline = 0.5px border + 0.5px outline. Only width/style live
+        // inline; the colour is a utility so focus-within can override it
+        // (an inline shorthand would beat the class — see .haki-input:focus).
+        borderWidth: "0.5px",
+        borderStyle: "solid",
+        outlineWidth: "0.5px",
+        outlineStyle: "solid",
         outlineOffset: 0,
         fontFamily: "var(--ui-font)"
       },

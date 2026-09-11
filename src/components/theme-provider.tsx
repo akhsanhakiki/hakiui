@@ -8,6 +8,7 @@ import { hexToRgb } from "../lib/hex-to-rgb";
 import { DARK_CHART_COLORS, LIGHT_CHART_COLORS } from "../lib/chart";
 import {
   darkNeutrals,
+  defaultStatusColors,
   defaultThemeTokens,
   lightNeutrals,
   type NeutralTokens,
@@ -25,6 +26,10 @@ export type Theme = {
   borderRadius: number;
   /** Neutral palette mode. Defaults to "light" (warm white background). */
   mode?: ThemeMode;
+  /** Status colours; default to the built-ins when omitted. */
+  successColor?: string;
+  warningColor?: string;
+  dangerColor?: string;
 };
 
 export const defaultTheme: Theme = defaultThemeTokens;
@@ -75,6 +80,9 @@ export const HakiProvider = ({
               : "var(--ui-primary)",
             "--ui-font": theme.fontFamily,
             "--ui-radius": `${theme.borderRadius}px`,
+            "--ui-success": theme.successColor ?? defaultStatusColors.successColor,
+            "--ui-warning": theme.warningColor ?? defaultStatusColors.warningColor,
+            "--ui-danger": theme.dangerColor ?? defaultStatusColors.dangerColor,
             "--bg": neutrals.bg,
             "--bg-soft": neutrals.bgSoft,
             "--surface": neutrals.surface,

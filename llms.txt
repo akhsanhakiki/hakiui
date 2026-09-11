@@ -1,0 +1,587 @@
+# @hakistudio/hakiui — reference for AI coding agents
+
+> Read this whole file before writing any code that uses HakiUI. Every prop
+> listed here is the complete public API — if a prop is not listed, it does
+> not exist. Do not guess props from other libraries (shadcn, MUI, Chakra).
+
+HakiUI is a themable React + Tailwind v4 component library. Brand: pixel
+orange `#F05423` on warm paper-white (light) or warm charcoal (dark), IBM Plex
+Mono, 4px radius. Live demos: https://hakiui.akhsanhakiki.com/components
+
+## 1. Setup (do all four — skipping any one produces a broken look)
+
+### 1a. Install
+```bash
+npm install @hakistudio/hakiui react react-dom lucide-react
+```
+Tailwind v4 is required (`tailwindcss` + `@tailwindcss/vite` for Vite, or
+`@tailwindcss/postcss` for Next.js). Tailwind v3 does not work.
+
+### 1b. Global stylesheet — both lines, in this order
+```css
+@import "tailwindcss";
+@import "@hakistudio/hakiui/styles.css";
+```
+`styles.css` contains an `@source` directive that makes your Tailwind build
+scan the package's compiled components. Without it your build generates none
+of the utility classes the components use, and you will see exactly these
+symptoms: inputs show the browser's default black/blue focus outline, buttons
+have no height or padding, focus rings are missing. If you see those, the
+stylesheet import is missing or `@import "tailwindcss"` is absent.
+
+No-Tailwind alternative (prebuilt, cannot be purged):
+`@import "@hakistudio/hakiui/hakiui.css";` instead of both lines above.
+
+### 1c. Load the font
+The default theme uses IBM Plex Mono but the package does not load it. Add
+to `index.html` `<head>` (or Next.js layout):
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+```
+Or pass a font you already load: `initialTheme={{ ...defaultTheme, fontFamily: "'Inter', sans-serif" }}`.
+
+### 1d. Wrap the app in `HakiProvider` and paint the page background
+```tsx
+import { HakiProvider, defaultTheme } from "@hakistudio/hakiui";
+
+export default function App() {
+  return (
+    <HakiProvider initialTheme={{ ...defaultTheme, mode: "light" }}>
+      <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+        {/* your app */}
+      </div>
+    </HakiProvider>
+  );
+}
+```
+`HakiProvider` renders a `<div>` that sets the CSS variables and `color`,
+but NOT `background`. Always paint the root with `var(--bg)` yourself, or the
+page stays white instead of warm paper (#FAF9F5).
+
+Next.js App Router: `HakiProvider` uses `useState`, so wrap it in a
+`"use client"` component and render that from `layout.tsx`.
+
+## 2. Theme tokens
+
+`HakiProvider` sets these CSS custom properties on its wrapper. Use them —
+never hard-code hex colours or Tailwind palette colours (`bg-orange-500`,
+`text-gray-500`, `border-gray-300`) in app code that sits next to HakiUI
+components, or the app will not retheme and will not match the components.
+
+| Variable | Meaning | Light | Dark |
+|---|---|---|---|
+| `--ui-primary` | brand colour | `#F05423` | same |
+| `--ui-primary-rgb` | `240 84 35` for `rgb(var(--ui-primary-rgb) / 0.12)` | | |
+| `--ui-primary-bg` | primary fill (solid or gradient) | | |
+| `--ui-font` | font stack | `'IBM Plex Mono', monospace` | |
+| `--ui-radius` | base radius | `4px` | |
+| `--bg` | page background | `#FAF9F5` | `#141311` |
+| `--bg-soft` | subtle fill (input bg, code blocks) | `#F2EFE8` | `#1C1A17` |
+| `--surface` | cards, modals, popovers | `#FFFFFF` | `#22201B` |
+| `--border` | hairline borders | `#E5E1D5` | `#37342C` |
+| `--input` | alt input fill | `#F2EFE8` | `#282521` |
+| `--text` | primary text | `#1C1B17` | `#F5F3EC` |
+| `--text-muted` | secondary text | `#6E6A5E` | `#A8A294` |
+| `--hover` | hover fill for rows/ghost buttons | `#EBE7DC` | `#322E27` |
+| `--ui-success` / `--ui-warning` / `--ui-danger` | status colours used by Alert, Badge, Progress, Toast, ToolCalls | `#0CA30C` / `#B87A00` / `#D03B3B` | same |
+| `--chart-1`…`--chart-8` | categorical chart palette | | |
+
+In Tailwind v4 use them as `bg-(--surface)`, `text-(--text-muted)`,
+`border-(--border)`, `text-(--ui-primary)`. In inline styles use
+`var(--surface)`. For a card:
+`<div className="bg-(--surface) border border-(--border) rounded-[var(--ui-radius)] p-4">`.
+
+### Theme type
+```ts
+type Theme = {
+  primaryColor: string;   // hex
+  gradientColor: string;  // hex, used only when useGradient
+  useGradient: boolean;
+  fontFamily: string;     // CSS font-family value
+  borderRadius: number;   // px
+  mode?: "light" | "dark";
+  successColor?: string;  // optional status overrides
+  warningColor?: string;
+  dangerColor?: string;
+};
+```
+`defaultTheme` = `{ primaryColor: "#F05423", gradientColor: "#FF8C42",
+useGradient: false, fontFamily: "'IBM Plex Mono', monospace", borderRadius: 4,
+mode: "light" }`.
+
+### Runtime theming
+```tsx
+const { theme, setTheme } = useTheme(); // must be inside HakiProvider
+setTheme({ ...theme, mode: theme.mode === "dark" ? "light" : "dark" });
+setTheme({ ...theme, primaryColor: "#2A78D6", borderRadius: 8 });
+```
+
+### Radius prop (shared by most components)
+`type Radius = "none" | "sm" | "md" | "lg" | "full"` — relative to
+`--ui-radius` (`sm` = ×0.5, `md` = ×1, `lg` = ×1.5, `full` = 9999px).
+Default is `"md"` unless stated.
+
+## 3. Imports
+
+Barrel: `import { Button, Input, … } from "@hakistudio/hakiui"`.
+Per-component (smaller bundles): `import { Button } from "@hakistudio/hakiui/button"`.
+Subpaths: `theme-provider`, `button`, `input`, `pagination`, `switch`,
+`tooltip`, `table`, `tabs`, `accordion`, `checkbox`, `radio`, `calendar`,
+`modal`, `drawer`, `dropdown`, `autocomplete`, `bar-chart`, `line-chart`,
+`date-picker`, `toast`, `alert`, `badge`, `avatar`, `progress`, `skeleton`,
+`spinner`, `slider`, `stepper`, `breadcrumbs`, `chip`, `kbd`, `menu`, `otp-input`,
+`sidebar`, `model-selector`, `prompt-input`, `chat-message`, `thinking-steps`,
+`tool-calls`, `prompt-suggestions`, `radius`, `hex-to-rgb`, `tokens`.
+
+Icons: the library uses `lucide-react`; use it for icons in app code too.
+
+## 4. Components — complete API
+
+Conventions: every `size` is `"sm" | "md" | "lg"` unless stated; default
+`"md"`. `className` on components that extend native elements lands on the
+INNER native element, not the wrapper — do not use it to add borders,
+backgrounds or focus rings; the component already draws those.
+
+### Button
+```ts
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "outline" | "ghost"; // default "primary"
+  size?: "sm" | "md" | "lg";
+  radius?: Radius;
+}
+```
+- `primary` solid brand fill, white text. `secondary` 12% brand tint, brand
+  text. `outline` hairline border, text colour. `ghost` no border, hover fill.
+- Heights: sm 32px, md 36px, lg 40px. Has press-bounce animation built in.
+- There is NO `destructive`, `link`, `icon`, `default` variant and NO
+  `asChild`, `isLoading`, `leftIcon` prop. For an icon button:
+  `<Button variant="ghost" size="sm" aria-label="Close"><X size={16} /></Button>`.
+- Loading: `<Button disabled><Spinner size="sm" color="current" /> Saving…</Button>`.
+- Destructive action: keep `variant="primary"` or `outline`; do not invent red.
+```tsx
+<Button variant="primary">Continue</Button>
+<Button variant="outline" size="sm">Cancel</Button>
+<Button variant="ghost" onClick={…}><Plus size={16} /> Add</Button>
+```
+
+### Input
+```ts
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
+  size?: "sm" | "md" | "lg";
+  label?: string;
+  labelPlacement?: "top" | "left";   // default "top"
+  description?: ReactNode;           // helper text under the field
+  startContent?: ReactNode;          // e.g. <Mail size={15} />
+  endContent?: ReactNode;
+  radius?: Radius;
+}
+```
+- Renders its own container (soft bg, hairline border, brand focus ring) and
+  its own `<label>`. Do NOT wrap it in another bordered div and do NOT add a
+  separate `<label>`; use the `label` prop.
+- `type="password"` automatically gets a show/hide eye toggle.
+- `className` goes on the inner `<input>`. Never pass `border-*`, `ring-*`,
+  `outline-*`, `bg-*`, `rounded-*`, `px-*`, `py-*` through it.
+- No `error` / `isInvalid` prop. Show errors with `description` and a
+  `text-(--ui-primary)` or `Alert variant="danger"`.
+```tsx
+<Input label="Email" type="email" placeholder="you@company.com" startContent={<Mail size={15} />} />
+<Input label="Password" type="password" description="At least 8 characters" />
+<Input size="sm" labelPlacement="left" label="Search" endContent={<Search size={14} />} />
+```
+There is no `Textarea` component. For multi-line text use a plain
+`<textarea>` styled with tokens:
+`className="w-full bg-(--bg-soft) text-(--text) border border-(--border) rounded-[var(--ui-radius)] px-3 py-2 text-sm outline-none focus:border-(--ui-primary) placeholder:text-(--text-muted)"`.
+
+### Checkbox
+```ts
+{ checked: boolean; onChange: (checked: boolean) => void; children?: ReactNode; radius?: Radius /* default "sm" */ }
+```
+Controlled only. Label is `children`. No `onCheckedChange`, `label`,
+`indeterminate`, `disabled`.
+```tsx
+<Checkbox checked={agree} onChange={setAgree}>I agree to the terms</Checkbox>
+```
+
+### Radio
+```ts
+{ checked: boolean; onChange: () => void; children?: ReactNode }
+```
+No group component — render one `Radio` per option:
+```tsx
+{["Monthly","Yearly"].map(p => <Radio key={p} checked={plan===p} onChange={() => setPlan(p)}>{p}</Radio>)}
+```
+
+### Switch
+```ts
+{ checked: boolean; onChange: (checked: boolean) => void; size?: "sm" | "md" | "lg" }
+```
+No label prop; put text beside it in a flex row.
+
+### Dropdown (select)
+```ts
+interface DropdownOption { label: string; value: string; description?: ReactNode; disabled?: boolean }
+interface DropdownProps {
+  options: DropdownOption[];
+  value?: string; defaultValue?: string; onChange?: (value: string) => void;
+  placeholder?: string; label?: string;
+  size?: "sm" | "md" | "lg"; radius?: Radius; disabled?: boolean; className?: string;
+}
+```
+Single-select, string values only. No `multiple`, no `<option>` children.
+```tsx
+<Dropdown label="Role" placeholder="Choose…" options={[{label:"Admin",value:"admin"},{label:"Viewer",value:"viewer"}]} value={role} onChange={setRole} />
+```
+
+### Autocomplete (combobox)
+```ts
+interface AutocompleteOption { label: string; value: string; description?: ReactNode }
+interface AutocompleteProps {
+  options: AutocompleteOption[];
+  value?: string; defaultValue?: string;
+  onChange?: (value: string) => void;        // selected value
+  onInputChange?: (text: string) => void;    // typed text
+  placeholder?: string; emptyMessage?: string; label?: string;
+  size?: "sm" | "md" | "lg"; radius?: Radius; disabled?: boolean; className?: string;
+}
+```
+
+### DatePicker
+```ts
+interface DatePickerProps {
+  value?: Date | null; defaultValue?: Date | null; onChange?: (date: Date | null) => void;
+  label?: string; placeholder?: string;
+  size?: "sm" | "md" | "lg"; radius?: Radius; disabled?: boolean;
+  clearable?: boolean; minDate?: Date; maxDate?: Date;
+  formatValue?: (date: Date) => string; className?: string;
+}
+```
+Single date only; no range.
+
+### Calendar
+```ts
+{ radius?: Radius }
+```
+Uncontrolled month view with internal selection — demo/decorative only. For
+a form field use `DatePicker`.
+
+### Slider
+```ts
+interface SliderProps {
+  value?: number; defaultValue?: number; onChange?: (value: number) => void;
+  min?: number; max?: number; step?: number;
+  label?: string; showValue?: boolean; formatValue?: (v: number) => string;
+  size?: "sm" | "md"; disabled?: boolean; className?: string;
+}
+```
+Single thumb only.
+
+### Stepper (numeric +/- input)
+```ts
+interface StepperProps {
+  value?: number; defaultValue?: number; onChange?: (value: number) => void;
+  min?: number; max?: number; step?: number;
+  label?: string; labelPlacement?: "top" | "left";
+  size?: "sm" | "md" | "lg"; radius?: Radius; disabled?: boolean;
+  formatValue?: (v: number) => string; className?: string; "aria-label"?: string;
+}
+```
+This is a quantity stepper, NOT a multi-step wizard progress indicator.
+Build a wizard indicator from `Badge` / `Progress` if you need one.
+
+### Tabs
+```ts
+{ items: { id: string; label: string; content: ReactNode }[] }
+```
+Uncontrolled; first item active. No `value`/`onChange`, no `TabsList`/
+`TabsTrigger`/`TabsContent` sub-components.
+```tsx
+<Tabs items={[{ id: "overview", label: "Overview", content: <Overview /> }, { id: "settings", label: "Settings", content: <Settings /> }]} />
+```
+
+### Accordion / AccordionItem
+```ts
+Accordion: { children: ReactNode; className?: string }
+AccordionItem: { title: string; children: ReactNode }
+```
+Each item toggles independently; no `type="single"`, no `defaultValue`.
+
+### Table
+```ts
+Table: { children: ReactNode; radius?: Radius; variant?: "default" | "rounded" }
+TableHeader, TableBody, TableRow, TableColumn (th), TableCell (td): { children: ReactNode }
+```
+```tsx
+<Table>
+  <TableHeader><TableColumn>Name</TableColumn><TableColumn>Status</TableColumn></TableHeader>
+  <TableBody>
+    {rows.map(r => <TableRow key={r.id}><TableCell>{r.name}</TableCell><TableCell><Badge color="success" variant="soft">{r.status}</Badge></TableCell></TableRow>)}
+  </TableBody>
+</Table>
+```
+`TableHeader` already renders the `<tr>` — put `TableColumn`s directly inside
+it. No sorting/selection props.
+
+### Pagination
+```ts
+{ total: number /* page count */; page: number /* 1-based */; onChange: (page: number) => void }
+```
+
+### Breadcrumbs
+```ts
+type BreadcrumbItem = { label: ReactNode; href?: string; onClick?: () => void };
+interface BreadcrumbsProps { items: BreadcrumbItem[]; separator?: ReactNode; className?: string }
+```
+Last item renders as the current page.
+
+### Modal
+```ts
+interface ModalProps { isOpen: boolean; onClose: () => void; title: string; children: ReactNode }
+```
+`title` is required. No `size`, `footer`, or `Dialog.*` sub-components — put
+action buttons at the bottom of `children`:
+```tsx
+<Modal isOpen={open} onClose={() => setOpen(false)} title="Delete project">
+  <p className="text-sm text-(--text-muted)">This cannot be undone.</p>
+  <div className="mt-6 flex justify-end gap-2">
+    <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+    <Button onClick={confirm}>Delete</Button>
+  </div>
+</Modal>
+```
+
+### Drawer
+```ts
+interface DrawerProps {
+  isOpen: boolean; onClose: () => void;
+  side?: "left" | "right" | "top" | "bottom";  // default "left"
+  size?: string;                                // CSS length, default "320px"
+  title?: ReactNode; children: ReactNode;
+  closeOnOverlayClick?: boolean; showCloseButton?: boolean; className?: string;
+}
+```
+
+### Tooltip
+```ts
+{ content: ReactNode; position?: "top" | "bottom" | "left" | "right"; children: ReactNode }
+```
+Hover-only, wraps its child in an inline-flex container.
+
+### Toast — `ToastProvider` + `useToast`
+```ts
+type ToastProviderProps = { children: ReactNode; position?: "top-right" | "top-left" | "bottom-right" | "bottom-left"; radius?: Radius };
+type ToastOptions = { title: string; description?: ReactNode; variant?: "default" | "success" | "error" | "warning" | "info"; duration?: number /* ms; 0 = sticky */ };
+```
+```tsx
+<HakiProvider><ToastProvider position="bottom-right"><App /></ToastProvider></HakiProvider>
+// in a component:
+const { toast, dismiss } = useToast();
+const id = toast({ title: "Saved", variant: "success" }); // returns id
+// dismiss(id) to close early
+```
+`ToastProvider` must be inside `HakiProvider`.
+
+### Alert
+```ts
+interface AlertProps { variant?: "info" | "success" | "warning" | "danger"; title?: string; children?: ReactNode; radius?: Radius; onClose?: () => void; className?: string }
+```
+`onClose` present ⇒ close button shown.
+
+### Badge
+```ts
+interface BadgeProps { children: ReactNode; color?: "primary" | "neutral" | "success" | "warning" | "danger"; variant?: "solid" | "soft" | "outline"; size?: "sm" | "md"; radius?: Radius; className?: string }
+```
+Use `variant="soft"` for status pills in tables.
+
+### Avatar / AvatarGroup
+```ts
+interface AvatarProps { src?: string; alt?: string; name?: string /* initials fallback */; size?: "sm" | "md" | "lg" | "xl"; radius?: Radius; className?: string }
+interface AvatarGroupProps { children: ReactNode; max?: number; size?: AvatarSize; radius?: Radius; className?: string }
+```
+
+### Progress
+```ts
+interface ProgressProps { value?: number /* 0–100 */; size?: "sm" | "md" | "lg"; color?: "primary" | "success" | "warning" | "danger"; label?: string; showValue?: boolean; indeterminate?: boolean; radius?: Radius; className?: string }
+```
+
+### Skeleton
+```ts
+interface SkeletonProps { variant?: "rect" | "text" | "circle"; width?: number | string; height?: number | string; radius?: Radius; className?: string }
+```
+
+### Spinner
+```ts
+interface SpinnerProps { size?: "sm" | "md" | "lg"; color?: "primary" | "current"; label?: string; className?: string }
+```
+
+### BarChart / LineChart
+```ts
+type ChartSeries = { key: string; label?: string; color?: string };
+interface BarChartProps {
+  data: Record<string, string | number>[]; xKey: string; series: ChartSeries[];
+  stacked?: boolean; height?: number; showValues?: boolean;
+  valueFormatter?: (v: number) => string; className?: string; "aria-label"?: string;
+}
+interface LineChartProps {
+  data: Record<string, string | number>[]; xKey: string; series: ChartSeries[];
+  area?: boolean; curve?: "smooth" | "linear"; height?: number; showDots?: boolean;
+  valueFormatter?: (v: number) => string; className?: string; "aria-label"?: string;
+}
+```
+Series colours come from `--chart-1…8` in order; don't pass `color` unless a
+one-off is required. Charts fill their container width — give the parent a
+width.
+```tsx
+<BarChart data={[{ month: "Jan", revenue: 12, cost: 8 }, …]} xKey="month" series={[{ key: "revenue", label: "Revenue" }, { key: "cost", label: "Cost" }]} height={240} />
+```
+
+### Chip
+```ts
+interface ChipProps { children; onClick?: () => void; onRemove?: () => void; selected?: boolean; disabled?: boolean; size?: "sm" | "md"; color?: "primary" | "neutral"; icon?: ReactNode; radius?: Radius /* "full" */; className?: string }
+```
+An interactive tag (filter, suggestion, selected option). Renders a `<button>` when `onClick` is given; `onRemove` adds an × control. Use Badge for read-only labels.
+
+### Kbd
+```ts
+interface KbdProps { keys?: string[]; children?: ReactNode; size?: "sm" | "md" }
+```
+`<Kbd keys={["⌘", "K"]} />` — one cap per key.
+
+### Menu
+```ts
+type MenuItem =
+  | { label: string; description?: string; icon?: ReactNode; shortcut?: string[]; danger?: boolean; disabled?: boolean; onSelect: () => void }
+  | { heading: string }
+  | { separator: true };
+interface MenuProps { items: MenuItem[]; trigger: (props) => ReactNode; placement?: "bottom-start" | "bottom-end" | "top-start" | "top-end"; radius?: Radius }
+```
+Action menu with arrow keys / Enter / Escape and outside-click close. Spread the `props` the trigger receives onto a button:
+```tsx
+<Menu
+  trigger={(p) => <Button {...p} variant="ghost" size="sm" aria-label="More"><MoreHorizontal size={14} /></Button>}
+  items={[
+    { heading: "Actions" },
+    { label: "Rename", icon: <Pencil size={13} />, shortcut: ["⌘", "E"], onSelect: rename },
+    { separator: true },
+    { label: "Delete", icon: <Trash2 size={13} />, danger: true, onSelect: remove },
+  ]}
+/>
+```
+
+### OtpInput
+```ts
+interface OtpInputProps { length?: number /* 6 */; value: string; onChange: (v: string) => void; onComplete?: (v: string) => void; groups?: number[] /* gap after these indexes, e.g. [3] */; size?: "sm" | "md" | "lg"; radius?: Radius; disabled?: boolean; autoFocus?: boolean; mode?: "numeric" | "alphanumeric"; label?: string }
+```
+Paste fills every cell; Backspace walks back; arrows move.
+
+### Sidebar / SidebarSection / SidebarItem
+```ts
+interface SidebarProps { children; header?: ReactNode; footer?: ReactNode; collapsed?: boolean; onCollapsedChange?: (c: boolean) => void; width?: number /* 264 */; "aria-label"?: string }
+interface SidebarSectionProps { title?: string; action?: ReactNode; children }
+interface SidebarItemProps { children: ReactNode /* label */; icon?: ReactNode; active?: boolean; meta?: ReactNode; actions?: ReactNode; onClick?: () => void; href?: string; radius?: Radius }
+```
+The AI app-shell column: brand/new-chat in `header`, grouped history (Pinned / Today / Yesterday…) as sections, account in `footer`. Passing `onCollapsedChange` shows the collapse toggle; collapsed = 56px icon rail. Put a `Menu` in `actions` for rename / pin / delete.
+```tsx
+<Sidebar header={<Button size="sm" variant="outline" className="w-full"><Plus size={14} /> New chat</Button>} footer={<Avatar name="Kai Ito" size="sm" />} collapsed={collapsed} onCollapsedChange={setCollapsed}>
+  <SidebarSection title="Pinned">
+    <SidebarItem icon={<Pin size={14} />} active meta="Today">Q3 revenue summary</SidebarItem>
+  </SidebarSection>
+</Sidebar>
+```
+
+### ModelSelector
+```ts
+interface ModelOption { value: string; label: string; description?: string; badge?: string; disabled?: boolean }
+interface ModelSelectorProps { options: ModelOption[]; value: string; onChange: (v: string) => void; placement?: "top" | "bottom" /* "top" */; icon?: ReactNode; size?: "sm" | "md"; radius?: Radius; disabled?: boolean }
+```
+Chip-sized picker for a composer toolbar; the list opens upward by default so it fits above a bottom-anchored PromptInput.
+
+### PromptInput
+```ts
+interface PromptInputProps { value: string; onChange: (v: string) => void; onSubmit: (v: string) => void; streaming?: boolean; onStop?: () => void; placeholder?: string; maxRows?: number /* 8 */; disabled?: boolean; leading?: ReactNode; trailing?: ReactNode; hint?: ReactNode; autoFocus?: boolean; radius?: Radius /* "lg" */ }
+```
+The chat composer. Enter sends (Shift+Enter = newline); while `streaming` the send button becomes Stop (`onStop`). Put `ModelSelector` and attach buttons in `leading`.
+```tsx
+<PromptInput value={draft} onChange={setDraft} onSubmit={send} streaming={busy} onStop={stop}
+  leading={<ModelSelector options={models} value={model} onChange={setModel} />}
+  hint="Enter to send · Shift+Enter for a new line" />
+```
+
+### ChatMessage
+```ts
+interface ChatMessageProps { role: "user" | "assistant"; children: ReactNode; avatar?: ReactNode; name?: string; time?: string; actions?: ReactNode; streaming?: boolean; radius?: Radius }
+```
+User turns: right-aligned tinted bubble. Assistant turns: full width under a sender line; `streaming` appends a blinking caret. Rich content (Markdown, tables, charts) goes in `children`.
+
+### ThinkingSteps
+```ts
+interface ThinkingStepsProps { steps: string[]; streaming?: boolean; defaultOpen?: boolean; label?: string }
+```
+Collapsible reasoning trail; shimmering "Thinking…" while streaming.
+
+### ToolCalls
+```ts
+interface ToolCall { name: string; status: "running" | "done" | "error"; detail?: string; duration?: string }
+interface ToolCallsProps { calls: ToolCall[]; defaultOpen?: boolean; label?: string }
+```
+Badge row with live status (running spins, error in `--ui-danger`) plus a fold-out trail.
+
+### PromptSuggestions
+```ts
+interface PromptSuggestion { title: string; prompt: string; category?: string; icon?: ReactNode }
+interface PromptSuggestionsProps { items: PromptSuggestion[]; onPick: (prompt: string) => void; columns?: 1 | 2 | 3; radius?: Radius }
+```
+Empty-state starter cards; `onPick` hands the prompt to the composer.
+
+### An AI chat screen, assembled
+```tsx
+<div className="flex h-screen bg-(--bg)">
+  <Sidebar header={…} footer={…}>…</Sidebar>
+  <main className="flex min-w-0 flex-1 flex-col">
+    <div className="mx-auto w-full max-w-3xl flex-1 space-y-6 overflow-y-auto p-6">
+      {messages.length === 0 && <PromptSuggestions items={starters} onPick={setDraft} />}
+      {messages.map((m) => (
+        <ChatMessage key={m.id} role={m.role} name={m.role === "user" ? "You" : "Assistant"} time={m.time} streaming={m.streaming}>
+          {m.role === "assistant" && m.steps && <ThinkingSteps steps={m.steps} streaming={m.streaming} />}
+          {m.role === "assistant" && m.tools && <ToolCalls calls={m.tools} />}
+          <p>{m.text}</p>
+        </ChatMessage>
+      ))}
+    </div>
+    <div className="mx-auto w-full max-w-3xl p-4"><PromptInput … /></div>
+  </main>
+</div>
+```
+
+## 5. Building screens that match the design system
+
+- Page: `bg-(--bg)`. Cards/panels: `bg-(--surface) border border-(--border)`
+  with `rounded-[var(--ui-radius)]`. Sidebars/toolbars: `bg-(--bg-soft)`.
+- Headings: `text-(--text) font-semibold`. Supporting text: `text-(--text-muted) text-sm`.
+- Spacing: 16/24px rhythm (`p-4`, `p-6`, `gap-4`). Density like a real app,
+  not a marketing page.
+- Focus: components already draw a brand focus ring. Don't add
+  `focus:ring-*` / `focus:outline-*` around them.
+- Never restyle a component's internals via `className`. If you need a
+  different look, change the theme (`setTheme`) or the token variables on a
+  wrapper element.
+- Dark mode = `mode: "dark"` in the theme (or `setTheme`), not Tailwind
+  `dark:` classes — the tokens flip automatically.
+- Components that do not exist here (Textarea, Select-multiple, Popover,
+  Command palette, Sheet, Card, Separator, Form): build them from plain
+  elements + tokens as shown for Textarea above. Do not import them from
+  another UI library into the same screen. For chat UIs use PromptInput,
+  ChatMessage, Sidebar, ModelSelector, ThinkingSteps, ToolCalls,
+  PromptSuggestions — do not hand-roll a composer.
+
+## 6. Checklist before you say "done"
+
+1. `@import "tailwindcss"` then `@import "@hakistudio/hakiui/styles.css"` in the global CSS.
+2. `HakiProvider` wraps everything; root painted with `var(--bg)`.
+3. IBM Plex Mono (or the chosen `fontFamily`) is actually loaded.
+4. No raw `<button>`/`<input>` where `Button`/`Input` exist; no
+   `border-gray-*`, `bg-orange-*`, `focus:ring-black` etc. in app code.
+5. Focus an input: the ring is translucent orange, not black/blue. If it's
+   black/blue, step 1 is wrong.

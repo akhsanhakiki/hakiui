@@ -14,14 +14,42 @@ Also install peer dependencies if your app does not already have them:
 npm install react react-dom lucide-react
 ```
 
-## Tailwind setup (required)
+## Using HakiUI with an AI coding agent
 
-HakiUI components use Tailwind utility classes. To ensure those classes are generated in consuming apps, import the package stylesheet in your global CSS:
+The package ships [`llms.txt`](./llms.txt) — the complete prop reference for every component plus the setup checklist, written for AI agents. Point your agent at it before it writes any code:
+
+```
+Read node_modules/@hakistudio/hakiui/llms.txt (or https://hakiui.akhsanhakiki.com/llms.txt) first, then build …
+```
+
+## Tailwind setup (required — Tailwind v4)
+
+HakiUI components use Tailwind utility classes. Import the package stylesheet in your global CSS, **after** Tailwind:
 
 ```css
 @import "tailwindcss";
 @import "@hakistudio/hakiui/styles.css";
 ```
+
+`styles.css` carries an `@source` that makes your Tailwind build scan the compiled components. If you skip it, none of the components' utility classes are generated — inputs show the browser's default black focus outline, buttons lose their height and padding.
+
+No Tailwind in your app? Use the prebuilt bundle instead (it cannot be tree-shaken):
+
+```css
+@import "@hakistudio/hakiui/hakiui.css";
+```
+
+## Font (recommended)
+
+The default theme is `'IBM Plex Mono', monospace` but the package does not load the font. Either load it:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+```
+
+or pass a font you already ship via `initialTheme={{ ...defaultTheme, fontFamily: "'Inter', sans-serif" }}`.
 
 ### Framework quick setup
 
@@ -70,11 +98,13 @@ export default function App() {
   return (
     // mode: "light" (default) or "dark"
     <HakiProvider initialTheme={{ ...defaultTheme, mode: "light" }}>
+      {/* HakiProvider sets the tokens and text colour but not the page
+          background — paint the root with var(--bg) yourself. */}
       <div
         className="p-6 space-y-4 min-h-screen"
         style={{ background: "var(--bg)" }}
       >
-        <Input placeholder="Email address" />
+        <Input label="Email" placeholder="Email address" />
         <Button variant="primary">Continue</Button>
       </div>
     </HakiProvider>
@@ -141,11 +171,14 @@ This package uses Tailwind utility classes and CSS variables. `HakiProvider` pro
 | Subpath | Exports |
 |---------|---------|
 | `@hakistudio/hakiui` | Full public API (re-exports) |
-| `@hakistudio/hakiui/styles.css` | Tailwind v4 source hints for HakiUI components |
+| `@hakistudio/hakiui/styles.css` | Tailwind v4 `@source` + tokens + `.haki-*` classes (use with your own Tailwind build) |
+| `@hakistudio/hakiui/hakiui.css` | Prebuilt, self-contained stylesheet (no Tailwind needed) |
+| `@hakistudio/hakiui/llms.txt` | Full component/prop reference for AI coding agents |
 | `@hakistudio/hakiui/theme-provider` | `HakiProvider`, `useTheme`, `defaultTheme`, types |
 | `@hakistudio/hakiui/hex-to-rgb` | `hexToRgb` |
 | `@hakistudio/hakiui/radius` | `getRadiusStyle`, `Radius` |
-| `@hakistudio/hakiui/button` … `/modal` | Individual UI modules |
+| `@hakistudio/hakiui/button` … `/breadcrumbs` | Individual UI modules |
+| `@hakistudio/hakiui/prompt-input`, `/model-selector`, `/chat-message`, `/sidebar`, `/thinking-steps`, `/tool-calls`, `/prompt-suggestions`, `/chip`, `/kbd`, `/menu`, `/otp-input` | AI-app components (v2.3) — see `llms.txt` |
 
 ## Publish (maintainer)
 

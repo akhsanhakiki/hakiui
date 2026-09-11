@@ -38,9 +38,9 @@ var getRadiusStyle = (radius = "md") => {
 var import_jsx_runtime = require("react/jsx-runtime");
 var VARIANT_META = {
   info: { icon: import_lucide_react.Info, color: "var(--ui-primary)" },
-  success: { icon: import_lucide_react.CheckCircle2, color: "#0CA30C" },
-  warning: { icon: import_lucide_react.AlertTriangle, color: "#B87A00" },
-  danger: { icon: import_lucide_react.XCircle, color: "#D03B3B" }
+  success: { icon: import_lucide_react.CheckCircle2, color: "var(--ui-success, #0CA30C)" },
+  warning: { icon: import_lucide_react.AlertTriangle, color: "var(--ui-warning, #B87A00)" },
+  danger: { icon: import_lucide_react.XCircle, color: "var(--ui-danger, #D03B3B)" }
 };
 var Alert = ({
   variant = "info",

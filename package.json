@@ -1,6 +1,6 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
@@ -22,6 +22,7 @@
       "require": "./dist/index.cjs"
     },
     "./styles.css": "./dist/styles.css",
+    "./llms.txt": "./llms.txt",
     "./hakiui.css": "./dist/hakiui.css",
     "./theme.css": "./dist/theme.css",
     "./components.css": "./dist/components.css",
@@ -190,12 +191,68 @@
       "types": "./dist/breadcrumbs.d.ts",
       "import": "./dist/breadcrumbs.js",
       "require": "./dist/breadcrumbs.cjs"
+    },
+    "./chip": {
+      "types": "./dist/chip.d.ts",
+      "import": "./dist/chip.js",
+      "require": "./dist/chip.cjs"
+    },
+    "./kbd": {
+      "types": "./dist/kbd.d.ts",
+      "import": "./dist/kbd.js",
+      "require": "./dist/kbd.cjs"
+    },
+    "./menu": {
+      "types": "./dist/menu.d.ts",
+      "import": "./dist/menu.js",
+      "require": "./dist/menu.cjs"
+    },
+    "./otp-input": {
+      "types": "./dist/otp-input.d.ts",
+      "import": "./dist/otp-input.js",
+      "require": "./dist/otp-input.cjs"
+    },
+    "./sidebar": {
+      "types": "./dist/sidebar.d.ts",
+      "import": "./dist/sidebar.js",
+      "require": "./dist/sidebar.cjs"
+    },
+    "./model-selector": {
+      "types": "./dist/model-selector.d.ts",
+      "import": "./dist/model-selector.js",
+      "require": "./dist/model-selector.cjs"
+    },
+    "./prompt-input": {
+      "types": "./dist/prompt-input.d.ts",
+      "import": "./dist/prompt-input.js",
+      "require": "./dist/prompt-input.cjs"
+    },
+    "./chat-message": {
+      "types": "./dist/chat-message.d.ts",
+      "import": "./dist/chat-message.js",
+      "require": "./dist/chat-message.cjs"
+    },
+    "./thinking-steps": {
+      "types": "./dist/thinking-steps.d.ts",
+      "import": "./dist/thinking-steps.js",
+      "require": "./dist/thinking-steps.cjs"
+    },
+    "./tool-calls": {
+      "types": "./dist/tool-calls.d.ts",
+      "import": "./dist/tool-calls.js",
+      "require": "./dist/tool-calls.cjs"
+    },
+    "./prompt-suggestions": {
+      "types": "./dist/prompt-suggestions.d.ts",
+      "import": "./dist/prompt-suggestions.js",
+      "require": "./dist/prompt-suggestions.cjs"
     }
   },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "llms.txt"
   ],
   "sideEffects": [
     "./dist/styles.css"

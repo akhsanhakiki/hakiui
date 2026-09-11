@@ -23,6 +23,7 @@ __export(tokens_exports, {
   DARK_CHART_COLORS: () => DARK_CHART_COLORS,
   LIGHT_CHART_COLORS: () => LIGHT_CHART_COLORS,
   darkNeutrals: () => darkNeutrals,
+  defaultStatusColors: () => defaultStatusColors,
   defaultThemeTokens: () => defaultThemeTokens,
   lightNeutrals: () => lightNeutrals
 });
@@ -67,19 +68,26 @@ var DARK_CHART_COLORS = [
   "#C98500",
   "#199E70"
 ];
+var defaultStatusColors = {
+  successColor: "#0CA30C",
+  warningColor: "#B87A00",
+  dangerColor: "#D03B3B"
+};
 var defaultThemeTokens = {
   primaryColor: "#F05423",
   gradientColor: "#FF8C42",
   useGradient: false,
   fontFamily: "'IBM Plex Mono', monospace",
   borderRadius: 4,
-  mode: "light"
+  mode: "light",
+  ...defaultStatusColors
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   DARK_CHART_COLORS,
   LIGHT_CHART_COLORS,
   darkNeutrals,
+  defaultStatusColors,
   defaultThemeTokens,
   lightNeutrals
 });

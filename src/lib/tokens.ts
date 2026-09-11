@@ -72,6 +72,18 @@ export const DARK_CHART_COLORS = [
   "#199E70",
 ] as const;
 
+/**
+ * Status colours — success / warning / danger — as theme tokens, so alerts,
+ * badges, progress bars and toasts can be retuned per brand (and per mode)
+ * instead of carrying their own hex. Components read them with a fallback
+ * to these defaults, so a provider that predates them still renders.
+ */
+export const defaultStatusColors = {
+  successColor: "#0CA30C",
+  warningColor: "#B87A00",
+  dangerColor: "#D03B3B",
+};
+
 /** Default brand/shape tokens. Shape of `Theme` in `theme-provider`. */
 export const defaultThemeTokens = {
   primaryColor: "#F05423",
@@ -80,4 +92,5 @@ export const defaultThemeTokens = {
   fontFamily: "'IBM Plex Mono', monospace",
   borderRadius: 4,
   mode: "light" as ThemeMode,
+  ...defaultStatusColors,
 };

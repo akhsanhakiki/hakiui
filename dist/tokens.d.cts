@@ -29,8 +29,22 @@ declare const darkNeutrals: NeutralTokens;
  */
 declare const LIGHT_CHART_COLORS: readonly ["#F05423", "#4A3AA7", "#E34948", "#2A78D6", "#008300", "#E87BA4", "#EDA100", "#1BAF7A"];
 declare const DARK_CHART_COLORS: readonly ["#F05423", "#9085E9", "#E66767", "#3987E5", "#008300", "#D55181", "#C98500", "#199E70"];
+/**
+ * Status colours — success / warning / danger — as theme tokens, so alerts,
+ * badges, progress bars and toasts can be retuned per brand (and per mode)
+ * instead of carrying their own hex. Components read them with a fallback
+ * to these defaults, so a provider that predates them still renders.
+ */
+declare const defaultStatusColors: {
+    successColor: string;
+    warningColor: string;
+    dangerColor: string;
+};
 /** Default brand/shape tokens. Shape of `Theme` in `theme-provider`. */
 declare const defaultThemeTokens: {
+    successColor: string;
+    warningColor: string;
+    dangerColor: string;
     primaryColor: string;
     gradientColor: string;
     useGradient: boolean;
@@ -39,4 +53,4 @@ declare const defaultThemeTokens: {
     mode: ThemeMode;
 };
 
-export { DARK_CHART_COLORS, LIGHT_CHART_COLORS, type NeutralTokens, type ThemeMode, darkNeutrals, defaultThemeTokens, lightNeutrals };
+export { DARK_CHART_COLORS, LIGHT_CHART_COLORS, type NeutralTokens, type ThemeMode, darkNeutrals, defaultStatusColors, defaultThemeTokens, lightNeutrals };

@@ -18,9 +18,9 @@ export interface ProgressProps {
 
 const COLOR_HEX: Record<ProgressColor, string> = {
   primary: "var(--ui-primary-bg)",
-  success: "#0CA30C",
-  warning: "#B87A00",
-  danger: "#D03B3B",
+  success: "var(--ui-success, #0CA30C)",
+  warning: "var(--ui-warning, #B87A00)",
+  danger: "var(--ui-danger, #D03B3B)",
 };
 
 const HEIGHTS = { sm: "h-1", md: "h-2", lg: "h-3" } as const;
