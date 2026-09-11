@@ -41,19 +41,30 @@ __export(src_exports, {
   Breadcrumbs: () => Breadcrumbs,
   Button: () => Button,
   Calendar: () => Calendar,
+  ChatMessage: () => ChatMessage,
   Checkbox: () => Checkbox,
+  Chip: () => Chip,
   DARK_CHART_COLORS: () => DARK_CHART_COLORS,
   DatePicker: () => DatePicker,
   Drawer: () => Drawer,
   Dropdown: () => Dropdown,
   HakiProvider: () => HakiProvider,
   Input: () => Input,
+  Kbd: () => Kbd,
   LIGHT_CHART_COLORS: () => LIGHT_CHART_COLORS,
   LineChart: () => LineChart,
+  Menu: () => Menu,
   Modal: () => Modal,
+  ModelSelector: () => ModelSelector,
+  OtpInput: () => OtpInput,
   Pagination: () => Pagination,
   Progress: () => Progress,
+  PromptInput: () => PromptInput,
+  PromptSuggestions: () => PromptSuggestions,
   Radio: () => Radio,
+  Sidebar: () => Sidebar,
+  SidebarItem: () => SidebarItem,
+  SidebarSection: () => SidebarSection,
   Skeleton: () => Skeleton,
   Slider: () => Slider,
   Spinner: () => Spinner,
@@ -66,10 +77,13 @@ __export(src_exports, {
   TableHeader: () => TableHeader,
   TableRow: () => TableRow,
   Tabs: () => Tabs,
+  ThinkingSteps: () => ThinkingSteps,
   ToastProvider: () => ToastProvider,
+  ToolCalls: () => ToolCalls,
   Tooltip: () => Tooltip,
   chartColor: () => chartColor,
   darkNeutrals: () => darkNeutrals,
+  defaultStatusColors: () => defaultStatusColors,
   defaultTheme: () => defaultTheme,
   formatChartValue: () => formatChartValue,
   getRadiusStyle: () => getRadiusStyle,
@@ -142,13 +156,19 @@ var DARK_CHART_COLORS = [
   "#C98500",
   "#199E70"
 ];
+var defaultStatusColors = {
+  successColor: "#0CA30C",
+  warningColor: "#B87A00",
+  dangerColor: "#D03B3B"
+};
 var defaultThemeTokens = {
   primaryColor: "#F05423",
   gradientColor: "#FF8C42",
   useGradient: false,
   fontFamily: "'IBM Plex Mono', monospace",
   borderRadius: 4,
-  mode: "light"
+  mode: "light",
+  ...defaultStatusColors
 };
 
 // src/lib/chart.ts
@@ -238,6 +258,9 @@ var HakiProvider = ({
         "--ui-primary-bg": theme.useGradient ? "var(--ui-gradient)" : "var(--ui-primary)",
         "--ui-font": theme.fontFamily,
         "--ui-radius": `${theme.borderRadius}px`,
+        "--ui-success": theme.successColor ?? defaultStatusColors.successColor,
+        "--ui-warning": theme.warningColor ?? defaultStatusColors.warningColor,
+        "--ui-danger": theme.dangerColor ?? defaultStatusColors.dangerColor,
         "--bg": neutrals.bg,
         "--bg-soft": neutrals.bgSoft,
         "--surface": neutrals.surface,
@@ -439,13 +462,18 @@ var Input = import_react4.default.forwardRef(
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "div",
         {
-          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${currentSize.container}`,
+          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 border-(--border) outline-(--border) focus-within:border-(--ui-primary) focus-within:outline-(--ui-primary) ${currentSize.container}`,
           style: {
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
             color: "var(--text)",
-            border: "0.5px solid var(--border)",
-            outline: "0.5px solid var(--border)",
+            // Hairline = 0.5px border + 0.5px outline. Only width/style live
+            // inline; the colour is a utility so focus-within can override it
+            // (an inline shorthand would beat the class — see .haki-input:focus).
+            borderWidth: "0.5px",
+            borderStyle: "solid",
+            outlineWidth: "0.5px",
+            outlineStyle: "solid",
             outlineOffset: 0
           },
           children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "flex items-center w-full gap-2", children: [
@@ -1771,12 +1799,17 @@ var Autocomplete = ({
       "div",
       {
         ref: fieldRef,
-        className: `flex w-full items-center gap-2 overflow-hidden transition-colors focus-within:border-(--ui-primary) ${currentSize.container}`,
+        className: `flex w-full items-center gap-2 overflow-hidden transition-colors border-(--border) outline-(--border) focus-within:border-(--ui-primary) focus-within:outline-(--ui-primary) ${currentSize.container}`,
         style: {
           ...getRadiusStyle(radius),
           backgroundColor: "var(--bg-soft)",
-          border: "0.5px solid var(--border)",
-          outline: "0.5px solid var(--border)",
+          // Hairline = 0.5px border + 0.5px outline. Only width/style live
+          // inline; the colour is a utility so focus-within can override it
+          // (an inline shorthand would beat the class — see .haki-input:focus).
+          borderWidth: "0.5px",
+          borderStyle: "solid",
+          outlineWidth: "0.5px",
+          outlineStyle: "solid",
           outlineOffset: 0
         },
         children: [
@@ -2673,9 +2706,9 @@ var useToast = () => {
 };
 var VARIANT_META = {
   default: { icon: null, color: "var(--ui-primary)" },
-  success: { icon: import_lucide_react11.CheckCircle2, color: "#0CA30C" },
-  error: { icon: import_lucide_react11.XCircle, color: "#D03B3B" },
-  warning: { icon: import_lucide_react11.AlertTriangle, color: "#B87A00" },
+  success: { icon: import_lucide_react11.CheckCircle2, color: "var(--ui-success, #0CA30C)" },
+  error: { icon: import_lucide_react11.XCircle, color: "var(--ui-danger, #D03B3B)" },
+  warning: { icon: import_lucide_react11.AlertTriangle, color: "var(--ui-warning, #B87A00)" },
   info: { icon: import_lucide_react11.Info, color: "var(--ui-primary)" }
 };
 var LEAVE_MS = 200;
@@ -2812,9 +2845,9 @@ var import_lucide_react12 = require("lucide-react");
 var import_jsx_runtime21 = require("react/jsx-runtime");
 var VARIANT_META2 = {
   info: { icon: import_lucide_react12.Info, color: "var(--ui-primary)" },
-  success: { icon: import_lucide_react12.CheckCircle2, color: "#0CA30C" },
-  warning: { icon: import_lucide_react12.AlertTriangle, color: "#B87A00" },
-  danger: { icon: import_lucide_react12.XCircle, color: "#D03B3B" }
+  success: { icon: import_lucide_react12.CheckCircle2, color: "var(--ui-success, #0CA30C)" },
+  warning: { icon: import_lucide_react12.AlertTriangle, color: "var(--ui-warning, #B87A00)" },
+  danger: { icon: import_lucide_react12.XCircle, color: "var(--ui-danger, #D03B3B)" }
 };
 var Alert = ({
   variant = "info",
@@ -2872,9 +2905,9 @@ var import_jsx_runtime22 = require("react/jsx-runtime");
 var COLOR_HEX = {
   primary: "var(--ui-primary)",
   neutral: "var(--text-muted)",
-  success: "#0CA30C",
-  warning: "#B87A00",
-  danger: "#D03B3B"
+  success: "var(--ui-success, #0CA30C)",
+  warning: "var(--ui-warning, #B87A00)",
+  danger: "var(--ui-danger, #D03B3B)"
 };
 var Badge = ({
   children,
@@ -3009,9 +3042,9 @@ var AvatarGroup = ({
 var import_jsx_runtime24 = require("react/jsx-runtime");
 var COLOR_HEX2 = {
   primary: "var(--ui-primary-bg)",
-  success: "#0CA30C",
-  warning: "#B87A00",
-  danger: "#D03B3B"
+  success: "var(--ui-success, #0CA30C)",
+  warning: "var(--ui-warning, #B87A00)",
+  danger: "var(--ui-danger, #D03B3B)"
 };
 var HEIGHTS = { sm: "h-1", md: "h-2", lg: "h-3" };
 var Progress = ({
@@ -3289,13 +3322,18 @@ var Stepper = ({
   const control = /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(
     "div",
     {
-      className: `inline-flex items-stretch overflow-hidden ring-2 ring-transparent transition-[box-shadow,ring-color] focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${disabled ? "opacity-50" : ""} ${className}`,
+      className: `inline-flex items-stretch overflow-hidden ring-2 ring-transparent transition-[box-shadow,ring-color] focus-within:ring-(--ui-primary)/35 border-(--border) outline-(--border) focus-within:border-(--ui-primary) focus-within:outline-(--ui-primary) ${disabled ? "opacity-50" : ""} ${className}`,
       style: {
         ...getRadiusStyle(radius),
         height: s.height,
         backgroundColor: "var(--bg-soft)",
-        border: "0.5px solid var(--border)",
-        outline: "0.5px solid var(--border)",
+        // Hairline = 0.5px border + 0.5px outline. Only width/style live
+        // inline; the colour is a utility so focus-within can override it
+        // (an inline shorthand would beat the class — see .haki-input:focus).
+        borderWidth: "0.5px",
+        borderStyle: "solid",
+        outlineWidth: "0.5px",
+        outlineStyle: "solid",
         outlineOffset: 0,
         fontFamily: "var(--ui-font)"
       },
@@ -3406,6 +3444,796 @@ var Breadcrumbs = ({
     }) })
   }
 );
+
+// src/components/ui/chip.tsx
+var import_lucide_react15 = require("lucide-react");
+var import_jsx_runtime30 = require("react/jsx-runtime");
+var Chip = ({
+  children,
+  onClick,
+  onRemove,
+  selected = false,
+  disabled = false,
+  size = "md",
+  color = "neutral",
+  icon,
+  radius = "full",
+  className = ""
+}) => {
+  const accent = color === "primary" || selected;
+  const base = accent ? "var(--ui-primary)" : "var(--text)";
+  const shell = {
+    ...getRadiusStyle(radius),
+    fontFamily: "var(--ui-font)",
+    color: accent ? "var(--ui-primary)" : "var(--text)",
+    backgroundColor: selected ? `color-mix(in srgb, ${base} 12%, transparent)` : "var(--bg-soft)",
+    border: `0.5px solid ${selected ? `color-mix(in srgb, ${base} 45%, transparent)` : "var(--border)"}`
+  };
+  const sizing = size === "sm" ? "h-6 px-2 text-[11px] gap-1" : "h-7 px-2.5 text-xs gap-1.5";
+  const Tag = onClick ? "button" : "span";
+  return /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(
+    "span",
+    {
+      className: `inline-flex items-center overflow-hidden ${className}`,
+      style: shell,
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(
+          Tag,
+          {
+            type: onClick ? "button" : void 0,
+            onClick,
+            disabled: onClick ? disabled : void 0,
+            "aria-pressed": onClick && selected ? true : void 0,
+            className: `inline-flex items-center font-medium transition-colors ${sizing} ${onClick ? "cursor-pointer hover:bg-(--hover) disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35" : ""}`,
+            children: [
+              icon && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("span", { className: "shrink-0", children: icon }),
+              children
+            ]
+          }
+        ),
+        onRemove && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+          "button",
+          {
+            type: "button",
+            onClick: onRemove,
+            disabled,
+            "aria-label": "Remove",
+            className: "flex h-full items-center border-l border-(--border) px-1.5 text-(--text-muted) transition-colors hover:bg-(--hover) hover:text-(--text) disabled:opacity-50",
+            children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(import_lucide_react15.X, { size: size === "sm" ? 11 : 12 })
+          }
+        )
+      ]
+    }
+  );
+};
+
+// src/components/ui/kbd.tsx
+var import_jsx_runtime31 = require("react/jsx-runtime");
+var Kbd = ({ keys, children, size = "sm", className = "" }) => {
+  const caps = keys ?? (children !== void 0 ? [children] : []);
+  const cap = size === "sm" ? "min-w-4 px-1 text-[10px] leading-4" : "min-w-5 px-1.5 text-[11px] leading-5";
+  return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)("span", { className: `inline-flex items-center gap-0.5 ${className}`, "aria-label": keys?.join(" "), children: caps.map((k, i) => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
+    "kbd",
+    {
+      className: `inline-flex items-center justify-center rounded font-medium tabular-nums ${cap}`,
+      style: {
+        fontFamily: "var(--ui-font)",
+        color: "var(--text-muted)",
+        backgroundColor: "var(--bg-soft)",
+        border: "0.5px solid var(--border)",
+        boxShadow: "inset 0 -1px 0 var(--border)"
+      },
+      children: k
+    },
+    i
+  )) });
+};
+
+// src/components/ui/menu.tsx
+var import_react18 = require("react");
+var import_jsx_runtime32 = require("react/jsx-runtime");
+var isAction = (i) => "onSelect" in i;
+var Menu = ({ items, trigger, placement = "bottom-end", radius = "md", className = "" }) => {
+  const id = (0, import_react18.useId)();
+  const [open, setOpen] = (0, import_react18.useState)(false);
+  const [index, setIndex] = (0, import_react18.useState)(-1);
+  const rootRef = (0, import_react18.useRef)(null);
+  const triggerRef = (0, import_react18.useRef)(null);
+  const actions = items.map((it, i) => isAction(it) && !it.disabled ? i : -1).filter((i) => i >= 0);
+  (0, import_react18.useEffect)(() => {
+    if (!open) return;
+    const onDown = (e) => {
+      if (!rootRef.current?.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  (0, import_react18.useEffect)(() => {
+    if (open) setIndex(actions[0] ?? -1);
+  }, [open]);
+  const move = (dir) => {
+    if (actions.length === 0) return;
+    const at = actions.indexOf(index);
+    const next = actions[(at + dir + actions.length) % actions.length];
+    setIndex(next);
+  };
+  const vertical = placement.startsWith("top") ? "bottom-full mb-1" : "top-full mt-1";
+  const horizontal = placement.endsWith("end") ? "right-0" : "left-0";
+  return /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)("div", { ref: rootRef, className: `relative inline-block ${className}`, children: [
+    trigger({
+      ref: triggerRef,
+      onClick: () => setOpen((o) => !o),
+      "aria-haspopup": "menu",
+      "aria-expanded": open,
+      "aria-controls": id
+    }),
+    open && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(
+      "div",
+      {
+        id,
+        role: "menu",
+        tabIndex: -1,
+        onKeyDown: (e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            move(1);
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            move(-1);
+          } else if ((e.key === "Enter" || e.key === " ") && index >= 0) {
+            e.preventDefault();
+            const it = items[index];
+            if (isAction(it)) {
+              it.onSelect();
+              setOpen(false);
+            }
+          }
+        },
+        ref: (el) => el?.focus(),
+        className: `absolute z-50 min-w-48 p-1 shadow-lg outline-none ${vertical} ${horizontal}`,
+        style: {
+          ...getRadiusStyle(radius),
+          fontFamily: "var(--ui-font)",
+          backgroundColor: "var(--surface)",
+          border: "0.5px solid var(--border)",
+          outline: "0.5px solid var(--border)",
+          outlineOffset: 0
+        },
+        children: items.map((it, i) => {
+          if ("separator" in it) return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("div", { role: "separator", className: "my-1 h-px", style: { background: "var(--border)" } }, i);
+          if ("heading" in it) return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("div", { className: "px-2 pt-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-(--text-muted)", children: it.heading }, i);
+          const focused = i === index;
+          return /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
+            "button",
+            {
+              type: "button",
+              role: "menuitem",
+              disabled: it.disabled,
+              tabIndex: -1,
+              onMouseEnter: () => setIndex(i),
+              onClick: () => {
+                it.onSelect();
+                setOpen(false);
+              },
+              className: "flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+              style: {
+                backgroundColor: focused ? "var(--hover)" : "transparent",
+                color: it.danger ? "var(--ui-danger, #D03B3B)" : "var(--text)"
+              },
+              children: [
+                it.icon && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("span", { className: "shrink-0 text-(--text-muted)", style: it.danger ? { color: "inherit" } : void 0, children: it.icon }),
+                /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)("span", { className: "min-w-0 flex-1", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("span", { className: "block truncate font-medium", children: it.label }),
+                  it.description && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("span", { className: "block truncate text-[11px] text-(--text-muted)", children: it.description })
+                ] }),
+                it.shortcut && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Kbd, { keys: it.shortcut })
+              ]
+            },
+            i
+          );
+        })
+      }
+    )
+  ] });
+};
+
+// src/components/ui/otp-input.tsx
+var import_react19 = __toESM(require("react"), 1);
+var import_jsx_runtime33 = require("react/jsx-runtime");
+var SIZES2 = { sm: "h-9 w-8 text-base", md: "h-11 w-10 text-lg", lg: "h-14 w-12 text-2xl" };
+var OtpInput = ({
+  length = 6,
+  value,
+  onChange,
+  onComplete,
+  groups = [],
+  size = "md",
+  radius = "md",
+  disabled = false,
+  autoFocus = false,
+  mode = "numeric",
+  label = "One-time code",
+  className = ""
+}) => {
+  const refs = (0, import_react19.useRef)([]);
+  const clean = (s) => (mode === "numeric" ? s.replace(/\D/g, "") : s.replace(/[^a-zA-Z0-9]/g, "")).slice(0, length);
+  const commit = (next) => {
+    onChange(next);
+    if (next.length === length) onComplete?.(next);
+  };
+  const focusAt = (i) => refs.current[Math.max(0, Math.min(length - 1, i))]?.focus();
+  return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("div", { role: "group", "aria-label": label, className: `inline-flex items-center gap-2 ${className}`, style: { fontFamily: "var(--ui-font)" }, children: Array.from({ length }, (_, i) => /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(import_react19.default.Fragment, { children: [
+    i > 0 && groups.includes(i) && /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("span", { "aria-hidden": true, className: "h-px w-2", style: { background: "var(--border)" } }),
+    /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+      "input",
+      {
+        ref: (el) => {
+          refs.current[i] = el;
+        },
+        inputMode: mode === "numeric" ? "numeric" : "text",
+        autoComplete: i === 0 ? "one-time-code" : "off",
+        autoFocus: autoFocus && i === 0,
+        disabled,
+        "aria-label": `${label}, character ${i + 1} of ${length}`,
+        value: value[i] ?? "",
+        onFocus: (e) => e.currentTarget.select(),
+        onPaste: (e) => {
+          e.preventDefault();
+          const pasted = clean(e.clipboardData.getData("text"));
+          if (!pasted) return;
+          const next = clean(value.slice(0, i) + pasted);
+          commit(next);
+          focusAt(next.length >= length ? length - 1 : next.length);
+        },
+        onChange: (e) => {
+          const ch = clean(e.target.value).slice(-1);
+          if (!ch) return;
+          const chars = value.padEnd(length, " ").split("");
+          chars[i] = ch;
+          const next = chars.join("").trimEnd();
+          commit(clean(next));
+          focusAt(i + 1);
+        },
+        onKeyDown: (e) => {
+          if (e.key === "Backspace") {
+            e.preventDefault();
+            const chars = value.padEnd(length, " ").split("");
+            if (chars[i] !== " ") chars[i] = " ";
+            else if (i > 0) {
+              chars[i - 1] = " ";
+              focusAt(i - 1);
+            }
+            onChange(clean(chars.join("").trimEnd()));
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            focusAt(i - 1);
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            focusAt(i + 1);
+          }
+        },
+        className: `text-center font-semibold tabular-nums outline-none transition-[box-shadow] ring-2 ring-transparent focus-visible:ring-(--ui-primary)/35 disabled:opacity-50 ${SIZES2[size]}`,
+        style: {
+          ...getRadiusStyle(radius),
+          color: "var(--text)",
+          backgroundColor: "var(--surface)",
+          border: "0.5px solid var(--border)",
+          outline: "0.5px solid var(--border)",
+          outlineOffset: 0,
+          caretColor: "var(--ui-primary)"
+        }
+      }
+    )
+  ] }, i)) });
+};
+
+// src/components/ui/sidebar.tsx
+var import_react20 = __toESM(require("react"), 1);
+var import_lucide_react16 = require("lucide-react");
+var import_jsx_runtime34 = require("react/jsx-runtime");
+var SidebarContext = import_react20.default.createContext({ collapsed: false });
+var Sidebar = ({
+  children,
+  header,
+  footer,
+  collapsed = false,
+  onCollapsedChange,
+  width = 264,
+  className = "",
+  "aria-label": ariaLabel = "Sidebar"
+}) => /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(SidebarContext.Provider, { value: { collapsed }, children: /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)(
+  "aside",
+  {
+    "aria-label": ariaLabel,
+    className: `flex h-full min-h-0 shrink-0 flex-col transition-[width] duration-200 ease-out motion-reduce:transition-none ${className}`,
+    style: {
+      width: collapsed ? 56 : width,
+      fontFamily: "var(--ui-font)",
+      backgroundColor: "var(--bg-soft)",
+      color: "var(--text)",
+      borderRight: "0.5px solid var(--border)"
+    },
+    children: [
+      /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)("div", { className: `flex h-14 shrink-0 items-center gap-1 ${collapsed ? "justify-center px-2" : "px-3"}`, children: [
+        !collapsed && /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("div", { className: "min-w-0 flex-1", children: header }),
+        onCollapsedChange && /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
+          "button",
+          {
+            type: "button",
+            onClick: () => onCollapsedChange(!collapsed),
+            "aria-label": collapsed ? "Expand sidebar" : "Collapse sidebar",
+            className: "shrink-0 rounded-md p-1.5 text-(--text-muted) transition-colors hover:bg-(--hover) hover:text-(--text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35",
+            children: collapsed ? /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(import_lucide_react16.PanelLeftOpen, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(import_lucide_react16.PanelLeftClose, { size: 16 })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("div", { className: `min-h-0 flex-1 overflow-y-auto ${collapsed ? "px-2" : "px-2"}`, children }),
+      footer && /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("div", { className: `shrink-0 ${collapsed ? "p-2" : "p-3"}`, style: { borderTop: "0.5px solid var(--border)" }, children: footer })
+    ]
+  }
+) });
+var SidebarSection = ({ title, action, children }) => {
+  const { collapsed } = import_react20.default.useContext(SidebarContext);
+  return /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)("section", { className: "py-2", children: [
+    title && !collapsed && /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)("div", { className: "flex items-center justify-between px-2 pb-1", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("span", { className: "text-[10px] font-semibold uppercase tracking-wider text-(--text-muted)", children: title }),
+      action
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("div", { className: "flex flex-col gap-0.5", children })
+  ] });
+};
+var SidebarItem = ({ children, icon, active = false, meta, actions, onClick, href, radius = "md" }) => {
+  const { collapsed } = import_react20.default.useContext(SidebarContext);
+  const Tag = href ? "a" : "button";
+  return /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)(
+    "div",
+    {
+      className: "group relative flex items-center",
+      style: { ...getRadiusStyle(radius), backgroundColor: active ? "var(--hover)" : void 0 },
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)(
+          Tag,
+          {
+            href,
+            type: href ? void 0 : "button",
+            onClick,
+            "aria-current": active ? "page" : void 0,
+            title: collapsed && typeof children === "string" ? children : void 0,
+            className: `flex min-w-0 flex-1 items-center gap-2.5 text-left text-xs transition-colors hover:bg-(--hover) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35 ${collapsed ? "justify-center px-0 py-2" : "px-2 py-2"}`,
+            style: { ...getRadiusStyle(radius), color: "var(--text)" },
+            children: [
+              icon && /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("span", { className: `shrink-0 ${active ? "text-(--ui-primary)" : "text-(--text-muted)"}`, children: icon }),
+              !collapsed && /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)("span", { className: "min-w-0 flex-1", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("span", { className: `block truncate leading-tight ${active ? "font-medium" : ""}`, children }),
+                meta && /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("span", { className: "mt-0.5 block truncate text-[10px] text-(--text-muted)", children: meta })
+              ] })
+            ]
+          }
+        ),
+        actions && !collapsed && /* @__PURE__ */ (0, import_jsx_runtime34.jsx)("span", { className: "absolute right-1 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100 [&:has([aria-expanded=true])]:opacity-100", children: actions })
+      ]
+    }
+  );
+};
+
+// src/components/ui/model-selector.tsx
+var import_react21 = require("react");
+var import_lucide_react17 = require("lucide-react");
+var import_jsx_runtime35 = require("react/jsx-runtime");
+var ModelSelector = ({
+  options,
+  value,
+  onChange,
+  placement = "top",
+  icon,
+  size = "sm",
+  radius = "full",
+  disabled = false,
+  className = ""
+}) => {
+  const id = (0, import_react21.useId)();
+  const [open, setOpen] = (0, import_react21.useState)(false);
+  const [index, setIndex] = (0, import_react21.useState)(() => Math.max(0, options.findIndex((o) => o.value === value)));
+  const rootRef = (0, import_react21.useRef)(null);
+  const current = options.find((o) => o.value === value);
+  (0, import_react21.useEffect)(() => {
+    if (!open) return;
+    const onDown = (e) => {
+      if (!rootRef.current?.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  const pick = (o) => {
+    if (o.disabled) return;
+    onChange(o.value);
+    setOpen(false);
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)("div", { ref: rootRef, className: `relative inline-block ${className}`, style: { fontFamily: "var(--ui-font)" }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(
+      "button",
+      {
+        type: "button",
+        disabled,
+        onClick: () => setOpen((o) => !o),
+        "aria-haspopup": "listbox",
+        "aria-expanded": open,
+        "aria-controls": id,
+        className: `inline-flex items-center gap-1.5 font-medium transition-colors hover:bg-(--hover) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35 disabled:opacity-50 ${size === "sm" ? "h-7 px-2 text-[11px]" : "h-8 px-2.5 text-xs"}`,
+        style: { ...getRadiusStyle(radius), color: "var(--text)", backgroundColor: "var(--bg-soft)", border: "0.5px solid var(--border)" },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("span", { className: "text-(--ui-primary)", children: icon ?? /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(import_lucide_react17.Sparkles, { size: size === "sm" ? 12 : 13 }) }),
+          current?.label ?? "Model",
+          /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(import_lucide_react17.ChevronDown, { size: 12, className: `text-(--text-muted) transition-transform ${open ? "rotate-180" : ""}` })
+        ]
+      }
+    ),
+    open && /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(
+      "ul",
+      {
+        id,
+        role: "listbox",
+        tabIndex: -1,
+        ref: (el) => el?.focus(),
+        "aria-activedescendant": `${id}-${index}`,
+        onKeyDown: (e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setIndex((i) => (i + 1) % options.length);
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setIndex((i) => (i - 1 + options.length) % options.length);
+          } else if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            pick(options[index]);
+          }
+        },
+        className: `absolute left-0 z-50 m-0 w-64 list-none p-1 shadow-lg outline-none ${placement === "top" ? "bottom-full mb-1.5" : "top-full mt-1.5"}`,
+        style: { ...getRadiusStyle("md"), backgroundColor: "var(--surface)", border: "0.5px solid var(--border)", outline: "0.5px solid var(--border)", outlineOffset: 0 },
+        children: options.map((o, i) => {
+          const selected = o.value === value;
+          return /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(
+            "li",
+            {
+              id: `${id}-${i}`,
+              role: "option",
+              "aria-selected": selected,
+              "aria-disabled": o.disabled,
+              onMouseEnter: () => setIndex(i),
+              onClick: () => pick(o),
+              className: `flex cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 text-xs ${o.disabled ? "cursor-not-allowed opacity-50" : ""}`,
+              style: { backgroundColor: i === index ? "var(--hover)" : "transparent", color: "var(--text)" },
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)("span", { className: "min-w-0 flex-1", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)("span", { className: "flex items-center gap-1.5", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("span", { className: "font-medium", children: o.label }),
+                    o.badge && /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("span", { className: "rounded-full px-1.5 text-[10px] font-medium", style: { backgroundColor: "color-mix(in srgb, var(--ui-primary) 12%, transparent)", color: "var(--ui-primary)" }, children: o.badge })
+                  ] }),
+                  o.description && /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("span", { className: "mt-0.5 block text-[11px] leading-4 text-(--text-muted)", children: o.description })
+                ] }),
+                selected && /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(import_lucide_react17.Check, { size: 14, className: "mt-0.5 shrink-0 text-(--ui-primary)" })
+              ]
+            },
+            o.value
+          );
+        })
+      }
+    )
+  ] });
+};
+
+// src/components/ui/prompt-input.tsx
+var import_react22 = require("react");
+var import_lucide_react18 = require("lucide-react");
+var import_jsx_runtime36 = require("react/jsx-runtime");
+var PromptInput = ({
+  value,
+  onChange,
+  onSubmit,
+  streaming = false,
+  onStop,
+  placeholder = "Ask anything\u2026",
+  maxRows = 8,
+  disabled = false,
+  leading,
+  trailing,
+  hint,
+  autoFocus = false,
+  radius = "lg",
+  className = "",
+  "aria-label": ariaLabel = "Message"
+}) => {
+  const ref = (0, import_react22.useRef)(null);
+  const canSend = value.trim().length > 0 && !disabled && !streaming;
+  (0, import_react22.useEffect)(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    const line = parseFloat(getComputedStyle(el).lineHeight) || 20;
+    const max = line * maxRows;
+    el.style.height = `${Math.min(el.scrollHeight, max)}px`;
+    el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden";
+  }, [value, maxRows]);
+  (0, import_react22.useEffect)(() => {
+    if (!streaming) ref.current?.focus({ preventScroll: true });
+  }, [streaming]);
+  const submit = () => {
+    if (!canSend) return;
+    onSubmit(value.trim());
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { className: `w-full ${className}`, style: { fontFamily: "var(--ui-font)" }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(
+      "div",
+      {
+        className: "flex flex-col transition-[box-shadow] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35",
+        style: {
+          ...getRadiusStyle(radius),
+          backgroundColor: "var(--surface)",
+          border: "0.5px solid var(--border)",
+          outline: "0.5px solid var(--border)",
+          outlineOffset: 0
+        },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+            "textarea",
+            {
+              ref,
+              rows: 1,
+              value,
+              disabled,
+              autoFocus,
+              placeholder,
+              "aria-label": ariaLabel,
+              onChange: (e) => onChange(e.target.value),
+              onKeyDown: (e) => {
+                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  submit();
+                }
+              },
+              className: "w-full resize-none bg-transparent px-4 pt-3.5 pb-2 text-sm leading-6 outline-none placeholder:text-(--text-muted) disabled:opacity-50",
+              style: { color: "var(--text)", caretColor: "var(--ui-primary)" }
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)("div", { className: "flex items-center gap-2 px-2 pb-2", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("div", { className: "flex min-w-0 flex-1 items-center gap-1.5", children: leading }),
+            trailing,
+            streaming ? /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+              "button",
+              {
+                type: "button",
+                onClick: onStop,
+                "aria-label": "Stop generating",
+                className: "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35",
+                style: { backgroundColor: "var(--text)", color: "var(--bg)" },
+                children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(import_lucide_react18.Square, { size: 12, fill: "currentColor" })
+              }
+            ) : /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+              "button",
+              {
+                type: "button",
+                onClick: submit,
+                disabled: !canSend,
+                "aria-label": "Send message",
+                className: "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35 disabled:cursor-not-allowed",
+                style: {
+                  background: canSend ? "var(--ui-primary-bg)" : "var(--bg-soft)",
+                  color: canSend ? "#ffffff" : "var(--text-muted)"
+                },
+                children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(import_lucide_react18.ArrowUp, { size: 15 })
+              }
+            )
+          ] })
+        ]
+      }
+    ),
+    hint && /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("p", { className: "mt-1.5 text-center text-[10px] text-(--text-muted)", children: hint })
+  ] });
+};
+
+// src/components/ui/chat-message.tsx
+var import_jsx_runtime37 = require("react/jsx-runtime");
+var ChatMessage = ({
+  role,
+  children,
+  avatar,
+  name,
+  time,
+  actions,
+  streaming = false,
+  radius = "lg",
+  className = ""
+}) => {
+  const isUser = role === "user";
+  return /* @__PURE__ */ (0, import_jsx_runtime37.jsxs)(
+    "article",
+    {
+      "aria-label": name ?? (isUser ? "You" : "Assistant"),
+      className: `flex w-full gap-3 ${isUser ? "flex-row-reverse" : ""} ${className}`,
+      style: { fontFamily: "var(--ui-font)", color: "var(--text)" },
+      children: [
+        avatar && /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("div", { className: "mt-0.5 shrink-0", children: avatar }),
+        /* @__PURE__ */ (0, import_jsx_runtime37.jsxs)("div", { className: `min-w-0 ${isUser ? "max-w-[80%]" : "flex-1"}`, children: [
+          (name || time) && /* @__PURE__ */ (0, import_jsx_runtime37.jsxs)("div", { className: `mb-1.5 flex items-center gap-2 text-[11px] text-(--text-muted) ${isUser ? "justify-end" : ""}`, children: [
+            name && /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("span", { className: "font-medium", children: name }),
+            time && /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("span", { children: time })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime37.jsxs)(
+            "div",
+            {
+              className: `text-sm leading-6 ${isUser ? "px-4 py-2.5" : ""}`,
+              style: isUser ? {
+                ...getRadiusStyle(radius),
+                backgroundColor: "color-mix(in srgb, var(--ui-primary) 10%, var(--surface))",
+                border: "0.5px solid color-mix(in srgb, var(--ui-primary) 25%, var(--border))"
+              } : void 0,
+              children: [
+                children,
+                streaming && /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(
+                  "span",
+                  {
+                    "aria-hidden": true,
+                    className: "ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em] animate-pulse align-baseline",
+                    style: { background: "var(--ui-primary)" }
+                  }
+                )
+              ]
+            }
+          ),
+          actions && /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("div", { className: `mt-2 flex items-center gap-1 ${isUser ? "justify-end" : ""}`, children: actions })
+        ] })
+      ]
+    }
+  );
+};
+
+// src/components/ui/thinking-steps.tsx
+var import_react23 = require("react");
+var import_lucide_react19 = require("lucide-react");
+var import_jsx_runtime38 = require("react/jsx-runtime");
+var ThinkingSteps = ({ steps, streaming = false, defaultOpen = true, label, className = "" }) => {
+  const [open, setOpen] = (0, import_react23.useState)(defaultOpen);
+  const title = label ?? (streaming ? "Thinking\u2026" : `Thought for ${steps.length} step${steps.length === 1 ? "" : "s"}`);
+  return /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)("div", { className, style: { fontFamily: "var(--ui-font)" }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("style", { children: `@keyframes hk-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}@media (prefers-reduced-motion:reduce){.hk-shimmer{animation:none!important}}` }),
+    /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(
+      "button",
+      {
+        type: "button",
+        onClick: () => setOpen((o) => !o),
+        "aria-expanded": open,
+        className: "flex items-center gap-1.5 rounded text-[11px] font-medium text-(--text-muted) transition-colors hover:text-(--text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35",
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(import_lucide_react19.Brain, { size: 12, className: streaming ? "text-(--ui-primary)" : void 0 }),
+          /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+            "span",
+            {
+              className: streaming ? "hk-shimmer bg-clip-text text-transparent" : void 0,
+              style: streaming ? {
+                backgroundImage: "linear-gradient(90deg, var(--text-muted) 0%, var(--text) 50%, var(--text-muted) 100%)",
+                backgroundSize: "200% 100%",
+                animation: "hk-shimmer 1.6s linear infinite"
+              } : void 0,
+              children: title
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(import_lucide_react19.ChevronDown, { size: 12, className: `transition-transform ${open ? "rotate-180" : ""}` })
+        ]
+      }
+    ),
+    open && steps.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("ol", { className: "mt-1.5 space-y-1 pl-3", style: { borderLeft: "2px solid var(--border)" }, "aria-live": streaming ? "polite" : void 0, children: steps.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime38.jsx)("li", { className: "text-[11px] leading-relaxed text-(--text-muted)", children: s }, i)) })
+  ] });
+};
+
+// src/components/ui/tool-calls.tsx
+var import_react24 = require("react");
+var import_lucide_react20 = require("lucide-react");
+var import_jsx_runtime39 = require("react/jsx-runtime");
+var STATUS = {
+  running: { color: "var(--ui-primary)", Icon: import_lucide_react20.Loader2, spin: true },
+  done: { color: "var(--ui-success, #0CA30C)", Icon: import_lucide_react20.Check, spin: false },
+  error: { color: "var(--ui-danger, #D03B3B)", Icon: import_lucide_react20.AlertCircle, spin: false }
+};
+var ToolCalls = ({ calls, defaultOpen = false, label = "Tools used", className = "" }) => {
+  const [open, setOpen] = (0, import_react24.useState)(defaultOpen);
+  if (calls.length === 0) return null;
+  return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { className, style: { fontFamily: "var(--ui-font)" }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("div", { className: "flex flex-wrap items-center gap-1.5", children: [
+      calls.map((c, i) => {
+        const s = STATUS[c.status];
+        return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(
+          "span",
+          {
+            className: "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+            style: { color: s.color, backgroundColor: `color-mix(in srgb, ${s.color} 12%, transparent)` },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(s.Icon, { size: 11, className: s.spin ? "animate-spin motion-reduce:animate-none" : void 0 }),
+              c.name
+            ]
+          },
+          `${c.name}-${i}`
+        );
+      }),
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(
+        "button",
+        {
+          type: "button",
+          onClick: () => setOpen((o) => !o),
+          "aria-expanded": open,
+          className: "ml-1 inline-flex items-center gap-1 rounded text-[11px] text-(--text-muted) transition-colors hover:text-(--text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(import_lucide_react20.Wrench, { size: 11 }),
+            " ",
+            label,
+            /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(import_lucide_react20.ChevronDown, { size: 11, className: `transition-transform ${open ? "rotate-180" : ""}` })
+          ]
+        }
+      )
+    ] }),
+    open && /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("ul", { className: "mt-2 space-y-1.5 pl-3", style: { borderLeft: "2px solid var(--border)" }, children: calls.map((c, i) => {
+      const s = STATUS[c.status];
+      return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("li", { className: "text-[11px] leading-relaxed", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("span", { className: "flex items-center gap-1.5", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { className: "font-medium text-(--text)", children: c.name }),
+          c.duration && /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)("span", { className: "text-(--text-muted)", children: [
+            "\xB7 ",
+            c.duration
+          ] })
+        ] }),
+        c.detail && /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("span", { className: "mt-0.5 block font-mono text-[10.5px]", style: { color: c.status === "error" ? s.color : "var(--text-muted)" }, children: c.detail })
+      ] }, `${c.name}-${i}`);
+    }) })
+  ] });
+};
+
+// src/components/ui/prompt-suggestions.tsx
+var import_lucide_react21 = require("lucide-react");
+var import_jsx_runtime40 = require("react/jsx-runtime");
+var PromptSuggestions = ({ items, onPick, columns = 2, radius = "md", className = "" }) => /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
+  "div",
+  {
+    className: `grid gap-2 ${columns === 3 ? "sm:grid-cols-3" : columns === 2 ? "sm:grid-cols-2" : ""} ${className}`,
+    style: { fontFamily: "var(--ui-font)" },
+    children: items.map((s) => /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)(
+      "button",
+      {
+        type: "button",
+        onClick: () => onPick(s.prompt),
+        className: "group flex flex-col p-3 text-left transition-colors hover:border-(--ui-primary) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-primary)/35",
+        style: { ...getRadiusStyle(radius), backgroundColor: "var(--surface)", border: "0.5px solid var(--border)", color: "var(--text)" },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("span", { className: "flex items-start justify-between gap-2", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)("span", { className: "flex items-center gap-1.5 text-xs font-medium", children: [
+              s.icon && /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("span", { className: "text-(--ui-primary)", children: s.icon }),
+              s.title
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(import_lucide_react21.ArrowUpRight, { size: 13, className: "mt-0.5 shrink-0 text-(--text-muted) transition-colors group-hover:text-(--ui-primary)" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("span", { className: "mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-(--text-muted)", children: s.prompt }),
+          s.category && /* @__PURE__ */ (0, import_jsx_runtime40.jsx)("span", { className: "mt-2 inline-flex w-fit rounded-full px-1.5 py-0.5 text-[10px] font-medium", style: { backgroundColor: "var(--bg-soft)", color: "var(--text-muted)" }, children: s.category })
+        ]
+      },
+      s.title
+    ))
+  }
+);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   Accordion,
@@ -3419,19 +4247,30 @@ var Breadcrumbs = ({
   Breadcrumbs,
   Button,
   Calendar,
+  ChatMessage,
   Checkbox,
+  Chip,
   DARK_CHART_COLORS,
   DatePicker,
   Drawer,
   Dropdown,
   HakiProvider,
   Input,
+  Kbd,
   LIGHT_CHART_COLORS,
   LineChart,
+  Menu,
   Modal,
+  ModelSelector,
+  OtpInput,
   Pagination,
   Progress,
+  PromptInput,
+  PromptSuggestions,
   Radio,
+  Sidebar,
+  SidebarItem,
+  SidebarSection,
   Skeleton,
   Slider,
   Spinner,
@@ -3444,10 +4283,13 @@ var Breadcrumbs = ({
   TableHeader,
   TableRow,
   Tabs,
+  ThinkingSteps,
   ToastProvider,
+  ToolCalls,
   Tooltip,
   chartColor,
   darkNeutrals,
+  defaultStatusColors,
   defaultTheme,
   formatChartValue,
   getRadiusStyle,

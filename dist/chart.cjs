@@ -52,6 +52,20 @@ var DARK_CHART_COLORS = [
   "#C98500",
   "#199E70"
 ];
+var defaultStatusColors = {
+  successColor: "#0CA30C",
+  warningColor: "#B87A00",
+  dangerColor: "#D03B3B"
+};
+var defaultThemeTokens = {
+  primaryColor: "#F05423",
+  gradientColor: "#FF8C42",
+  useGradient: false,
+  fontFamily: "'IBM Plex Mono', monospace",
+  borderRadius: 4,
+  mode: "light",
+  ...defaultStatusColors
+};
 
 // src/lib/chart.ts
 var chartColor = (index) => {

@@ -28,7 +28,18 @@ const ui = [
   "spinner",
   "slider",
   "stepper",
-  "breadcrumbs"
+  "breadcrumbs",
+  "chip",
+  "kbd",
+  "menu",
+  "otp-input",
+  "sidebar",
+  "model-selector",
+  "prompt-input",
+  "chat-message",
+  "thinking-steps",
+  "tool-calls",
+  "prompt-suggestions"
 ] as const;
 
 const entry: Record<string, string> = {

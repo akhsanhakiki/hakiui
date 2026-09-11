@@ -19,9 +19,9 @@ const VARIANT_META: Record<
   { icon: typeof Info; color: string }
 > = {
   info: { icon: Info, color: "var(--ui-primary)" },
-  success: { icon: CheckCircle2, color: "#0CA30C" },
-  warning: { icon: AlertTriangle, color: "#B87A00" },
-  danger: { icon: XCircle, color: "#D03B3B" },
+  success: { icon: CheckCircle2, color: "var(--ui-success, #0CA30C)" },
+  warning: { icon: AlertTriangle, color: "var(--ui-warning, #B87A00)" },
+  danger: { icon: XCircle, color: "var(--ui-danger, #D03B3B)" },
 };
 
 export const Alert = ({

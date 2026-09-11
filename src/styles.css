@@ -1,8 +1,21 @@
 /*
- * Import this in your app's global stylesheet after Tailwind.
- * It tells Tailwind v4 to scan HakiUI component files in this package.
+ * Import this in your app's global stylesheet after Tailwind:
+ *
+ *   @import "tailwindcss";
+ *   @import "@hakistudio/hakiui/styles.css";
+ *
+ * It tells Tailwind v4 to scan HakiUI's compiled components so the utility
+ * classes they use (outline-none, ring-2, inline-flex, h-9, …) are generated
+ * in YOUR build. Tailwind skips node_modules on its own, so without this
+ * every component renders unstyled — inputs get the browser's default focus
+ * outline, buttons lose their height and padding.
+ *
+ * `@source` is resolved relative to THIS file. This file is copied verbatim
+ * into dist/ by scripts/copy-styles.mjs and consumed from there, so the glob
+ * is written relative to dist/ — it must not be "./dist/…" (that would point
+ * at dist/dist/, which doesn't exist, and silently scan nothing).
  */
-@source "./dist/**/*.{js,mjs,cjs}";
+@source "./**/*.{js,mjs,cjs}";
 
 /*
  * Design tokens. Harmless alongside <HakiProvider> — the provider sets the

@@ -50,9 +50,9 @@ const VARIANT_META: Record<
   { icon: typeof Info | null; color: string }
 > = {
   default: { icon: null, color: "var(--ui-primary)" },
-  success: { icon: CheckCircle2, color: "#0CA30C" },
-  error: { icon: XCircle, color: "#D03B3B" },
-  warning: { icon: AlertTriangle, color: "#B87A00" },
+  success: { icon: CheckCircle2, color: "var(--ui-success, #0CA30C)" },
+  error: { icon: XCircle, color: "var(--ui-danger, #D03B3B)" },
+  warning: { icon: AlertTriangle, color: "var(--ui-warning, #B87A00)" },
   info: { icon: Info, color: "var(--ui-primary)" },
 };
 

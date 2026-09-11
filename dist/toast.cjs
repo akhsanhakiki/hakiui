@@ -73,9 +73,9 @@ var useToast = () => {
 };
 var VARIANT_META = {
   default: { icon: null, color: "var(--ui-primary)" },
-  success: { icon: import_lucide_react.CheckCircle2, color: "#0CA30C" },
-  error: { icon: import_lucide_react.XCircle, color: "#D03B3B" },
-  warning: { icon: import_lucide_react.AlertTriangle, color: "#B87A00" },
+  success: { icon: import_lucide_react.CheckCircle2, color: "var(--ui-success, #0CA30C)" },
+  error: { icon: import_lucide_react.XCircle, color: "var(--ui-danger, #D03B3B)" },
+  warning: { icon: import_lucide_react.AlertTriangle, color: "var(--ui-warning, #B87A00)" },
   info: { icon: import_lucide_react.Info, color: "var(--ui-primary)" }
 };
 var LEAVE_MS = 200;

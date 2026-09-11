@@ -79,13 +79,19 @@ var DARK_CHART_COLORS = [
   "#C98500",
   "#199E70"
 ];
+var defaultStatusColors = {
+  successColor: "#0CA30C",
+  warningColor: "#B87A00",
+  dangerColor: "#D03B3B"
+};
 var defaultThemeTokens = {
   primaryColor: "#F05423",
   gradientColor: "#FF8C42",
   useGradient: false,
   fontFamily: "'IBM Plex Mono', monospace",
   borderRadius: 4,
-  mode: "light"
+  mode: "light",
+  ...defaultStatusColors
 };
 
 // src/components/theme-provider.tsx
@@ -120,6 +126,9 @@ var HakiProvider = ({
         "--ui-primary-bg": theme.useGradient ? "var(--ui-gradient)" : "var(--ui-primary)",
         "--ui-font": theme.fontFamily,
         "--ui-radius": `${theme.borderRadius}px`,
+        "--ui-success": theme.successColor ?? defaultStatusColors.successColor,
+        "--ui-warning": theme.warningColor ?? defaultStatusColors.warningColor,
+        "--ui-danger": theme.dangerColor ?? defaultStatusColors.dangerColor,
         "--bg": neutrals.bg,
         "--bg-soft": neutrals.bgSoft,
         "--surface": neutrals.surface,

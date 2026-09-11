@@ -14,6 +14,9 @@
   --ui-primary-bg: var(--ui-primary);
   --ui-font: 'IBM Plex Mono', monospace;
   --ui-radius: 4px;
+  --ui-success: #0CA30C;
+  --ui-warning: #B87A00;
+  --ui-danger: #D03B3B;
   --bg: #FAF9F5;
   --bg-soft: #F2EFE8;
   --surface: #FFFFFF;

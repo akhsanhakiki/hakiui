@@ -2,13 +2,15 @@ import {
   DARK_CHART_COLORS,
   LIGHT_CHART_COLORS,
   darkNeutrals,
+  defaultStatusColors,
   defaultThemeTokens,
   lightNeutrals
-} from "./chunk-QM3UML3O.js";
+} from "./chunk-IBLLDML5.js";
 export {
   DARK_CHART_COLORS,
   LIGHT_CHART_COLORS,
   darkNeutrals,
+  defaultStatusColors,
   defaultThemeTokens,
   lightNeutrals
 };

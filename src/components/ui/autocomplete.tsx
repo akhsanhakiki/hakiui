@@ -368,12 +368,17 @@ export const Autocomplete = ({
       <div ref={containerRef} className="relative w-full">
         <div
           ref={fieldRef}
-          className={`flex w-full items-center gap-2 overflow-hidden transition-colors focus-within:border-(--ui-primary) ${currentSize.container}`}
+          className={`flex w-full items-center gap-2 overflow-hidden transition-colors border-(--border) outline-(--border) focus-within:border-(--ui-primary) focus-within:outline-(--ui-primary) ${currentSize.container}`}
           style={{
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
-            border: "0.5px solid var(--border)",
-            outline: "0.5px solid var(--border)",
+            // Hairline = 0.5px border + 0.5px outline. Only width/style live
+            // inline; the colour is a utility so focus-within can override it
+            // (an inline shorthand would beat the class — see .haki-input:focus).
+            borderWidth: "0.5px",
+            borderStyle: "solid",
+            outlineWidth: "0.5px",
+            outlineStyle: "solid",
             outlineOffset: 0,
           }}
         >

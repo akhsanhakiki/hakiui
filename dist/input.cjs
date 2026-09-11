@@ -88,13 +88,18 @@ var Input = import_react.default.forwardRef(
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "div",
         {
-          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 focus-within:border-(--ui-primary) ${currentSize.container}`,
+          className: `flex w-full items-center overflow-hidden text-(--text) transition-[box-shadow,ring-color] ring-2 ring-transparent focus-within:ring-(--ui-primary)/35 border-(--border) outline-(--border) focus-within:border-(--ui-primary) focus-within:outline-(--ui-primary) ${currentSize.container}`,
           style: {
             ...getRadiusStyle(radius),
             backgroundColor: "var(--bg-soft)",
             color: "var(--text)",
-            border: "0.5px solid var(--border)",
-            outline: "0.5px solid var(--border)",
+            // Hairline = 0.5px border + 0.5px outline. Only width/style live
+            // inline; the colour is a utility so focus-within can override it
+            // (an inline shorthand would beat the class — see .haki-input:focus).
+            borderWidth: "0.5px",
+            borderStyle: "solid",
+            outlineWidth: "0.5px",
+            outlineStyle: "solid",
             outlineOffset: 0
           },
           children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center w-full gap-2", children: [
