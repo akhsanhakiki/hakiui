@@ -276,15 +276,26 @@
     "svelte": "^4.2.0 || ^5.0.0"
   },
   "peerDependenciesMeta": {
-    "lucide-react": { "optional": true },
-    "react": { "optional": true },
-    "react-dom": { "optional": true },
-    "svelte": { "optional": true }
+    "lucide-react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.4",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "lucide-react": "^1.47.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "tailwindcss": "^4.2.4",
