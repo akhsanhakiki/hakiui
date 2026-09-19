@@ -1,0 +1,1 @@
+<script lang="ts">import Base from "./_Base.svelte"; export let role: "user" | "assistant" = "assistant"; export let className = ""; export let as = "article";</script><Base component={`chat-message ${role === "user" ? "haki-chat-message--user" : ""}`} {as} {className} {...$$restProps}><slot /></Base>

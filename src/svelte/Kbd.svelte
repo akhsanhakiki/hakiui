@@ -1,0 +1,1 @@
+<script lang="ts">export let keys: string[] = []; export let className = "";</script><span class={`haki-kbd ${className}`.trim()} {...$$restProps}>{#if keys.length}{#each keys as key}<kbd>{key}</kbd>{/each}{:else}<slot />{/if}</span>

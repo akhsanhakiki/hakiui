@@ -298,8 +298,11 @@ Build a wizard indicator from `Badge` / `Progress` if you need one.
 Uncontrolled; first item active. No `value`/`onChange`, no `TabsList`/
 `TabsTrigger`/`TabsContent` sub-components.
 ```tsx
-<Tabs items={[{ id: "overview", label: "Overview", content: <Overview /> }, { id: "settings", label: "Settings", content: <Settings /> }]} />
+<Tabs variant="segmented" items={[{ id: "overview", label: "Overview", content: <Overview /> }, { id: "settings", label: "Settings", content: <Settings /> }]} />
 ```
+
+`variant`: `"underline"` (default) or `"segmented"`.
+`size`: `"sm"`, `"md"` (default), or `"lg"`.
 
 ### Accordion / AccordionItem
 ```ts

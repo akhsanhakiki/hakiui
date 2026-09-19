@@ -282,6 +282,109 @@
     });
   }
 
+  // ------------------------------------------------------ AI primitives
+  // Shared disclosure behaviour for Menu and Model Selector. The trigger and
+  // content remain ordinary, accessible HTML when JS is unavailable.
+  function initDisclosure(root, selector, key) {
+    each(root, selector, function (container) {
+      once(container, key, function () {
+        var trigger = container.querySelector("[data-haki-disclosure-trigger]");
+        var content = container.querySelector("[data-haki-disclosure-content]");
+        if (!trigger || !content) return;
+        function close() { content.hidden = true; trigger.setAttribute("aria-expanded", "false"); }
+        function open() { closeAllDisclosures(); content.hidden = false; trigger.setAttribute("aria-expanded", "true"); }
+        content.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.addEventListener("click", function (event) { event.stopPropagation(); content.hidden ? open() : close(); });
+        each(container, "[data-haki-menu-item], [data-haki-model-option]", function (item) {
+          item.addEventListener("click", function () {
+            if (item.disabled || item.getAttribute("aria-disabled") === "true") return;
+            var value = item.getAttribute("data-haki-menu-item") || item.getAttribute("data-haki-model-option");
+            if (item.hasAttribute("data-haki-model-option")) {
+              each(container, "[data-haki-model-option]", function (option) { option.setAttribute("aria-selected", option === item ? "true" : "false"); });
+              var label = container.querySelector("[data-haki-model-value]");
+              if (label) label.textContent = item.getAttribute("data-haki-label") || item.textContent.trim();
+            }
+            container.dispatchEvent(new CustomEvent("haki:change", { detail: { value: value } }));
+            close();
+          });
+        });
+        container.__hakiCloseDisclosure = close;
+      });
+    });
+  }
+  function closeAllDisclosures() { each(document, "[data-haki-menu], [data-haki-model-selector]", function (el) { if (el.__hakiCloseDisclosure) el.__hakiCloseDisclosure(); }); }
+  function initMenu(root) { initDisclosure(root, "[data-haki-menu]", "menu"); }
+  function initModelSelector(root) { initDisclosure(root, "[data-haki-model-selector]", "modelSelector"); }
+
+  // PromptInput: autosize, Enter-to-send, and a framework-neutral event so
+  // the host application owns network work.
+  function initPromptInput(root) {
+    each(root, "[data-haki-prompt-input]", function (container) {
+      once(container, "promptInput", function () {
+        var input = container.querySelector("textarea");
+        var send = container.querySelector("[data-haki-prompt-send]");
+        if (!input) return;
+        function resize() { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 192) + "px"; }
+        function submit() { var value = input.value.trim(); if (!value || input.disabled) return; container.dispatchEvent(new CustomEvent("haki:submit", { detail: { value: value } })); }
+        input.addEventListener("input", resize);
+        input.addEventListener("keydown", function (event) { if (event.key === "Enter" && !event.shiftKey && !event.isComposing) { event.preventDefault(); submit(); } });
+        if (send) send.addEventListener("click", submit);
+        resize();
+      });
+    });
+  }
+
+  function initTogglePanels(root, selector, key) {
+    each(root, selector, function (container) {
+      once(container, key, function () {
+        var toggle = container.querySelector("[data-haki-toggle]");
+        var panel = container.querySelector("[data-haki-panel]");
+        if (!toggle || !panel) return;
+        function set(open) { toggle.setAttribute("aria-expanded", open ? "true" : "false"); panel.hidden = !open; }
+        set(toggle.getAttribute("aria-expanded") !== "false");
+        toggle.addEventListener("click", function () { set(toggle.getAttribute("aria-expanded") !== "true"); });
+      });
+    });
+  }
+  function initThinking(root) { initTogglePanels(root, "[data-haki-thinking]", "thinking"); }
+  function initToolCalls(root) { initTogglePanels(root, "[data-haki-tool-calls]", "toolCalls"); }
+
+  function initSidebar(root) {
+    each(root, "[data-haki-sidebar]", function (sidebar) {
+      once(sidebar, "sidebar", function () {
+        var toggle = sidebar.querySelector("[data-haki-sidebar-toggle]");
+        if (!toggle) return;
+        function sync() { var collapsed = sidebar.classList.contains("haki-sidebar--collapsed"); toggle.setAttribute("aria-expanded", collapsed ? "false" : "true"); toggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar"); }
+        sync();
+        toggle.addEventListener("click", function () { sidebar.classList.toggle("haki-sidebar--collapsed"); sync(); sidebar.dispatchEvent(new CustomEvent("haki:collapsechange", { detail: { collapsed: sidebar.classList.contains("haki-sidebar--collapsed") } })); });
+      });
+    });
+  }
+
+  function initOtp(root) {
+    each(root, "[data-haki-otp]", function (container) {
+      once(container, "otp", function () {
+        var inputs = container.querySelectorAll(".haki-otp__input");
+        function value() { return Array.prototype.map.call(inputs, function (input) { return input.value; }).join(""); }
+        function complete() { if (value().length === inputs.length) container.dispatchEvent(new CustomEvent("haki:complete", { detail: { value: value() } })); }
+        Array.prototype.forEach.call(inputs, function (input, index) {
+          input.addEventListener("input", function () { input.value = input.value.replace(/\D/g, "").slice(-1); if (input.value && inputs[index + 1]) inputs[index + 1].focus(); complete(); });
+          input.addEventListener("keydown", function (event) { if (event.key === "Backspace" && !input.value && inputs[index - 1]) inputs[index - 1].focus(); if (event.key === "ArrowLeft" && inputs[index - 1]) inputs[index - 1].focus(); if (event.key === "ArrowRight" && inputs[index + 1]) inputs[index + 1].focus(); });
+          input.addEventListener("paste", function (event) { var text = (event.clipboardData || window.clipboardData).getData("text").replace(/\D/g, ""); if (!text) return; event.preventDefault(); Array.prototype.forEach.call(text.slice(0, inputs.length - index), function (character, offset) { inputs[index + offset].value = character; }); (inputs[Math.min(inputs.length - 1, index + text.length)] || input).focus(); complete(); });
+        });
+      });
+    });
+  }
+
+  function initPromptSuggestions(root) {
+    each(root, "[data-haki-prompt-suggestions]", function (container) {
+      once(container, "promptSuggestions", function () {
+        each(container, "[data-haki-prompt]", function (item) { item.addEventListener("click", function () { container.dispatchEvent(new CustomEvent("haki:pick", { detail: { prompt: item.getAttribute("data-haki-prompt") } })); }); });
+      });
+    });
+  }
+
   // ----------------------------------------------------------------- toast
   //
   // HakiUI.toast("Saved", { variant: "success" })
@@ -338,10 +441,12 @@
     once(document, "globals", function () {
       document.addEventListener("click", function () {
         closeAllDropdowns();
+        closeAllDisclosures();
       });
       document.addEventListener("keydown", function (event) {
         if (event.key !== "Escape") return;
         closeAllDropdowns();
+        closeAllDisclosures();
         each(document, ".haki-modal", function (modal) {
           if (!modal.hidden) closeModal(modal);
         });
@@ -357,6 +462,14 @@
     initDropdown(root);
     initPasswordToggle(root);
     initStepper(root);
+    initMenu(root);
+    initModelSelector(root);
+    initPromptInput(root);
+    initThinking(root);
+    initToolCalls(root);
+    initSidebar(root);
+    initOtp(root);
+    initPromptSuggestions(root);
     initGlobalListeners();
     return root;
   }

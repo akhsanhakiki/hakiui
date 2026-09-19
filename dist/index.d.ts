@@ -7,7 +7,7 @@ export { Pagination } from './pagination.js';
 export { Switch } from './switch.js';
 export { Tooltip } from './tooltip.js';
 export { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from './table.js';
-export { Tabs } from './tabs.js';
+export { Tabs, TabsProps, TabsSize, TabsVariant } from './tabs.js';
 export { Accordion, AccordionItem } from './accordion.js';
 export { Checkbox } from './checkbox.js';
 export { Radio } from './radio.js';

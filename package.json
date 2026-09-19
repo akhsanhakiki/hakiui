@@ -1,7 +1,7 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "2.3.0",
-  "description": "Pixel-orange React UI components with light/dark CSS variable theming.",
+  "version": "2.4.0",
+  "description": "Pixel-orange React, Svelte, and HTML UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -15,6 +15,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "svelte": "./src/svelte/index.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,6 +28,11 @@
     "./theme.css": "./dist/theme.css",
     "./components.css": "./dist/components.css",
     "./hakiui.js": "./dist/hakiui.js",
+    "./svelte": {
+      "svelte": "./src/svelte/index.ts",
+      "types": "./src/svelte/index.ts",
+      "default": "./src/svelte/index.ts"
+    },
     "./tokens": {
       "types": "./dist/tokens.d.ts",
       "import": "./dist/tokens.js",
@@ -250,6 +256,7 @@
   },
   "files": [
     "dist",
+    "src/svelte",
     "README.md",
     "LICENSE",
     "llms.txt"
@@ -259,23 +266,34 @@
   ],
   "scripts": {
     "build": "tsup && node scripts/generate-theme-css.mjs && tailwindcss -i src/vanilla.css -o dist/hakiui.css --minify && node scripts/copy-styles.mjs",
+    "check:svelte": "svelte-check --tsconfig ./tsconfig.json",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
+    "lucide-react": ">=0.460.0",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
-    "lucide-react": ">=0.460.0"
+    "svelte": "^4.2.0 || ^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "lucide-react": { "optional": true },
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "svelte": { "optional": true }
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.4",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "svelte": "^5.57.0",
+    "svelte-check": "^4.7.6",
     "tailwindcss": "^4.2.4",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },
   "keywords": [
     "react",
+    "svelte",
     "ui",
     "components",
     "design-system",

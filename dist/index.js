@@ -109,7 +109,7 @@ import {
 } from "./chunk-B2ZI32H3.js";
 import {
   Tabs
-} from "./chunk-V2EY2Y7V.js";
+} from "./chunk-FXM3UHJC.js";
 import {
   Accordion,
   AccordionItem

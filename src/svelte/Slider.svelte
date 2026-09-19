@@ -1,0 +1,1 @@
+<script lang="ts">export let value = 0; export let min = 0; export let max = 100; export let step = 1; export let className = "";</script><input class={`haki-slider ${className}`.trim()} type="range" bind:value {min} {max} {step} {...$$restProps} />

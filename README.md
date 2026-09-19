@@ -1,6 +1,6 @@
 # @hakistudio/hakiui
 
-Pixel-orange React UI components powered by CSS variables and Tailwind utility classes, with built-in light (warm paper-white) and dark (warm charcoal) modes. Source is split per component under `src/components/ui/` for maintainability, granular installs, and tree-shaking-friendly subpath exports.
+Pixel-orange UI components for React, Svelte, and plain HTML. Every delivery path shares the same CSS-variable theme, including light (warm paper-white) and dark (warm charcoal) modes.
 
 ## Install
 
@@ -8,10 +8,16 @@ Pixel-orange React UI components powered by CSS variables and Tailwind utility c
 npm install @hakistudio/hakiui
 ```
 
-Also install peer dependencies if your app does not already have them:
+For React, also install peer dependencies if your app does not already have them:
 
 ```bash
 npm install react react-dom lucide-react
+```
+
+For Svelte, install Svelte 4.2+ or 5:
+
+```bash
+npm install svelte
 ```
 
 ## Using HakiUI with an AI coding agent
@@ -64,6 +70,39 @@ or pass a font you already ship via `initialTheme={{ ...defaultTheme, fontFamily
 ```
 
 3. Wrap your app with `HakiProvider`.
+
+#### Svelte / SvelteKit
+
+1. Add the prebuilt stylesheet to your global CSS (Svelte does not require
+   Tailwind to use Haki UI):
+
+```css
+@import "@hakistudio/hakiui/hakiui.css";
+```
+
+2. Import components from the Svelte-only subpath. It contains every public
+   Haki UI component and has no React dependency:
+
+```svelte
+<script lang="ts">
+  import { HakiProvider, Button, Input, Progress } from "@hakistudio/hakiui/svelte";
+
+  let email = "";
+</script>
+
+<HakiProvider primary="#F05423" radius={4} mode="light">
+  <main class="app">
+    <Input label="Email" bind:value={email} placeholder="Email address" />
+    <Progress value={64} label="Profile complete" />
+    <Button on:click={() => console.log(email)}>Continue</Button>
+  </main>
+</HakiProvider>
+```
+
+`HakiProvider` scopes optional token overrides to its children. The component
+set is exported one-for-one from `@hakistudio/hakiui/svelte`; structural
+components accept a slot and an `as` prop, while form components expose native
+Svelte bindings such as `bind:value` and `bind:checked`.
 
 #### Next.js (App Router)
 

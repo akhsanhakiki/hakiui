@@ -1,12 +1,17 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
 
-declare const Tabs: ({ items, }: {
+type TabsVariant = "underline" | "segmented";
+type TabsSize = "sm" | "md" | "lg";
+interface TabsProps {
     items: {
         id: string;
-        label: string;
+        label: ReactNode;
         content: ReactNode;
     }[];
-}) => react_jsx_runtime.JSX.Element;
+    variant?: TabsVariant;
+    size?: TabsSize;
+}
+declare const Tabs: ({ items, variant, size, }: TabsProps) => react_jsx_runtime.JSX.Element;
 
-export { Tabs };
+export { Tabs, type TabsProps, type TabsSize, type TabsVariant };

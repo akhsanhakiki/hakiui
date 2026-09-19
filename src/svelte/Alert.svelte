@@ -1,0 +1,1 @@
+<script lang="ts">import Base from "./_Base.svelte"; export let variant: "info" | "success" | "warning" | "danger" = "info"; export let className = "";</script><Base component={`alert haki-alert--${variant}`} className={className} role="alert" {...$$restProps}><slot /></Base>

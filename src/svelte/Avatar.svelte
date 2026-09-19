@@ -1,0 +1,1 @@
+<script lang="ts">export let name = ""; export let src = ""; export let className = "";</script><span class={`haki-avatar ${className}`.trim()} aria-label={name} {...$$restProps}>{#if src}<img {src} alt={name} />{:else}{name.slice(0, 2).toUpperCase()}{/if}</span>

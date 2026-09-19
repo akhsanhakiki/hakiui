@@ -1,0 +1,1 @@
+<script lang="ts">import Base from "./_Base.svelte"; export let className = ""; export let as = "nav";</script><Base component="breadcrumbs" {as} {className} aria-label="Breadcrumb" {...$$restProps}><slot /></Base>

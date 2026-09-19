@@ -1,6 +1,6 @@
 import {
   Tabs
-} from "./chunk-V2EY2Y7V.js";
+} from "./chunk-FXM3UHJC.js";
 export {
   Tabs
 };

@@ -19,7 +19,7 @@ export { Pagination } from "./components/ui/pagination";
 export { Switch } from "./components/ui/switch";
 export { Tooltip } from "./components/ui/tooltip";
 export { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "./components/ui/table";
-export { Tabs } from "./components/ui/tabs";
+export { Tabs, type TabsProps, type TabsSize, type TabsVariant } from "./components/ui/tabs";
 export { Accordion, AccordionItem } from "./components/ui/accordion";
 export { Checkbox } from "./components/ui/checkbox";
 export { Radio } from "./components/ui/radio";

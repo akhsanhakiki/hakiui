@@ -1,0 +1,1 @@
+<script lang="ts">import Base from "./_Base.svelte"; export let open = false; export let className = "";</script>{#if open}<Base component="modal" className={className} role="dialog" aria-modal="true" {...$$restProps}><slot /></Base>{/if}
