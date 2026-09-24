@@ -611,7 +611,7 @@
 }
 
 .haki-tabs--segmented .haki-tabs__list {
-  border-radius: var(--ui-radius);
+  border-radius: var(--haki-tabs-radius, var(--ui-radius));
 }
 
 .haki-tabs--segmented .haki-tabs__tab {
@@ -622,8 +622,13 @@
 }
 
 .haki-tabs--segmented .haki-tabs__tab {
-  border-radius: var(--ui-radius);
+  border-radius: var(--haki-tabs-radius, var(--ui-radius));
 }
+
+.haki-tabs--radius-none { --haki-tabs-radius: 0px; }
+.haki-tabs--radius-sm { --haki-tabs-radius: calc(var(--ui-radius) * 0.5); }
+.haki-tabs--radius-lg { --haki-tabs-radius: calc(var(--ui-radius) * 1.5); }
+.haki-tabs--radius-full { --haki-tabs-radius: 9999px; }
 
 .haki-tabs--segmented .haki-tabs__tab[aria-selected="true"] {
   background: var(--surface);

@@ -303,6 +303,7 @@ Uncontrolled; first item active. No `value`/`onChange`, no `TabsList`/
 
 `variant`: `"underline"` (default) or `"segmented"`.
 `size`: `"sm"`, `"md"` (default), or `"lg"`.
+`radius`: `"none"`, `"sm"`, `"md"` (default), `"lg"`, or `"full"` for segmented tabs.
 
 ### Accordion / AccordionItem
 ```ts

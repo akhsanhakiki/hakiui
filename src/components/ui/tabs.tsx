@@ -5,6 +5,7 @@ import React, {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
+import { getRadiusStyle, type Radius } from "../../lib/radius";
 
 export type TabsVariant = "underline" | "segmented";
 export type TabsSize = "sm" | "md" | "lg";
@@ -13,12 +14,14 @@ export interface TabsProps {
   items: { id: string; label: ReactNode; content: ReactNode }[];
   variant?: TabsVariant;
   size?: TabsSize;
+  radius?: Radius;
 }
 
 export const Tabs = ({
   items,
   variant = "underline",
   size = "md",
+  radius = "md",
 }: TabsProps) => {
   const [active, setActive] = useState(items[0]?.id ?? "");
   const instanceId = useId();
@@ -52,7 +55,7 @@ export const Tabs = ({
   const listClass =
     variant === "underline"
       ? "flex w-full border-b"
-      : "flex w-fit max-w-full overflow-x-auto rounded-[var(--ui-radius)] border border-(--border) bg-(--bg-soft) p-0.5";
+      : "flex w-fit max-w-full overflow-x-auto border border-(--border) bg-(--bg-soft) p-0.5";
 
   const sizeClass =
     size === "sm"
@@ -65,14 +68,14 @@ export const Tabs = ({
     if (variant === "underline") {
       return `-mb-px border-b-2 font-medium transition-colors ${sizeClass} ${selected ? "border-(--ui-primary) text-(--text)" : "border-transparent text-(--text-muted) hover:text-(--text)"}`;
     }
-    return `shrink-0 rounded-[var(--ui-radius)] border-0 font-medium transition-colors ${sizeClass} ${selected ? "bg-(--surface) text-(--text) shadow-sm" : "text-(--text-muted) hover:text-(--text)"}`;
+    return `shrink-0 border-0 font-medium transition-colors ${sizeClass} ${selected ? "bg-(--surface) text-(--text) shadow-sm" : "text-(--text-muted) hover:text-(--text)"}`;
   };
 
   return (
     <div className="flex flex-col gap-4">
       <div
         className={listClass}
-        style={variant === "underline" ? { borderColor: "color-mix(in srgb, var(--border) 50%, transparent)" } : undefined}
+        style={variant === "underline" ? { borderColor: "color-mix(in srgb, var(--border) 50%, transparent)" } : getRadiusStyle(radius)}
         role="tablist"
       >
         {items.map((item, index) => {
@@ -92,6 +95,7 @@ export const Tabs = ({
             aria-controls={panelId}
             tabIndex={selected ? 0 : -1}
             className={tabClass(selected)}
+            style={variant === "segmented" ? getRadiusStyle(radius) : undefined}
           >
             {item.label}
           </button>
