@@ -12,8 +12,9 @@ Mono, 4px radius. Live demos: https://hakiui.akhsanhakiki.com/components
 
 ### 1a. Install
 ```bash
-npm install @hakistudio/hakiui react react-dom lucide-react
+npm install @hakistudio/hakiui
 ```
+Start with an existing React 18/19 app. HakiUI installs `lucide-react` itself.
 Tailwind v4 is required (`tailwindcss` + `@tailwindcss/vite` for Vite, or
 `@tailwindcss/postcss` for Next.js). Tailwind v3 does not work.
 

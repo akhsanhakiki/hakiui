@@ -2,23 +2,40 @@
 
 Pixel-orange UI components for React, Svelte, and plain HTML. Every delivery path shares the same CSS-variable theme, including light (warm paper-white) and dark (warm charcoal) modes.
 
-## Install
+## Quick start (React)
+
+Requires an existing React 18 or 19 app and Tailwind CSS v4.
+
+### 1. Install
 
 ```bash
 npm install @hakistudio/hakiui
 ```
 
-For React, also install peer dependencies if your app does not already have them:
+`lucide-react` is installed with HakiUI. Your React app already provides `react` and `react-dom`.
 
-```bash
-npm install react react-dom lucide-react
+### 2. Import styles
+
+Add these lines to your global CSS, in this order:
+
+```css
+@import "tailwindcss";
+@import "@hakistudio/hakiui/styles.css";
 ```
 
-For Svelte, install Svelte 4.2+ or 5:
+### 3. Use a component
 
-```bash
-npm install svelte
+```tsx
+import { Button } from "@hakistudio/hakiui";
+
+export default function App() {
+  return <Button variant="primary">Continue</Button>;
+}
 ```
+
+The stylesheet supplies the default theme. Add `HakiProvider` when you want runtime theme controls. To paint the whole page with the theme background, set the root background to `var(--bg)`.
+
+For Svelte, install HakiUI in an existing Svelte 4.2+ or 5 project and use the Svelte entry point below.
 
 ## Using HakiUI with an AI coding agent
 

@@ -1,6 +1,6 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Pixel-orange React, Svelte, and HTML UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",
@@ -270,15 +270,11 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "lucide-react": ">=0.460.0",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
     "svelte": "^4.2.0 || ^5.0.0"
   },
   "peerDependenciesMeta": {
-    "lucide-react": {
-      "optional": true
-    },
     "react": {
       "optional": true
     },
@@ -293,7 +289,6 @@
     "@tailwindcss/cli": "^4.2.4",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
-    "lucide-react": "^1.47.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "svelte": "^5.57.0",
@@ -313,5 +308,8 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "dependencies": {
+    "lucide-react": "^1.47.0"
   }
 }
