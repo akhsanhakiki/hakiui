@@ -1,6 +1,6 @@
 {
   "name": "@hakistudio/hakiui",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Pixel-orange React, Svelte, and HTML UI components with light/dark CSS variable theming.",
   "license": "MIT",
   "type": "module",

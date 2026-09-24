@@ -33,7 +33,7 @@ export default function App() {
 }
 ```
 
-The stylesheet supplies the default theme. Add `HakiProvider` when you want runtime theme controls. To paint the whole page with the theme background, set the root background to `var(--bg)`.
+The stylesheet supplies the default theme. No wrapper is required. To paint the whole page with the theme background, set the root background to `var(--bg)`.
 
 For Svelte, install HakiUI in an existing Svelte 4.2+ or 5 project and use the Svelte entry point below.
 
@@ -45,7 +45,7 @@ The package ships [`llms.txt`](./llms.txt) — the complete prop reference for e
 Read node_modules/@hakistudio/hakiui/llms.txt (or https://hakiui.akhsanhakiki.com/llms.txt) first, then build …
 ```
 
-## Tailwind setup (required — Tailwind v4)
+## Tailwind setup (Tailwind v4)
 
 HakiUI components use Tailwind utility classes. Import the package stylesheet in your global CSS, **after** Tailwind:
 
@@ -86,7 +86,7 @@ or pass a font you already ship via `initialTheme={{ ...defaultTheme, fontFamily
 @import "@hakistudio/hakiui/styles.css";
 ```
 
-3. Wrap your app with `HakiProvider`.
+3. Import and use components directly. No provider is required.
 
 #### Svelte / SvelteKit
 
@@ -130,7 +130,7 @@ Svelte bindings such as `bind:value` and `bind:checked`.
 @import "@hakistudio/hakiui/styles.css";
 ```
 
-2. Wrap your root layout body content (or a shared client boundary) with `HakiProvider`.
+2. Import and use components in client files. No provider is required.
 
 #### Astro
 
@@ -143,27 +143,19 @@ Svelte bindings such as `bind:value` and `bind:checked`.
 @import "@hakistudio/hakiui/styles.css";
 ```
 
-4. Render HakiUI React components inside `.tsx` React components and use `HakiProvider`.
+4. Render HakiUI React components inside `.tsx` React components.
 
 ## Usage (barrel import)
 
 ```tsx
-import { HakiProvider, Button, Input, defaultTheme } from "@hakistudio/hakiui";
+import { Button, Input } from "@hakistudio/hakiui";
 
 export default function App() {
   return (
-    // mode: "light" (default) or "dark"
-    <HakiProvider initialTheme={{ ...defaultTheme, mode: "light" }}>
-      {/* HakiProvider sets the tokens and text colour but not the page
-          background — paint the root with var(--bg) yourself. */}
-      <div
-        className="p-6 space-y-4 min-h-screen"
-        style={{ background: "var(--bg)" }}
-      >
-        <Input label="Email" placeholder="Email address" />
-        <Button variant="primary">Continue</Button>
-      </div>
-    </HakiProvider>
+    <div className="p-6 space-y-4 min-h-screen" style={{ background: "var(--bg)" }}>
+      <Input label="Email" placeholder="Email address" />
+      <Button variant="primary">Continue</Button>
+    </div>
   );
 }
 ```
@@ -220,7 +212,7 @@ Adjust import paths to match your project aliases.
 
 ## Styling note
 
-This package uses Tailwind utility classes and CSS variables. `HakiProvider` provides the `--ui-*` brand variables plus the neutral tokens (`--bg`, `--bg-soft`, `--surface`, `--border`, `--input`, `--text`, `--text-muted`, `--hover`) for the active mode, so it should wrap every area where you render HakiUI components. To use your own neutrals, override those variables on a descendant element (or import `lightNeutrals` / `darkNeutrals` as a starting point).
+This package uses Tailwind utility classes and CSS variables. The stylesheet defines default `--ui-*` brand variables and neutral tokens (`--bg`, `--bg-soft`, `--surface`, `--border`, `--input`, `--text`, `--text-muted`, `--hover`) on `:root`. No React wrapper is needed. Override the variables in CSS to customize a theme, or use the optional `HakiProvider` and `useTheme` for runtime theme state.
 
 ## Package exports
 

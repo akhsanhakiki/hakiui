@@ -8,7 +8,7 @@ HakiUI is a themable React + Tailwind v4 component library. Brand: pixel
 orange `#F05423` on warm paper-white (light) or warm charcoal (dark), IBM Plex
 Mono, 4px radius. Live demos: https://hakiui.akhsanhakiki.com/components
 
-## 1. Setup (do all four — skipping any one produces a broken look)
+## 1. Setup
 
 ### 1a. Install
 ```bash
@@ -43,30 +43,29 @@ to `index.html` `<head>` (or Next.js layout):
 ```
 Or pass a font you already load: `initialTheme={{ ...defaultTheme, fontFamily: "'Inter', sans-serif" }}`.
 
-### 1d. Wrap the app in `HakiProvider` and paint the page background
+### 1d. Use components directly and paint the page background
 ```tsx
-import { HakiProvider, defaultTheme } from "@hakistudio/hakiui";
+import { Button } from "@hakistudio/hakiui";
 
 export default function App() {
   return (
-    <HakiProvider initialTheme={{ ...defaultTheme, mode: "light" }}>
-      <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-        {/* your app */}
-      </div>
-    </HakiProvider>
+    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+      <Button variant="primary">Continue</Button>
+    </div>
   );
 }
 ```
-`HakiProvider` renders a `<div>` that sets the CSS variables and `color`,
-but NOT `background`. Always paint the root with `var(--bg)` yourself, or the
-page stays white instead of warm paper (#FAF9F5).
+The stylesheet sets the default tokens on `:root`; no provider is required.
+Paint the root with `var(--bg)` if you want the full page to use the warm paper
+background (#FAF9F5).
 
-Next.js App Router: `HakiProvider` uses `useState`, so wrap it in a
-`"use client"` component and render that from `layout.tsx`.
+For runtime theme switching, `HakiProvider` and `useTheme` remain available.
+In Next.js App Router, put that optional provider in a `"use client"` component.
 
 ## 2. Theme tokens
 
-`HakiProvider` sets these CSS custom properties on its wrapper. Use them —
+The stylesheet sets these CSS custom properties on `:root`; the optional
+`HakiProvider` can override them on its wrapper. Use them —
 never hard-code hex colours or Tailwind palette colours (`bg-orange-500`,
 `text-gray-500`, `border-gray-300`) in app code that sits next to HakiUI
 components, or the app will not retheme and will not match the components.
@@ -379,13 +378,13 @@ type ToastProviderProps = { children: ReactNode; position?: "top-right" | "top-l
 type ToastOptions = { title: string; description?: ReactNode; variant?: "default" | "success" | "error" | "warning" | "info"; duration?: number /* ms; 0 = sticky */ };
 ```
 ```tsx
-<HakiProvider><ToastProvider position="bottom-right"><App /></ToastProvider></HakiProvider>
+<ToastProvider position="bottom-right"><App /></ToastProvider>
 // in a component:
 const { toast, dismiss } = useToast();
 const id = toast({ title: "Saved", variant: "success" }); // returns id
 // dismiss(id) to close early
 ```
-`ToastProvider` must be inside `HakiProvider`.
+`ToastProvider` works without `HakiProvider`; it reads the stylesheet's theme tokens.
 
 ### Alert
 ```ts
@@ -583,7 +582,7 @@ Empty-state starter cards; `onPick` hands the prompt to the composer.
 ## 6. Checklist before you say "done"
 
 1. `@import "tailwindcss"` then `@import "@hakistudio/hakiui/styles.css"` in the global CSS.
-2. `HakiProvider` wraps everything; root painted with `var(--bg)`.
+2. Components render without a provider; paint the root with `var(--bg)` if you want the page background.
 3. IBM Plex Mono (or the chosen `fontFamily`) is actually loaded.
 4. No raw `<button>`/`<input>` where `Button`/`Input` exist; no
    `border-gray-*`, `bg-orange-*`, `focus:ring-black` etc. in app code.
